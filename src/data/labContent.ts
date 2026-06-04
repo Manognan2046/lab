@@ -2,6 +2,7 @@ export interface LabExperiment {
   id: string;
   num: string;
   title: string;
+  folderName: string;
   cmd: string;
   lang: string;
   fileName: string;
@@ -9,11 +10,12 @@ export interface LabExperiment {
   description: string;
 }
 
-export const labData: LabExperiment[] = [
+export const cdLabData: LabExperiment[] = [
   {
     id: 'q1',
     num: '01',
     title: 'Construction of DFA from NFA',
+    folderName: 'q1 - Construction of DFA from NFA',
     cmd: 'cat dfa_from_nfa.cpp',
     lang: 'C++',
     fileName: 'dfa_from_nfa.cpp',
@@ -164,6 +166,7 @@ int main() {
     id: 'q2',
     num: '02',
     title: 'Scanner program using LEX',
+    folderName: 'q2 - Scanner program using LEX',
     cmd: 'cat scanner.l',
     lang: 'LEX',
     fileName: 'scanner.l',
@@ -229,6 +232,7 @@ int yywrap() { return 1; }`
     id: 'q3',
     num: '03',
     title: 'Construction of a Predictive Parsing Table',
+    folderName: 'q3 - Construction of a Predictive Parsing Table',
     cmd: 'cat predictive_parse.cpp',
     lang: 'C++',
     fileName: 'predictive_parse.cpp',
@@ -305,6 +309,7 @@ int main() {
     id: 'q4',
     num: '04',
     title: 'SLR Parser table generation',
+    folderName: 'q4 - SLR Parser table generation',
     cmd: 'cat slr_parser.cpp',
     lang: 'C++',
     fileName: 'slr_parser.cpp',
@@ -418,6 +423,7 @@ void v2(char ai, int ii, int kk, int tt) {
     id: 'q5',
     num: '05',
     title: 'Implement Unification Algorithm',
+    folderName: 'q5 - Implement Unification Algorithm',
     cmd: 'cat unification.cpp',
     lang: 'C++',
     fileName: 'unification.cpp',
@@ -515,6 +521,7 @@ void unify() {
     id: 'q6',
     num: '06',
     title: 'LR Parser table generation',
+    folderName: 'q6 - LR Parser table generation',
     cmd: 'cat lr_parser.cpp',
     lang: 'C++',
     fileName: 'lr_parser.cpp',
@@ -587,6 +594,7 @@ int main() {
     id: 'q7',
     num: '07',
     title: 'Parser Generation using YACC',
+    folderName: 'q7 - Parser Generation using YACC',
     cmd: 'cat parser.l && echo "---" && cat parser.y',
     lang: 'LEX + YACC',
     fileName: 'parser.l / parser.y',
@@ -641,6 +649,7 @@ void yyerror(char *s) { printf("%s\\n", s); }`
     id: 'q8',
     num: '08',
     title: 'Code Generation',
+    folderName: 'q8 - Code Generation',
     cmd: 'cat code_gen.cpp',
     lang: 'C++',
     fileName: 'code_gen.cpp',
@@ -715,6 +724,7 @@ int main() {
     id: 'q9',
     num: '09',
     title: 'Code Optimization',
+    folderName: 'q9 - Code Optimization',
     cmd: 'cat code_opt.c',
     lang: 'C',
     fileName: 'code_opt.c',
@@ -808,3 +818,37 @@ int main() {
 }`
   }
 ];
+
+export const dlLabData: LabExperiment[] = [
+  {
+    id: 'dl-q1',
+    num: '01',
+    title: 'Basic Logic Gates',
+    folderName: 'q1 - Basic Logic Gates',
+    cmd: 'cat logic_gates.v',
+    lang: 'Verilog',
+    fileName: 'logic_gates.v',
+    description: 'Implementation of basic logic gates using Verilog',
+    code: `// Verilog code for logic gates will go here`
+  }
+];
+
+export const cnLabData: LabExperiment[] = [
+  {
+    id: 'cn-q1',
+    num: '01',
+    title: 'Socket Programming',
+    folderName: 'q1 - Socket Programming',
+    cmd: 'cat server.py',
+    lang: 'Python',
+    fileName: 'server.py',
+    description: 'Simple TCP server using sockets',
+    code: `# Python code for socket programming will go here`
+  }
+];
+
+export const allLabs: Record<string, LabExperiment[]> = {
+  cd: cdLabData,
+  dl: dlLabData,
+  cn: cnLabData
+};
