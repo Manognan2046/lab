@@ -64,7 +64,7 @@ export default function TerminalPage() {
         const completed = matches[0].includes(" ") ? `"${matches[0]}"` : matches[0];
         setInput(`${cmd} ${completed}`);
       } else if (matches.length > 1) {
-        setHistory([...history, `PROMPT_START${getPrompt()}PROMPT_END ${input}`, formatColumns(matches), ""]);
+        setHistory([...history, `PROMPT_START${getPrompt()}PROMPT_END ${input}`, formatColumns(matches)]);
       }
     }
   };
@@ -141,7 +141,7 @@ export default function TerminalPage() {
       newHistory.push(`bash: ${cmd}: command not found`);
     }
 
-    setHistory([...newHistory, ""]);
+    setHistory([...newHistory]);
     setInput("");
   };
 

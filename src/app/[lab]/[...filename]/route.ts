@@ -111,10 +111,38 @@ export async function GET(
             font-size: inherit;
             width: 100%;
         }
-    </style>
+    
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 16px;
+            background: transparent;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s, background 0.2s;
+        }
+        .copy-btn:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .copy-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+</style>
 </head>
 <body>
-    <div class="main">
+    
+    <button class="copy-btn" id="copy-btn" title="Copy code">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+    </button>
+<div class="main">
         ${lines.map((line, i) => `
             <div class="line">
                 <span class="ln">${i + 1}</span>
@@ -147,7 +175,23 @@ export async function GET(
                 e.target.value = '';
             }
         });
-    </script>
+    
+        document.getElementById('copy-btn').addEventListener('click', () => {
+            // Fetch the raw code from the curl endpoint to get unescaped content reliably
+            fetch(window.location.pathname, { headers: { 'User-Agent': 'curl' } })
+                .then(res => res.text())
+                .then(code => {
+                    navigator.clipboard.writeText(code).then(() => {
+                        const btn = document.getElementById('copy-btn');
+                        const originalHTML = btn.innerHTML;
+                        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                        setTimeout(() => {
+                            btn.innerHTML = originalHTML;
+                        }, 2000);
+                    });
+                });
+        });
+</script>
 </body>
 </html>
   `;
