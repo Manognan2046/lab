@@ -1,0 +1,270 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0d1117;
+  --bg2: #161b22;
+  --bg3: #21262d;
+  --border: #30363d;
+  --green: #3fb950;
+  --green-dim: #238636;
+  --cyan: #58a6ff;
+  --yellow: #d29922;
+  --red: #f85149;
+  --purple: #bc8cff;
+  --orange: #d2a679;
+  --text: #c9d1d9;
+  --text-dim: #8b949e;
+  --text-bright: #f0f6fc;
+  --prompt-user: #3fb950;
+  --prompt-host: #58a6ff;
+  --prompt-path: #d29922;
+}
+
+html { font-size: 14px; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  min-height: 100vh;
+  padding: 0;
+}
+
+/* ── Title bar ── */
+.titlebar {
+  background: #1c2128;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  height: 38px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 10px;
+}
+.dots { display: flex; gap: 7px; }
+.dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  cursor: pointer; transition: filter .2s;
+}
+.dot:hover { filter: brightness(1.3); }
+.dot.close { background: #ff5f57; }
+.dot.min   { background: #febc2e; }
+.dot.max   { background: #28c840; }
+.titlebar-label {
+  flex: 1; text-align: center; font-size: .78rem;
+  color: var(--text-dim); letter-spacing: .05em;
+}
+.titlebar-right { width: 60px; }
+
+/* ── Layout ── */
+.shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 20px 80px;
+}
+
+/* ── Startup banner ── */
+.banner {
+  color: var(--green-dim);
+  font-size: .72rem;
+  line-height: 1.7;
+  margin-bottom: 28px;
+  opacity: .7;
+}
+
+/* ── TOC ── */
+.toc {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 18px 22px;
+  margin-bottom: 32px;
+}
+.toc-title {
+  color: var(--yellow);
+  margin-bottom: 12px;
+  font-size: .8rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.toc-title::before { content: '# '; color: var(--text-dim); }
+.toc-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 4px 24px; }
+.toc-list li a {
+  color: var(--cyan);
+  text-decoration: none;
+  font-size: .82rem;
+  display: flex; align-items: center; gap: 6px;
+  padding: 3px 0;
+  transition: color .15s;
+}
+.toc-list li a:hover { color: var(--text-bright); }
+.toc-list li a::before { content: '→'; color: var(--text-dim); font-size: .75rem; }
+.toc-num { color: var(--text-dim); }
+
+/* ── Section ── */
+.section { margin-bottom: 40px; }
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+.section-header:hover .section-title { color: var(--text-bright); }
+
+.section-num {
+  background: var(--green-dim);
+  color: var(--bg);
+  font-size: .7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 3px;
+  letter-spacing: .06em;
+}
+
+.section-title {
+  color: var(--green);
+  font-size: .95rem;
+  font-weight: 500;
+  transition: color .15s;
+}
+
+.toggle-hint {
+  margin-left: auto;
+  font-size: .7rem;
+  color: var(--text-dim);
+}
+
+/* ── Prompt line (question) ── */
+.prompt-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: .84rem;
+  line-height: 1.6;
+  flex-wrap: wrap;
+}
+.prompt-user { color: var(--prompt-user); font-weight: 600; }
+.prompt-at   { color: var(--text-dim); }
+.prompt-host { color: var(--prompt-host); }
+.prompt-colon{ color: var(--text-dim); }
+.prompt-path { color: var(--prompt-path); }
+.prompt-dollar{ color: var(--text); }
+.prompt-cmd  { color: var(--text-bright); }
+
+/* ── Answer cell ── */
+.answer-cell {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  transition: border-color .2s;
+}
+.answer-cell:hover { border-color: #484f58; }
+
+.cell-topbar {
+  display: flex;
+  align-items: center;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  padding: 6px 14px;
+  gap: 10px;
+}
+.cell-lang {
+  font-size: .7rem;
+  color: var(--purple);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.cell-label {
+  font-size: .7rem;
+  color: var(--text-dim);
+}
+.cell-copy {
+  margin-left: auto;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-dim);
+  font-family: inherit;
+  font-size: .68rem;
+  padding: 3px 10px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.cell-copy:hover { border-color: var(--cyan); color: var(--cyan); }
+.cell-copy.copied { border-color: var(--green); color: var(--green); }
+
+.cell-body {
+  padding: 16px 18px;
+  overflow-x: auto;
+  max-height: 520px;
+  overflow-y: auto;
+}
+.cell-body::-webkit-scrollbar { width: 6px; height: 6px; }
+.cell-body::-webkit-scrollbar-track { background: var(--bg2); }
+.cell-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+pre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .78rem;
+  line-height: 1.65;
+  white-space: pre;
+  color: var(--text);
+  tab-size: 4;
+}
+
+/* Syntax highlight classes */
+.kw  { color: #ff7b72; }   /* keywords */
+.ty  { color: #ffa657; }   /* types */
+.fn  { color: #d2a679; }   /* function names */
+.cm  { color: #8b949e; font-style: italic; } /* comments */
+.st  { color: #a5d6ff; }   /* strings */
+.nm  { color: #79c0ff; }   /* numbers/macros */
+.pp  { color: #bc8cff; }   /* preprocessor */
+.op  { color: #ff7b72; }   /* operators */
+.id  { color: var(--text); }
+
+/* ── Output area ── */
+.output-line {
+  font-size: .78rem;
+  color: var(--text-dim);
+  padding: 6px 18px 10px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.output-line::before { content: '↳'; color: var(--text-dim); font-size: .72rem; }
+
+/* ── Divider ── */
+.divider {
+  border: none;
+  border-top: 1px dashed var(--border);
+  margin: 0 0 32px;
+}
+
+/* ── Collapsed state ── */
+.section.collapsed .answer-cell { display: none; }
+.section.collapsed .toggle-hint::after { content: ' [+]'; color: var(--cyan); }
+.section:not(.collapsed) .toggle-hint::after { content: ' [−]'; color: var(--text-dim); }
+
+#cursor {
+  display: inline-block;
+  width: 8px;
+  height: 1.2em;
+  background: var(--text-bright);
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
+@media (max-width: 640px) {
+  .toc-list { grid-template-columns: 1fr; }
+  .cell-body { max-height: 360px; }
+  pre { font-size: .72rem; }
+}
