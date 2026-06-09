@@ -155,13 +155,6 @@ export async function GET(
             </div>
         `).join('')}
     </div>
-    <div class="status">
-        <span>${actualFileName}</span>
-        <span>${lines.length}L, ${lab.code.length}C</span>
-    </div>
-    <div class="footer">
-        [Esc] to quit (simulated: type :q or click back)
-    </div>
     <div class="input-line">
         <input type="text" placeholder=":" id="vi-input" autofocus>
     </div>
