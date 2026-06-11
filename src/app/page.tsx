@@ -10,37 +10,17 @@ export default function JupyterTreePage() {
   const router = useRouter();
 
   const getItems = () => {
+    // We want to show all files from the 'dl' lab directly on the home page
+    const dlFiles = allLabs['dl'] || [];
+    
     if (currentPath.length === 0) {
-      return Object.keys(allLabs).map(name => ({
-        name,
-        type: "directory",
-        path: [name],
-        lastModified: "14 days ago",
-        size: "-"
-      }));
-    } else if (currentPath.length === 1) {
-      const labKey = currentPath[0];
-      const labData = allLabs[labKey] || [];
-      const folders = Array.from(new Set(labData.map(l => l.folderName)));
-      return folders.map(name => ({
-        name,
-        type: "directory",
-        path: [...currentPath, name],
-        lastModified: "2 months ago",
-        size: "-"
-      }));
-    } else if (currentPath.length === 2) {
-      const labKey = currentPath[0];
-      const folderName = currentPath[1];
-      const labData = allLabs[labKey] || [];
-      const files = labData.filter(l => l.folderName === folderName);
-      return files.map(file => ({
+      return dlFiles.map(file => ({
         name: file.fileName,
         type: "file",
-        path: [...currentPath, file.fileName],
-        lastModified: "8 days ago",
+        path: ['dl', file.fileName],
+        lastModified: "moments ago",
         size: "1.2 KB",
-        labKey
+        labKey: 'dl'
       }));
     }
     return [];
@@ -50,7 +30,8 @@ export default function JupyterTreePage() {
     if (item.type === "directory") {
       setCurrentPath(item.path);
     } else {
-      router.push(`/${item.labKey}/${encodeURIComponent(currentPath[1])}/${item.name}`);
+      // Direct route to the file: /lab/filename
+      router.push(`/${item.labKey}/${item.name}`);
     }
   };
 
@@ -64,21 +45,28 @@ export default function JupyterTreePage() {
     <div className="min-h-screen flex flex-col">
       {/* Header */}
       <header className="header">
-        <div className="logo">
-          <img src="/logo.png" alt="Jupyter Logo" />
+        <div className="container">
+          <div className="logo">
+            <img src="/logo.png" alt="Jupyter Logo" />
+          </div>
         </div>
       </header>
 
       {/* Menu */}
       <div className="menu-bar">
-        <a href="#">File</a>
-        <a href="#">View</a>
-        <a href="#">Settings</a>
-        <a href="#">Help</a>
+        <div className="container">
+          <div className="menu-items">
+            <a href="/">Home</a>
+            <a href="#">File</a>
+            <a href="#">View</a>
+            <a href="#">Settings</a>
+            <a href="#">Help</a>
+          </div>
+        </div>
       </div>
 
       {/* Main */}
-      <div className="wrapper">
+      <div className="wrapper container">
         {/* Tabs */}
         <div className="tabs">
           <div 
