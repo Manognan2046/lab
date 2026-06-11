@@ -1,190 +1,200 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { allLabs, LabExperiment } from "../data/labContent";
+import { allLabs } from "../data/labContent";
 
-export default function TerminalPage() {
-  const [input, setInput] = useState("");
-  const [history, setHistory] = useState<string[]>([""]);
-  // currentPath tracks the directory hierarchy: [] is root, ['cd'] is in CD lab, etc.
+export default function JupyterTreePage() {
   const [currentPath, setCurrentPath] = useState<string[]>([]);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeTab, setActiveTab] = useState("Files");
   const router = useRouter();
 
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  const getItems = () => {
+    if (currentPath.length === 0) {
+      return Object.keys(allLabs).map(name => ({
+        name,
+        type: "directory",
+        path: [name],
+        lastModified: "14 days ago",
+        size: "-"
+      }));
+    } else if (currentPath.length === 1) {
+      const labKey = currentPath[0];
+      const labData = allLabs[labKey] || [];
+      const folders = Array.from(new Set(labData.map(l => l.folderName)));
+      return folders.map(name => ({
+        name,
+        type: "directory",
+        path: [...currentPath, name],
+        lastModified: "2 months ago",
+        size: "-"
+      }));
+    } else if (currentPath.length === 2) {
+      const labKey = currentPath[0];
+      const folderName = currentPath[1];
+      const labData = allLabs[labKey] || [];
+      const files = labData.filter(l => l.folderName === folderName);
+      return files.map(file => ({
+        name: file.fileName,
+        type: "file",
+        path: [...currentPath, file.fileName],
+        lastModified: "8 days ago",
+        size: "1.2 KB",
+        labKey
+      }));
     }
-  }, [history]);
-
-  const formatColumns = (items: string[]) => {
-    if (items.length === 0) return "";
-    const colWidth = Math.max(...items.map(i => i.length)) + 4;
-    const resultItems = [];
-    for (let i = 0; i < items.length; i += 3) {
-      resultItems.push(items.slice(i, i + 3).map(item => item.padEnd(colWidth)).join(""));
-    }
-    return resultItems.join("\n");
+    return [];
   };
 
-  const getPrompt = () => `system32:~/${currentPath.join("/")}$`;
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Tab") {
-      e.preventDefault();
-      const parts = input.split(" ");
-      if (parts.length < 2) return;
-
-      const cmd = parts[0];
-      const partial = parts.slice(1).join(" ").replace(/^"(.*)"$/, "$1");
-      let matches: string[] = [];
-
-      if (currentPath.length === 0) {
-        // Root: suggest labs
-        matches = Object.keys(allLabs).filter(l => l.startsWith(partial));
-      } else if (currentPath.length === 1) {
-        // In a lab: suggest question folders
-        const labKey = currentPath[0];
-        const labData = allLabs[labKey] || [];
-        matches = Array.from(new Set(labData.map(l => l.folderName)))
-          .filter(f => f.toLowerCase().startsWith(partial.toLowerCase()));
-      } else if (currentPath.length === 2) {
-        // In a question folder: suggest files
-        const labKey = currentPath[0];
-        const folderName = currentPath[1];
-        const labData = allLabs[labKey] || [];
-        matches = labData
-          .filter(l => l.folderName === folderName)
-          .map(l => l.fileName)
-          .filter(f => f.toLowerCase().startsWith(partial.toLowerCase()));
-      }
-
-      if (matches.length === 1) {
-        const completed = matches[0].includes(" ") ? `"${matches[0]}"` : matches[0];
-        setInput(`${cmd} ${completed}`);
-      } else if (matches.length > 1) {
-        setHistory([...history, `PROMPT_START${getPrompt()}PROMPT_END ${input}`, formatColumns(matches)]);
-      }
-    }
-  };
-
-  const handleCommand = (e: React.FormEvent) => {
-    e.preventDefault();
-    const cmdInput = input.trim();
-    const [cmd, ...args] = cmdInput.split(" ");
-    const arg = args.join(" ").replace(/^"(.*)"$/, "$1");
-    
-    const newHistory = [...history, `PROMPT_START${getPrompt()}PROMPT_END ${cmdInput}`];
-
-    if (cmd === "ls") {
-      if (currentPath.length === 0) {
-        newHistory.push(formatColumns(Object.keys(allLabs)));
-      } else if (currentPath.length === 1) {
-        const labData = allLabs[currentPath[0]] || [];
-        const folders = Array.from(new Set(labData.map(lab => lab.folderName)));
-        newHistory.push(formatColumns(folders));
-      } else if (currentPath.length === 2) {
-        const labData = allLabs[currentPath[0]] || [];
-        const files = labData
-          .filter(lab => lab.folderName === currentPath[1])
-          .map(lab => lab.fileName);
-        newHistory.push(formatColumns(files));
-      }
-    } else if (cmd === "cd") {
-      if (!arg || arg === "~") {
-        setCurrentPath([]);
-      } else if (arg === "..") {
-        setCurrentPath(currentPath.slice(0, -1));
-      } else {
-        if (currentPath.length === 0) {
-          if (allLabs[arg]) {
-            setCurrentPath([arg]);
-          } else {
-            newHistory.push(`bash: cd: ${arg}: No such directory`);
-          }
-        } else if (currentPath.length === 1) {
-          const labData = allLabs[currentPath[0]] || [];
-          if (labData.some(l => l.folderName === arg)) {
-            setCurrentPath([...currentPath, arg]);
-          } else {
-            newHistory.push(`bash: cd: ${arg}: No such directory`);
-          }
-        } else {
-          newHistory.push(`bash: cd: ${arg}: Not a directory`);
-        }
-      }
-    } else if (cmd === "vi") {
-      if (!arg) {
-        newHistory.push("vi: missing filename");
-      } else if (currentPath.length === 2) {
-        const labKey = currentPath[0];
-        const folderName = currentPath[1];
-        const labData = allLabs[labKey] || [];
-        const lab = labData.find(l => l.fileName === arg && l.folderName === folderName);
-        if (lab) {
-          newHistory.push(`Opening ${arg}...`);
-          router.push(`/${labKey}/${encodeURIComponent(folderName)}/${arg}`);
-        } else {
-          newHistory.push(`vi: ${arg}: No such file in current directory`);
-        }
-      } else {
-        newHistory.push(`vi: ${arg}: No such file`);
-      }
-    } else if (cmd === "clear") {
-      setHistory([]);
-      setInput("");
-      return;
-    } else if (cmd === "") {
-      newHistory.push(`PROMPT_START${getPrompt()}PROMPT_END`);
+  const navigateTo = (item: any) => {
+    if (item.type === "directory") {
+      setCurrentPath(item.path);
     } else {
-      newHistory.push(`bash: ${cmd}: command not found`);
+      router.push(`/${item.labKey}/${encodeURIComponent(currentPath[1])}/${item.name}`);
     }
-
-    setHistory([...newHistory]);
-    setInput("");
   };
 
-  const renderLine = (line: string) => {
-    if (line.startsWith("PROMPT_START")) {
-      const parts = line.replace("PROMPT_START", "").split("PROMPT_END");
-      const promptPart = parts[0];
-      const rest = parts[1] || "";
-      return (
-        <div className="flex">
-          <span className="font-bold mr-2 text-green-400">{promptPart}</span>
-          <span>{rest}</span>
-        </div>
-      );
-    }
-    return <div className="whitespace-pre">{line}</div>;
+  const goUp = () => {
+    setCurrentPath(currentPath.slice(0, -1));
   };
+
+  const items = getItems();
 
   return (
-    <div 
-      className="min-h-screen p-2 font-mono text-sm md:text-base selection:bg-white selection:text-black overflow-y-auto"
-      ref={scrollRef}
-      onClick={() => document.getElementById("terminal-input")?.focus()}
-    >
-      <div className="w-full">
-        {history.map((line, i) => (
-          <div key={i} className="min-h-[1.2em] break-all">
-            {renderLine(line)}
+    <div className="min-h-screen flex flex-col">
+      {/* Header */}
+      <header className="header">
+        <div className="logo">
+          <img src="/logo.png" alt="Jupyter Logo" />
+        </div>
+      </header>
+
+      {/* Menu */}
+      <div className="menu-bar">
+        <a href="#">File</a>
+        <a href="#">View</a>
+        <a href="#">Settings</a>
+        <a href="#">Help</a>
+      </div>
+
+      {/* Main */}
+      <div className="wrapper">
+        {/* Tabs */}
+        <div className="tabs">
+          <div 
+            className={`tab ${activeTab === "Files" ? "active" : ""}`} 
+            onClick={() => setActiveTab("Files")}
+          >
+            <i className="fa-solid fa-folder"></i>
+            Files
           </div>
-        ))}
-        <form onSubmit={handleCommand} className="flex">
-          <span className="font-bold mr-2 text-green-400">{getPrompt()}</span>
-          <input
-            id="terminal-input"
-            type="text"
-            autoFocus
-            autoComplete="off"
-            className="flex-1 bg-transparent outline-none border-none p-0 m-0 font-mono text-inherit font-normal"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-          />
-        </form>
+          <div 
+            className={`tab ${activeTab === "Running" ? "active" : ""}`} 
+            onClick={() => setActiveTab("Running")}
+          >
+            <i className="fa-solid fa-circle"></i>
+            Running
+          </div>
+        </div>
+
+        {/* White Panel */}
+        <div className="content">
+          {activeTab === "Files" ? (
+            <>
+              <div className="toolbar">
+                <div className="toolbar-left">
+                  Select items to perform actions on them.
+                </div>
+                <div className="toolbar-right">
+                  <button className="btn">
+                    <i className="fa-solid fa-filter"></i>
+                  </button>
+                  <button className="btn">
+                    New ▼
+                  </button>
+                  <button className="btn">
+                    <i className="fa-solid fa-upload"></i>
+                    Upload
+                  </button>
+                  <button className="btn">
+                    <i className="fa-solid fa-rotate-right"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div className="path">
+                <i className="fa-solid fa-folder folder-icon"></i>
+                <button onClick={() => setCurrentPath([])} className="folder-link"> / </button>
+                {currentPath.map((p, i) => (
+                  <span key={i}>
+                    <button onClick={() => setCurrentPath(currentPath.slice(0, i + 1))} className="folder-link">{p}</button>
+                    {i < currentPath.length - 1 && " / "}
+                  </span>
+                ))}
+              </div>
+
+              <table className="file-table">
+                <thead>
+                  <tr>
+                    <th className="checkbox-col">
+                      <input type="checkbox" />
+                    </th>
+                    <th>Name</th>
+                    <th className="modified-col">Modified</th>
+                    <th className="size-col">File Size</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentPath.length > 0 && (
+                    <tr onClick={goUp} style={{ cursor: "pointer" }}>
+                      <td></td>
+                      <td>
+                        <i className="fa-solid fa-folder folder-icon"></i>
+                        <span className="folder-link">..</span>
+                      </td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  )}
+                  {items.map((item, idx) => (
+                    <tr key={idx}>
+                      <td className="checkbox-col">
+                        <input type="checkbox" />
+                      </td>
+                      <td>
+                        {item.type === "directory" ? (
+                          <i className="fa-solid fa-folder folder-icon"></i>
+                        ) : (
+                          <i className="fa-solid fa-file folder-icon" style={{ opacity: 0.7 }}></i>
+                        )}
+                        <a 
+                          href="#" 
+                          className="folder-link" 
+                          onClick={(e) => { e.preventDefault(); navigateTo(item); }}
+                        >
+                          {item.name}
+                        </a>
+                      </td>
+                      <td className="modified-col">{item.lastModified}</td>
+                      <td className="size-col">{item.size}</td>
+                    </tr>
+                  ))}
+                  {items.length === 0 && (
+                    <tr>
+                      <td colSpan={4} style={{ textAlign: "center", padding: "40px", color: "#666" }}>
+                        The notebook list is empty.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </>
+          ) : (
+            <div style={{ padding: "40px", textAlign: "center", color: "#666" }}>
+              Currently no processes running.
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -49,7 +49,7 @@ export async function GET(
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #300a24;
+            background-color: #000000;
             color: #ffffff;
             font-family: 'JetBrains Mono', monospace;
             margin: 0;
