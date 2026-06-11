@@ -7,7 +7,7 @@ export async function GET(
   { params }: { params: { lab: string, filename: string[] } }
 ) {
   const userAgent = req.headers.get("user-agent") || "";
-  const isCurl = userAgent.toLowerCase().includes("curl");
+  const isCurl = userAgent.toLowerCase().includes("curl") || req.headers.get("x-raw") === "true";
 
   // The filename parameter is an array because it's a catch-all route
   const actualFileName = params.filename[params.filename.length - 1];
@@ -171,7 +171,7 @@ export async function GET(
     
         document.getElementById('copy-btn').addEventListener('click', () => {
             // Fetch the raw code from the curl endpoint to get unescaped content reliably
-            fetch(window.location.pathname, { headers: { 'User-Agent': 'curl' } })
+            fetch(window.location.pathname, { headers: { 'x-raw': 'true' } })
                 .then(res => res.text())
                 .then(code => {
                     navigator.clipboard.writeText(code).then(() => {

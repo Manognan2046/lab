@@ -12,6 +12,174 @@ export interface LabExperiment {
 
 export const cdLabData: LabExperiment[] = [
   {
+    "id": "cd-q01",
+    "num": "01",
+    "title": "Design and implement a program that accepts an NFA (with \u03b5-transitions) and outputs its  equivalent DFA.",
+    "folderName": "q01_nfa_to_dfa",
+    "cmd": "cat nfadfa.cpp",
+    "lang": "C++",
+    "fileName": "nfadfa.cpp",
+    "description": "Design and implement a program that accepts an NFA (with \u03b5-transitions) and outputs its  equivalent DFA.",
+    "code": "/* \nfilename : nfadfa.cpp \ng++ nfadfa.cpp -o nfadfa \n./nfadfa \n*/ \n#include <iostream> \n#include <set> \n#include <map> \n#include <queue> \n \nusing namespace std; \nmap<pair<int,char>, set<int>> trans; \nmap<int,set<int>> eclose; \nset<int> move(set<int> states, char sym) { \nset<int> res; \nfor(int s : states) \n{ \nfor(int nxt : trans[{s,sym}]) \nres.insert(nxt); \n} \n \nreturn res; \n} \n \nset<int> closure(set<int> states) { \nset<int> res; \nfor(int s : states) { \nfor(int x : eclose[s]) \nres.insert(x); \n} \n \nreturn res; \n} \n \nint main() \n{ \nint n,t; \ncout<<\"States: \"; \ncin>>n; \ncout<<\"Transitions: \"; \ncin>>t; \ncout<<\"Enter (from symbol to)\\n\"; \nfor(int i=0;i<t;i++) \n{ \nint from,to; \nchar sym; \ncin>>from>>sym>>to; \nif(sym=='e') \n{ \neclose[from].insert(from); \neclose[from].insert(to); \n} \nelse \ntrans[{from,sym}].insert(to); \n} \n \nfor(int i=0;i<n;i++) \neclose[i].insert(i); \n \nvector<char> alpha = {'a','b'}; \nmap<set<int>,int> dfa; \nqueue<set<int>> q; \nset<int> start=eclose[0]; \n \ndfa[start]=0; \nq.push(start); \n \nwhile(!q.empty()) \n{ \nset<int> cur=q.front(); \nq.pop(); \ncout<<\"D\"<<dfa[cur]<<\" : \"; \nfor(char c:alpha) \n{ \nset<int> nxt=closure(move(cur,c)); \nif(!dfa.count(nxt)) \n{ \ndfa[nxt]=dfa.size(); \nq.push(nxt); \n} \n \ncout<<c<<\"->D\"<<dfa[nxt]<<\" \"; \n} \n \ncout<<endl; \n} \n \nreturn 0;} \n/* Input - output States: 3 \nTransitions: 5 \nEnter (from symbol to) \n0 e 1 \n0 a 0 \n1 b 2 \n1 a 1 \n2 b 2 \nD0 : a->D0 b->D1 \nD1 : a->D2 b->D1 \nD2 : a->D2 b\u2192D2 \n*/"
+  },
+  {
+    "id": "cd-q02",
+    "num": "02",
+    "title": "Implement a LEX scanner to detect and count keywords, identifiers, and numeric constants in a C-like program.",
+    "folderName": "q02_count_key",
+    "cmd": "cat q02.l",
+    "lang": "Lex",
+    "fileName": "q02.l",
+    "description": "Implement a LEX scanner to detect and count keywords, identifiers, and numeric constants in a C-like program.",
+    "code": "/* lex countkey.lex \ngcc lex.yy.c \n./a.out */ \n \n%{  \n#include <stdio.h> \nint keywords = 0, identifiers = 0, numbers = 0;  \n%} \n \n%% \n \nint|float|char|if|else|while|return { printf(\"Keyword: %s\\n\", yytext); keywords++; } \n[0-9]+ { printf(\"Number: %s\\n\", yytext); numbers++; } \n[a-zA-Z_][a-zA-Z0-9_]* { printf(\"Identifier: %s\\n\", yytext); identifiers++; } \n[ \\t\\n]+ ;  \n. ; \n \n%% \n \nint main() {  \nyylex(); \nprintf(\"\\nKeywords = %d\\n\", keywords); \n printf(\"Identifiers = %d\\n\", identifiers); \n printf(\"Numbers = %d\\n\", numbers); \n return 0; \n} \n \nint yywrap() { return 1; }"
+  },
+  {
+    "id": "cd-q03",
+    "num": "03",
+    "title": "Construct an NFA from the regular expression (a|b)abb and convert it into an equivalent DFA",
+    "folderName": "q03_nfa_from_(a|b)abb",
+    "cmd": "cat q03.cpp",
+    "lang": "C++",
+    "fileName": "q03.cpp",
+    "description": "Construct an NFA from the regular expression (a|b)abb and convert it into an equivalent DFA",
+    "code": "#include <iostream> \nusing namespace std; \nint main() \n{ \nstring s; \ncin >> s; \nint state = 0; \nfor(char c : s) { \nif(state == 0 &amp;&amp; (c == 'a' || c == 'b')) \nstate = 1; \nelse if(state == 1 &amp;&amp; c == 'a') \nstate = 2; \nelse if(state == 2 &amp;&amp; c == 'b') \nstate = 3; \nelse if(state == 3 &amp;&amp; c == 'b') \nstate = 4; \nelse { \nstate = -1; \nbreak; \n} \n} \nif(state == 4) \ncout << \"Accepted\"; \nelse \ncout << \"Rejected\"; \n}"
+  },
+  {
+    "id": "cd-q04",
+    "num": "04",
+    "title": "Write a YACC program to parse arithmetic expressions with proper operator precedence and associativity.",
+    "folderName": "q04_YACC_parser",
+    "cmd": "cat q04.l",
+    "lang": "Lex",
+    "fileName": "q04.l",
+    "description": "Write a YACC program to parse arithmetic expressions with proper operator precedence and associativity.",
+    "code": "/*  \nyacc -d expr.y \nlex expr.l \ngcc y.tab.c lex.yy.c -ll -ly                                 or                          gcc y.tab.c lex.yy.c -lfl \n./a.out  \n*/ \n \n// expr.l \n%{ \n#include \"y.tab.h\" \n#include <stdlib.h> \n%} \n \n%% \n \n[0-9]+      { yylval = atoi(yytext); return NUM; } \n[ \\t]          ; \n\\n            return '\\n'; \n.              return yytext[0]; \n \n%% \n \nint yywrap \n() { \n    return 1; \n} \n \n// expr.y \n%{ \n#include <stdio.h> \n#include <stdlib.h> \n \nvoid yyerror(char *s); \nint yylex(); \n%} \n \n%token NUM \n \n%left '+' '-' \n%left '*' '/' \n%right '^' \n \n%% \n \ninput: \n      input line \n    | \n    ; \n \nline: \n      expr '\\n' { printf(\"Valid Expression\\n\"); } \n    ; \n \n \nexpr: \n      expr '+' expr \n    | expr '-' expr \n    | expr '*' expr \n    | expr '/' expr \n    | expr '^' expr \n    | '(' expr ')' \n    | NUM \n    ; \n \n%% \n \nvoid yyerror(char *s) \n{ \n    printf(\"Invalid Expression\\n\"); \n} \n \nint main() \n{ \n    printf(\"Enter Arithmetic Expression:\\n\"); \n    yyparse(); \n    return 0; \n} \n/* Enter Arithmetic Expression: \n2+3 \nValid Expression \n*/"
+  },
+  {
+    "id": "cd-q05",
+    "num": "05",
+    "title": "Write a program to construct the LL(1) parsing table for a user-defined grammar and parse input strings",
+    "folderName": "q05_LL(1)_parser",
+    "cmd": "cat q05.cpp",
+    "lang": "C++",
+    "fileName": "q05.cpp",
+    "description": "Write a program to construct the LL(1) parsing table for a user-defined grammar and parse input strings",
+    "code": "/*  \nS \u2192 aA \nA \u2192 b \n*/ \n#include <iostream> \n#include <stack> \nusing namespace std; \n \nint main() \n{ \n    string input; \n    cout << \"Enter string (end with $): \"; \n    cin >> input; \n \n    stack<char> st; \n    st.push('$'); \n    st.push('S'); \n \n    int i = 0; \n \n    while(!st.empty()) \n    { \n        char top = st.top(); \n        char cur = input[i]; \n \n        if(top == cur) \n        { \n            st.pop(); \n            i++; \n        } \n        else if(top == 'S' &amp;&amp; cur == 'a') \n        { \n            st.pop(); \n            st.push('A'); \n            st.push('a'); \n        } \n        else if(top == 'A' &amp;&amp; cur == 'b') \n        { \n            st.pop(); \n            st.push('b'); \n        } \n        else \n        { \n            cout << \"Rejected\"; \n            return 0; \n        } \n    } \n \n    if(input[i] == '\\0') \n        cout << \"Accepted\"; \n    else \n        cout << \"Rejected\"; \n \n    return 0; }"
+  },
+  {
+    "id": "cd-q06",
+    "num": "06",
+    "title": "Write a LEX program to recognize and print tokens for arithmetic expressions involving +, \u2013, *, / and integers.",
+    "folderName": "q06_tokens_for_arithm",
+    "cmd": "cat q06.l",
+    "lang": "Lex",
+    "fileName": "q06.l",
+    "description": "Write a LEX program to recognize and print tokens for arithmetic expressions involving +, \u2013, *, / and integers.",
+    "code": "/* lex arith.l \ngcc lex.yy.c -o arith \n./arith */%{ \n#include <stdio.h> \n%} \n \n%% \n \n[0-9]+          { printf(\"%s\\tINTEGER\\n\", yytext); } \n \n\"+\"             { printf(\"%s\\tPLUS OPERATOR\\n\", yytext); } \n\"-\"             { printf(\"%s\\tMINUS OPERATOR\\n\", yytext); } \n\"*\"             { printf(\"%s\\tMULTIPLY OPERATOR\\n\", yytext); } \n\"/\"             { printf(\"%s\\tDIVIDE OPERATOR\\n\", yytext); } \n \n\"(\"             { printf(\"%s\\tLEFT PARENTHESIS\\n\", yytext); } \n\")\"             { printf(\"%s\\tRIGHT PARENTHESIS\\n\", yytext); } \n \n[ \\t\\n]         { /* ignore spaces, tabs, newlines */ } \n \n.               { printf(\"%s\\tINVALID CHARACTER\\n\", yytext); } \n \n%% \n \nint main() { \n    printf(\"Enter arithmetic expression:\\n\"); \n    yylex(); \n    return 0; \n} \n \nint yywrap() { \n    return 1; \n}"
+  },
+  {
+    "id": "cd-q07",
+    "num": "07",
+    "title": "For a given LL(1) grammar, compute the FIRST and FOLLOW sets and construct the  predictive parsing table.",
+    "folderName": "q07_first_and_follow",
+    "cmd": "cat q07.cpp",
+    "lang": "C++",
+    "fileName": "q07.cpp",
+    "description": "For a given LL(1) grammar, compute the FIRST and FOLLOW sets and construct the  predictive parsing table.",
+    "code": "#include <iostream> \n#include <cstring> \n#include <cctype> \n \nusing namespace std; \n \nchar production[10][10]; \nchar first[10], follow[10]; \n \nint countFirst = 0, countFollow = 0; \nint n; \n \nvoid findFirst(char, int, int); \nvoid findFollow(char); \nvoid followFirst(char, int, int); \n \nint main() \n{ \n    int i, j; \n    char c; \n \n    cout << \"Enter number of productions: \"; \n    cin >> n; \n \n    cout << \"Enter productions (Example: E=TR)\\n\"; \n    for (i = 0; i < n; i++) \n        cin >> production[i]; \n \n    cout << \"\\nFIRST Sets:\\n\"; \n \n    for (i = 0; i < n; i++) \n    { \n        c = production[i][0]; \n        countFirst = 0; \n \n        findFirst(c, 0, 0); \n \n        cout << \"FIRST(\" << c << \") = { \"; \n        for (j = 0; j < countFirst; j++) \n            cout << first[j] << \" \"; \n        cout << \"}\\n\"; \n    } \n \n    cout << \"\\nFOLLOW Sets:\\n\"; \n \n    for (i = 0; i < n; i++) \n    { \n        c = production[i][0]; \n        countFollow = 0; \n \n        findFollow(c); \n \n        cout << \"FOLLOW(\" << c << \") = { \"; \n        for (j = 0; j < countFollow; j++) \n            cout << follow[j] << \" \"; \n        cout << \"}\\n\"; \n    } \n \n    return 0; \n} \n \nvoid findFirst(char c, int q1, int q2) \n{ \n    if (!isupper(c)) \n    { \n        first[countFirst++] = c; \n        return; \n    } \n \n    for (int j = 0; j < n; j++) \n    { \n        if (production[j][0] == c) \n        { \n            if (production[j][2] == '#') \n            { \n                if (production[q1][q2] == '\\0') \n                    first[countFirst++] = '#'; \n                else \n                    findFirst(production[q1][q2], q1, q2 + 1); \n            } \n            else if (!isupper(production[j][2])) \n            { \n                first[countFirst++] = production[j][2]; \n            } \n            else \n            { \n                findFirst(production[j][2], j, 3); \n            } \n        } \n    } \n} \n \nvoid findFollow(char c) \n{ \n    if (production[0][0] == c) \n        follow[countFollow++] = '$'; \n \n    for (int i = 0; i < n; i++) \n    { \n        for (int j = 2; j < strlen(production[i]); j++) \n        { \n            if (production[i][j] == c) \n            { \n                if (production[i][j + 1] != '\\0') \n                    followFirst(production[i][j + 1], i, j + 2); \n \n                if (production[i][j + 1] == '\\0' &amp;&amp; \n                    c != production[i][0]) \n                { \n                    findFollow(production[i][0]); \n                } \n            } \n        } \n    } \n} \n \nvoid followFirst(char c, int c1, int c2) \n{ \n    if (!isupper(c)) \n    { \n        follow[countFollow++] = c; \n    } \n    else \n    { \n        countFirst = 0; \n        findFirst(c, c1, c2); \n \n        for (int i = 0; i < countFirst; i++) \n        { \n            if (first[i] == '#') \n            { \n                if (production[c1][c2] == '\\0') \n                    findFollow(production[c1][0]); \n                else \n                    followFirst(production[c1][c2], c1, c2 + 1); \n            } \n            else \n            { \n                follow[countFollow++] = first[i]; \n            } \n        } \n    } \n} \n/* \nProgram: FIRST and FOLLOW Set Computation \n \nCompilation: \ng++ firstfollow.cpp -o firstfollow \n \nExecution: \n./firstfollow \n \nSample Input: \n5 \nE=TR \nR=+TR \nT=FY \nY=*FY \nF=i \n \n*/"
+  },
+  {
+    "id": "cd-q08",
+    "num": "08",
+    "title": "Develop a program to construct the SLR parsing table (ACTION and GOTO) for a given  grammar.",
+    "folderName": "q08_slr_table",
+    "cmd": "cat q08.cpp",
+    "lang": "C++",
+    "fileName": "q08.cpp",
+    "description": "Develop a program to construct the SLR parsing table (ACTION and GOTO) for a given  grammar.",
+    "code": "#include <iostream> \n#include <vector> \n#include <map> \nusing namespace std; \nint main() { \ncout << \"SLR Parsing Table for Grammar:\\n\"; \ncout << \"E -> E+T | T\\n\"; \ncout << \"T -> T*F | F\\n\"; \ncout << \"F -> (E) | id\\n\\n\"; \n// ACTION TABLE \nmap<pair<int,string>, string> ACTION; \nACTION[{0,\"id\"}] = \"S5\"; \nACTION[{0,\"(\"}] = \"S4\"; \nACTION[{1,\"+\"}] = \"S6\"; \nACTION[{1,\"$\"}] = \"ACC\"; \nACTION[{2,\"+\"}] = \"R2\"; \nACTION[{2,\"*\"}] = \"S7\"; \nACTION[{2,\")\"}] = \"R2\"; \nACTION[{2,\"$\"}] = \"R2\"; \nACTION[{3,\"+\"}] = \"R4\"; \nACTION[{3,\"*\"}] = \"R4\"; \nACTION[{3,\")\"}] = \"R4\"; \nACTION[{3,\"$\"}] = \"R4\"; \n// GOTO TABLE \nmap<pair<int,string>, int> GOTO; \nGOTO[{0,\"E\"}] = 1; \nGOTO[{0,\"T\"}] = 2; \nGOTO[{0,\"F\"}] = 3; \ncout << \"ACTION TABLE\\n\"; \ncout << \"State\\tid\\t+\\t*\\t(\\t)\\t$\\n\"; \nfor(int i = 0; i <= 3; i++) { \ncout << i << \"\\t\"; \nvector<string> terminals = {\"id\",\"+\",\"*\",\"(\",\")\",\"$\"}; \nfor(auto t : terminals) { \nif(ACTION.count({i,t})) \ncout << ACTION[{i,t}] << \"\\t\"; \nelse \ncout << \"-\\t\"; \n} \ncout << endl; \n} \ncout << \"\\nGOTO TABLE\\n\"; \ncout << \"State\\tE\\tT\\tF\\n\"; \nfor(int i = 0; i <= 3; i++) { \ncout << i << \"\\t\"; \nvector<string> nonTerminals = {\"E\",\"T\",\"F\"}; \nfor(auto nt : nonTerminals) { \nif(GOTO.count({i,nt})) \ncout << GOTO[{i,nt}] << \"\\t\"; \nelse \ncout << \"-\\t\"; \n}cout << endl;} \nreturn 0;}"
+  },
+  {
+    "id": "cd-q09",
+    "num": "09",
+    "title": "Construct the canonical collection of LR(0) items for a grammar and use it to initiate SLR  parsing.",
+    "folderName": "q09_canonical_coll_ofLR(0)",
+    "cmd": "cat q09.cpp",
+    "lang": "C++",
+    "fileName": "q09.cpp",
+    "description": "Construct the canonical collection of LR(0) items for a grammar and use it to initiate SLR  parsing.",
+    "code": "#include <iostream> \nusing namespace std; \nint main() { cout << \"Grammar:\\n\"; \ncout << \"E -> E+T | T\\n\"; \ncout << \"T -> T*F | F\\n\"; \ncout << \"F -> (E) | id\\n\\n\"; \ncout << \"Canonical Collection of LR(0) Items:\\n\\n\"; \ncout << \"I0:\\n\"; \ncout << \"E' -> .E\\n\";cout << \"E -> .E+T\\n\"; \ncout << \"E -> .T\\n\"; \ncout << \"T -> .T*F\\n\"; \ncout << \"T -> .F\\n\"; \ncout << \"F -> .(E)\\n\"; \ncout << \"F -> .id\\n\\n\"; \ncout << \"I1:\\n\"; \ncout << \"E' -> E.\\n\"; \ncout << \"E -> E.+T\\n\\n\"; \ncout << \"I2:\\n\"; \ncout << \"E -> T.\\n\"; \ncout << \"T -> T.*F\\n\\n\"; \ncout << \"I3:\\n\"; \ncout << \"T -> F.\\n\\n\"; \ncout << \"I4:\\n\"; \ncout << \"F -> (.E)\\n\"; \ncout << \"E -> .E+T\\n\"; \ncout << \"E -> .T\\n\"; \ncout << \"T -> .T*F\\n\"; \ncout << \"T -> .F\\n\"; \ncout << \"F -> .(E)\\n\"; \ncout << \"F -> .id\\n\\n\"; \ncout << \"I5:\\n\"; \ncout << \"F -> id.\\n\\n\"; \ncout << \"I6:\\n\"; \ncout << \"E -> E+.T\\n\"; \ncout << \"T -> .T*F\\n\"; \ncout << \"T -> .F\\n\"; \ncout << \"F -> .(E)\\n\"; \ncout << \"F -> .id\\n\\n\"; \ncout << \"I7:\\n\"; \ncout << \"T -> T*.F\\n\"; \ncout << \"F -> .(E)\\n\"; \ncout << \"F -> .id\\n\\n\"; \ncout << \"I8:\\n\"; \ncout << \"F -> (E.)\\n\";cout << \"E -> E.+T\\n\\n\"; \ncout << \"I9:\\n\"; \ncout << \"E -> E+T.\\n\"; \ncout << \"T -> T.*F\\n\\n\"; \ncout << \"I10:\\n\"; \ncout << \"T -> T*F.\\n\\n\"; \ncout << \"I11:\\n\"; \ncout << \"F -> (E).\\n\\n\"; \ncout << \"SLR Parsing Initialization Complete.\\n\"; \ncout << \"Use FOLLOW sets to fill reduce entries in ACTION table.\\n\"; \nreturn 0;}"
+  },
+  {
+    "id": "cd-q10",
+    "num": "10",
+    "title": "Write a program to implement the unification algorithm for two logical expressions containing variables and constants",
+    "folderName": "q10_unification_algo",
+    "cmd": "cat q10.cpp",
+    "lang": "C++",
+    "fileName": "q10.cpp",
+    "description": "Write a program to implement the unification algorithm for two logical expressions containing variables and constants",
+    "code": "#include <iostream> \n#include <map> \nusing namespace std; \n \nbool isVar(char c) \n{ \n    return c >= 'x' &amp;&amp; c <= 'z'; \n} \n \nint main() \n{ \n    string e1, e2; \n \n    cin >> e1 >> e2; \n \n    if(e1[0] != e2[0]) \n    { \n        cout << \"Unification Failed\"; \n        return 0; \n    } \n \n    map<char,char> sub; \n \n    for(int i = 2, j = 2; e1[i] != ')'; i++, j++) \n    { \n        if(e1[i] == ',' || e2[j] == ',') \n            continue; \n \n        if(e1[i] == e2[j]) \n            continue; \n \n        if(isVar(e1[i])) \n            sub[e1[i]] = e2[j]; \n \n        else if(isVar(e2[j])) \n            sub[e2[j]] = e1[i]; \n \n        else \n        { \n            cout << \"Unification Failed\"; \n            return 0; \n        } \n    } \n \n    cout << \"Unification Successful\\n\"; \n \n    for(auto x : sub) \n        cout << x.first << \" = \" << x.second << endl; \n}"
+  },
+  {
+    "id": "cd-q11",
+    "num": "11",
+    "title": "Construct the canonical LR(1) items for a given grammar and list all states with transitions.",
+    "folderName": "q11_Canonical_LR(1)_for_grammar",
+    "cmd": "cat q11.cpp",
+    "lang": "C++",
+    "fileName": "q11.cpp",
+    "description": "Construct the canonical LR(1) items for a given grammar and list all states with transitions.",
+    "code": "#include <iostream> \nusing namespace std; \nint main() { \ncout << \"Canonical LR(1) Item Sets\\n\\n\"; \ncout << \"I0:\\n\"; \ncout << \"E' -> .E, $\\n\"; \ncout << \"E -> .E+T, $\\n\"; \ncout << \"E -> .T, $\\n\"; \ncout << \"T -> .T*F, +/$\\n\"; \ncout << \"T -> .F, +/$\\n\"; \ncout << \"F -> .(E), */+/$\\n\"; \ncout << \"F -> .id, */+/$\\n\\n\"; \ncout << \"I1:\\n\"; \ncout << \"E' -> E., $\\n\"; \ncout << \"E -> E.+T, $\\n\\n\"; \ncout << \"I2:\\n\"; \ncout << \"E -> T., $\\n\"; \ncout << \"T -> T.*F, +/$\\n\\n\"; \ncout << \"I3:\\n\"; \ncout << \"T -> F., +/$\\n\\n\"; \ncout << \"I4:\\n\"; \ncout << \"F -> (.E), */+/$\\n\"; \ncout << \"E -> .E+T, )\\n\"; \ncout << \"E -> .T, )\\n\"; \ncout << \"T -> .T*F, +/)\\n\"; \ncout << \"T -> .F, +/)\\n\"; \ncout << \"F -> .(E), */+/)\\n\";cout << \"F -> .id, */+/)\\n\\n\"; \ncout << \"I5:\\n\"; \ncout << \"F -> id., */+/$\\n\\n\"; \ncout << \"I6:\\n\"; \ncout << \"E -> E+.T, $\\n\"; \ncout << \"T -> .T*F, +/$\\n\"; \ncout << \"T -> .F, +/$\\n\"; \ncout << \"F -> .(E), */+/$\\n\"; \ncout << \"F -> .id, */+/$\\n\\n\"; \ncout << \"I7:\\n\"; \ncout << \"T -> T*.F, +/$\\n\"; \ncout << \"F -> .(E), */+/$\\n\"; \ncout << \"F -> .id, */+/$\\n\\n\"; \ncout << \"I8:\\n\"; \ncout << \"F -> (E.), */+/$\\n\"; \ncout << \"E -> E.+T, )\\n\\n\"; \ncout << \"I9:\\n\"; \ncout << \"E -> E+T., $\\n\"; \ncout << \"T -> T.*F, +/$\\n\\n\"; \ncout << \"I10:\\n\"; \ncout << \"T -> T*F., +/$\\n\\n\"; \ncout << \"I11:\\n\"; \ncout << \"F -> (E)., */+/$\\n\\n\"; \ncout << \"Transitions:\\n\\n\"; \ncout << \"I0 --E--> I1\\n\"; \ncout << \"I0 --T--> I2\\n\"; \ncout << \"I0 --F--> I3\\n\"; \ncout << \"I0 --(--> I4\\n\"; \ncout << \"I0 --id--> I5\\n\\n\"; \ncout << \"I1 --+--> I6\\n\"; \ncout << \"I2 --*--> I7\\n\"; \ncout << \"I4 --E--> I8\\n\"; \ncout << \"I4 --T--> I2\\n\"; \ncout << \"I4 --F--> I3\\n\";cout << \"I4 --(--> I4\\n\"; \ncout << \"I4 --id--> I5\\n\"; \ncout << \"I6 --T--> I9\\n\"; \ncout << \"I6 --F--> I3\\n\"; \ncout << \"I6 --(--> I4\\n\"; \ncout << \"I6 --id--> I5\\n\"; \ncout << \"I7 --F--> I10\\n\"; \ncout << \"I7 --(--> I4\\n\"; \ncout << \"I7 --id--> I5\\n\"; \ncout << \"I8 --+--> I6\\n\"; \ncout << \"I8 --)--> I11\\n\"; \nreturn 0; \n}"
+  },
+  {
+    "id": "cd-q12",
+    "num": "12",
+    "title": "Build the complete LR(1) parsing table and simulate the parsing process for a sample input  string.",
+    "folderName": "q12_Complete_LR(1)",
+    "cmd": "cat q12.cpp",
+    "lang": "C++",
+    "fileName": "q12.cpp",
+    "description": "Build the complete LR(1) parsing table and simulate the parsing process for a sample input  string.",
+    "code": "#include <iostream> \n#include <stack> \n#include <vector> \n#include <iomanip> \nusing namespace std; \nstruct Action { \nchar type; // s = shift, r = reduce, a = accept \nint value; \n}; \nint main() { \n// Productions \nvector<string> lhs = { \n\"\", \n\"E\", //1: E->E+T \n\"E\", //2: E->T \n\"T\", //3: T->T*F \n\"T\", //4: T->F \n\"F\", //5: F->(E) \n\"F\" //6: F->id \n};vector<int> rhsLen = { \n0, 3, 1, 3, 1, 3, 1 \n}; \n// Simplified LR(1) ACTION table \nAction action[12][6]; \n// Initialize \nfor(int i=0;i<12;i++) \nfor(int j=0;j<6;j++) \naction[i][j] = {'e',-1}; \n// Terminals: id,+,*,(,),$ \naction[0][0]={'s',5}; \naction[0][3]={'s',4}; \naction[1][1]={'s',6}; \naction[1][5]={'a',0}; \naction[2][1]={'r',2}; \naction[2][2]={'s',7}; \naction[2][4]={'r',2}; \naction[2][5]={'r',2}; \naction[3][1]={'r',4}; \naction[3][2]={'r',4}; \naction[3][4]={'r',4}; \naction[3][5]={'r',4}; \naction[4][0]={'s',5}; \naction[4][3]={'s',4}; \naction[5][1]={'r',6}; \naction[5][2]={'r',6}; \naction[5][4]={'r',6}; \naction[5][5]={'r',6}; \naction[6][0]={'s',5}; \naction[6][3]={'s',4}; \naction[7][0]={'s',5}; \naction[7][3]={'s',4}; \naction[8][1]={'s',6};action[8][4]={'s',11}; \naction[9][1]={'r',1}; \naction[9][2]={'s',7}; \naction[9][4]={'r',1}; \naction[9][5]={'r',1}; \naction[10][1]={'r',3}; \naction[10][2]={'r',3}; \naction[10][4]={'r',3}; \naction[10][5]={'r',3}; \naction[11][1]={'r',5}; \naction[11][2]={'r',5}; \naction[11][4]={'r',5}; \naction[11][5]={'r',5}; \n// GOTO table \nint goTo[12][3] = { \n{1,2,3}, \n{-1,-1,-1}, \n{-1,-1,-1}, \n{-1,-1,-1}, \n{8,2,3}, \n{-1,-1,-1}, \n{-1,9,3}, \n{-1,-1,10}, \n{-1,-1,-1}, \n{-1,-1,-1}, \n{-1,-1,-1}, \n{-1,-1,-1} \n}; \nstring input; \ncout << \"Enter input string (use i for id, end with $): \"; \ncin >> input; \nstack<int> st; \nst.push(0); \nint ptr = 0; \ncout << \"\\nParsing Steps:\\n\";while(true) { \nint state = st.top(); \nint col; \nswitch(input[ptr]) { \ncase 'i': col=0; break; \ncase '+': col=1; break; \ncase '*': col=2; break; \ncase '(': col=3; break; \ncase ')': col=4; break; \ncase '$': col=5; break; \ndefault: \ncout<<\"Invalid Input\\n\"; \nreturn 0; \n} \nAction a = action[state][col]; \nif(a.type=='s') { \ncout<<\"Shift \"<<a.value<<endl; \nst.push(a.value); \nif(input[ptr]=='i') \nptr++; \nelse \nptr++; \n} \nelse if(a.type=='r') { \ncout<<\"Reduce by Production \"<<a.value<<endl; \nfor(int k=0;k<rhsLen[a.value];k++) \nst.pop(); \nint curr = st.top(); \nint nt; \nif(lhs[a.value]==\"E\") nt=0; \nelse if(lhs[a.value]==\"T\") nt=1;else nt=2; \nst.push(goTo[curr][nt]); \n} \nelse if(a.type=='a') { \ncout<<\"\\nString Accepted\\n\"; \nbreak; \n} \nelse { \ncout<<\"\\nString Rejected\\n\"; \nbreak; \n} \n} \nreturn 0; \n}"
+  },
+  {
+    "id": "cd-q13",
+    "num": "13",
+    "title": "Implement a stack-based code generator that converts high-level expressions into stack  machine instructions.",
+    "folderName": "q13_stack_high_to_low",
+    "cmd": "cat q13.cpp",
+    "lang": "C++",
+    "fileName": "q13.cpp",
+    "description": "Implement a stack-based code generator that converts high-level expressions into stack  machine instructions.",
+    "code": "#include <iostream> \n#include <stack> \nusing namespace std; \n \nint prec(char op) \n{ \n    if(op=='+' || op=='-') return 1; \n    if(op=='*' || op=='/') return 2; \n    return 0; \n} \n \nint main() \n{ \n    string infix, postfix = \"\"; \n    stack<char> st; \n \n    cout << \"Enter expression: \"; \n    cin >> infix; \n \n    for(char ch : infix) \n    { \n        if(isalnum(ch)) \n            postfix += ch; \n \n        else \n        { \n            while(!st.empty() &amp;&amp; prec(st.top()) >= prec(ch)) \n            { \n                postfix += st.top(); \n                st.pop(); \n            } \n \n            st.push(ch); \n        } \n    } \n \n    while(!st.empty()) \n    { \n        postfix += st.top(); \n        st.pop(); \n    } \n \n    cout << \"\\nPostfix: \" << postfix << \"\\n\"; \n \n    cout << \"\\nStack Instructions:\\n\"; \n \n    for(char ch : postfix) \n    { \n        if(isalnum(ch)) \n            cout << \"PUSH \" << ch << endl; \n        else if(ch == '+') \n            cout << \"ADD\\n\"; \n        else if(ch == '-') \n            cout << \"SUB\\n\"; \n        else if(ch == '*') \n            cout << \"MUL\\n\"; \n        else if(ch == '/') \n            cout << \"DIV\\n\"; \n    } \n \n    return 0; \n}"
+  },
+  {
+    "id": "cd-q14",
+    "num": "14",
+    "title": "Write a program to detect and eliminate common subexpressions in a block of intermediate code.",
+    "folderName": "q14_elim_comm_subexp",
+    "cmd": "cat q14.cpp",
+    "lang": "C++",
+    "fileName": "q14.cpp",
+    "description": "Write a program to detect and eliminate common subexpressions in a block of intermediate code.",
+    "code": "#include <iostream> \n#include <map> \nusing namespace std; \n \nint main() \n{ \n    int n; \n    cin >> n; \n \n    map<string, string> expr; \n \n    for(int i = 0; i < n; i++) \n    { \n        string lhs, eq, a, op, b; \n \n        cin >> lhs >> eq >> a >> op >> b; \n \n        string key = a + op + b; \n \n        if(expr.count(key)) \n            cout << lhs << \" = \" << expr[key] \n                 << \" (Common Subexpression)\\n\"; \n        else \n        { \n            expr[key] = lhs; \n            cout << lhs << \" = \" \n                 << a << \" \" << op << \" \" << b << endl; \n        } \n    } \n \n    return 0; \n}"
+  },
+  {
+    "id": "cd-q15",
+    "num": "15",
+    "title": "Implement constant folding and constant propagation optimization techniques for  Three-Address Code instructions.",
+    "folderName": "q15_three_addr_code_instr",
+    "cmd": "cat q15.cpp",
+    "lang": "C++",
+    "fileName": "q15.cpp",
+    "description": "Implement constant folding and constant propagation optimization techniques for  Three-Address Code instructions.",
+    "code": "#include <iostream> \n#include <map> \nusing namespace std; \n \nint main() \n{ \n    int n; \n    cin >> n; \n \n    map<string,int> val; \n \n    for(int i=0;i<n;i++) \n    { \n        string lhs, eq, op1, op, op2; \n \n        cin >> lhs >> eq >> op1 >> op >> op2; \n \n        if(val.count(op1)) \n            op1 = to_string(val[op1]); \n \n        if(val.count(op2)) \n            op2 = to_string(val[op2]); \n \n        if(isdigit(op1[0]) &amp;&amp; isdigit(op2[0])) \n        { \n            int a = stoi(op1); \n            int b = stoi(op2); \n            int res; \n \n            if(op == \"+\") res = a+b; \n            else if(op == \"-\") res = a-b; \n            else if(op == \"*\") res = a*b; \n            else res = a/b; \n \n            val[lhs] = res; \n \n            cout << lhs << \" = \" \n                 << res \n                 << \" (Constant Folded)\\n\"; \n        } \n        else \n        { \n            cout << lhs << \" = \" \n                 << op1 << \" \" \n                 << op << \" \" \n                 << op2 << endl; \n        } \n    } \n \n    return 0; \n}"
+  }
+];
+
+export const recordLabData: LabExperiment[] = [
+  {
     id: 'q1',
     num: '01',
     title: 'Construction of DFA from NFA',
@@ -590,60 +758,102 @@ int main() {
     return 0;
 }`
   },
-  {
+        {
     id: 'q7',
     num: '07',
-    title: 'Parser Generation using YACC',
+    title: "Write a YACC program to parse arithmetic expressions with proper operator precedence and associativity.",
     folderName: 'q7_Parser_Generation_using_YACC',
     cmd: 'cat parser.l && echo "---" && cat parser.y',
     lang: 'LEX + YACC',
     fileName: 'parser.l / parser.y',
-    description: 'Expression evaluator using LEX+YACC — handles +, -, *, / with correct operator precedence',
-    code: `/* ===== parser.l (Lexer) ===== */
-%{
-#include "parser.tab.h"
-extern int yylval;
-%}
+    description: "Write a YACC program to parse arithmetic expressions with proper operator precedence and associativity.",
+    code: `/*  
+yacc -d expr.y 
+lex expr.l 
+gcc y.tab.c lex.yy.c -ll -ly                                 or                          gcc y.tab.c lex.yy.c -lfl 
+./a.out  
+*/ 
+ 
+// expr.l 
+%{ 
+#include "y.tab.h" 
+#include <stdlib.h> 
+%} 
+ 
+%% 
+ 
+[0-9]+      { yylval = atoi(yytext); return NUM; } 
+[ \t]          ; 
 
-%%
-
-[0-9]+      { yylval = atoi(yytext); return NUM; }
-[ \\t]+      {  }          /* skip whitespace */
-\\n          { return 0; }
-.           { return yytext[0]; }
-
-%%
-int yywrap() { return 1; }
-
-
-/* ===== parser.y (Parser) ===== */
-%token NUM
-%left  '+' '-'
-%left  '*' '/'
-
-%%
-
-cmd : E         { printf("%d\\n", $1); }
-    ;
-
-E   : E '+' T  { $$ = $1 + $3; }
-    | E '-' T  { $$ = $1 - $3; }
-    | T         { $$ = $1; }
-    ;
-
-T   : T '*' F  { $$ = $1 * $3; }
-    | T '/' F  { $$ = ($3 != 0) ? $1 / $3 : 0; }
-    | F         { $$ = $1; }
-    ;
-
-F   : '(' E ')' { $$ = $2; }
-    | NUM       { $$ = $1; }
-    ;
-
-%%
-
-int main()  { yyparse(); return 0; }
-void yyerror(char *s) { printf("%s\\n", s); }`
+            return '
+'; 
+.              return yytext[0]; 
+ 
+%% 
+ 
+int yywrap 
+() { 
+    return 1; 
+} 
+ 
+// expr.y 
+%{ 
+#include <stdio.h> 
+#include <stdlib.h> 
+ 
+void yyerror(char *s); 
+int yylex(); 
+%} 
+ 
+%token NUM 
+ 
+%left '+' '-' 
+%left '*' '/' 
+%right '^' 
+ 
+%% 
+ 
+input: 
+      input line 
+    | 
+    ; 
+ 
+line: 
+      expr '
+' { printf("Valid Expression
+"); } 
+    ; 
+ 
+ 
+expr: 
+      expr '+' expr 
+    | expr '-' expr 
+    | expr '*' expr 
+    | expr '/' expr 
+    | expr '^' expr 
+    | '(' expr ')' 
+    | NUM 
+    ; 
+ 
+%% 
+ 
+void yyerror(char *s) 
+{ 
+    printf("Invalid Expression
+"); 
+} 
+ 
+int main() 
+{ 
+    printf("Enter Arithmetic Expression:
+"); 
+    yyparse(); 
+    return 0; 
+} 
+/* Enter Arithmetic Expression: 
+2+3 
+Valid Expression 
+*/`
   },
   {
     id: 'q8',
@@ -819,388 +1029,8 @@ int main() {
   }
 ];
 
-export const dlLabData: LabExperiment[] = [
-  {
-    id: 'dl-q1',
-    num: '01',
-    title: 'Basic Logic Gates',
-    folderName: 'q1_Basic_Logic_Gates',
-    cmd: 'cat logic_gates.v',
-    lang: 'Verilog',
-    fileName: 'logic_gates.v',
-    description: 'Implementation of basic logic gates using Verilog',
-    code: `// Verilog code for logic gates will go here`
-  }
-];
-
-export const cnLabData: LabExperiment[] = [
-  {
-    "id": "cn-q1a",
-    "num": "01",
-    "title": "Write programs for a UDP Talker (Sender) and UDP Listener (Receiver) to demonstrate communication using the UDP protocol.",
-    "folderName": "q1_Udp_Talker",
-    "cmd": "cat 01_udp_talker.c",
-    "lang": "C",
-    "fileName": "01_udp_talker.c",
-    "description": "UDP Talker (Sender)",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\nint main() {\n    int sockfd;\n    char buffer[MAXLINE];\n    struct sockaddr_in servaddr;\n    sockfd = socket(AF_INET, SOCK_DGRAM, 0);\n    if (sockfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_port = htons(PORT);\n    servaddr.sin_addr.s_addr = inet_addr(\"127.0.0.1\");\n    printf(\"UDP Talker started. Type messages to send (type 'exit' to quit):\\n\");\n    while (1) {\n        printf(\"Enter message: \");\n        fgets(buffer, MAXLINE, stdin);\n        buffer[strcspn(buffer, \"\\n\")] = '\\0';  \n        if (strcmp(buffer, \"exit\") == 0)\n            break;\n        sendto(sockfd, buffer, strlen(buffer), 0,\n               (struct sockaddr *)&servaddr, sizeof(servaddr));\n        printf(\"Message sent: %s\\n\", buffer);\n    }\n    close(sockfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q1b",
-    "num": "01",
-    "title": "Write programs for a UDP Talker (Sender) and UDP Listener (Receiver) to demonstrate communication using the UDP protocol.",
-    "folderName": "q1_Udp_Talker",
-    "cmd": "cat 01_udp_listener.c",
-    "lang": "C",
-    "fileName": "01_udp_listener.c",
-    "description": "UDP Listener (Receiver)",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\nint main() {\n    int sockfd;\n    char buffer[MAXLINE];\n    struct sockaddr_in servaddr, cliaddr;\n    socklen_t len;\n    int n;\n    sockfd = socket(AF_INET, SOCK_DGRAM, 0);\n    if (sockfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_addr.s_addr = INADDR_ANY;\n    servaddr.sin_port = htons(PORT);\n    if (bind(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {\n        perror(\"Bind failed\");\n        exit(1);\n    }\n    printf(\"UDP Listener started. Waiting for messages on port %d...\\n\", PORT);\n    while (1) {\n        len = sizeof(cliaddr);\n        memset(buffer, 0, MAXLINE);\n        n = recvfrom(sockfd, buffer, MAXLINE, 0,\n                     (struct sockaddr *)&cliaddr, &len);\n        buffer[n] = '\\0';\n        printf(\"Received from %s:%d -> %s\\n\",\n               inet_ntoa(cliaddr.sin_addr), ntohs(cliaddr.sin_port), buffer);\n    }\n    close(sockfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q2a",
-    "num": "02",
-    "title": "Write a UDP Echo Server program that receives a message from a client and sends the same message back to the client.",
-    "folderName": "q2_Udp_Echo",
-    "cmd": "cat 02_udp_echo_server.c",
-    "lang": "C",
-    "fileName": "02_udp_echo_server.c",
-    "description": "UDP Echo Server",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\nint main() {\n    int sockfd;\n    char buffer[MAXLINE];\n    struct sockaddr_in servaddr, cliaddr;\n    socklen_t len;\n    int n;\n    sockfd = socket(AF_INET, SOCK_DGRAM, 0);\n    if (sockfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_addr.s_addr = INADDR_ANY;\n    servaddr.sin_port = htons(PORT);\n    if (bind(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {\n        perror(\"Bind failed\");\n        exit(1);\n    }\n    printf(\"UDP Echo Server started on port %d...\\n\", PORT);\n    while (1) {\n        len = sizeof(cliaddr);\n        memset(buffer, 0, MAXLINE);\n        n = recvfrom(sockfd, buffer, MAXLINE, 0,\n                     (struct sockaddr *)&cliaddr, &len);\n        buffer[n] = '\\0';\n        printf(\"Received: %s\\n\", buffer);\n        sendto(sockfd, buffer, n, 0,\n               (struct sockaddr *)&cliaddr, len);\n        printf(\"Echoed back: %s\\n\", buffer);\n    }\n    close(sockfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q2b",
-    "num": "02",
-    "title": "Write a UDP Echo Server program that receives a message from a client and sends the same message back to the client.",
-    "folderName": "q2_Udp_Echo",
-    "cmd": "cat 02_udp_echo_client.c",
-    "lang": "C",
-    "fileName": "02_udp_echo_client.c",
-    "description": "UDP Echo Client",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\nint main() {\n    int sockfd;\n    char buffer[MAXLINE];\n    struct sockaddr_in servaddr;\n    socklen_t len;\n    int n;\n    sockfd = socket(AF_INET, SOCK_DGRAM, 0);\n    if (sockfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_port = htons(PORT);\n    servaddr.sin_addr.s_addr = inet_addr(\"127.0.0.1\");\n    printf(\"UDP Echo Client started. Type messages (type 'exit' to quit):\\n\");\n    while (1) {\n        printf(\"Enter message: \");\n        fgets(buffer, MAXLINE, stdin);\n        buffer[strcspn(buffer, \"\\n\")] = '\\0';\n        if (strcmp(buffer, \"exit\") == 0)\n            break;\n        sendto(sockfd, buffer, strlen(buffer), 0,\n               (struct sockaddr *)&servaddr, sizeof(servaddr));\n        len = sizeof(servaddr);\n        memset(buffer, 0, MAXLINE);\n        n = recvfrom(sockfd, buffer, MAXLINE, 0,\n                     (struct sockaddr *)&servaddr, &len);\n        buffer[n] = '\\0';\n        printf(\"Echo from server: %s\\n\", buffer);\n    }\n    close(sockfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q3a",
-    "num": "03",
-    "title": "Write a TCP Echo Server program using the iterative server approach, where the server handles one client at a time.",
-    "folderName": "q3_Tcp_Echo",
-    "cmd": "cat 03_tcp_echo_server.c",
-    "lang": "C",
-    "fileName": "03_tcp_echo_server.c",
-    "description": "TCP Iterative Echo Server",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\nint main() {\n    int listenfd, connfd;\n    char buffer[MAXLINE];\n    struct sockaddr_in servaddr, cliaddr;\n    socklen_t clilen;\n    int n;\n    listenfd = socket(AF_INET, SOCK_STREAM, 0);\n    if (listenfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_addr.s_addr = INADDR_ANY;\n    servaddr.sin_port = htons(PORT);\n    if (bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {\n        perror(\"Bind failed\");\n        exit(1);\n    }\n    listen(listenfd, 5);\n    printf(\"TCP Iterative Echo Server started on port %d...\\n\", PORT);\n    while (1) {\n        clilen = sizeof(cliaddr);\n        connfd = accept(listenfd, (struct sockaddr *)&cliaddr, &clilen);\n        if (connfd < 0) {\n            perror(\"Accept failed\");\n            continue;\n        }\n        printf(\"Client connected: %s:%d\\n\",\n               inet_ntoa(cliaddr.sin_addr), ntohs(cliaddr.sin_port));\n        while ((n = read(connfd, buffer, MAXLINE)) > 0) {\n            buffer[n] = '\\0';\n            printf(\"Received: %s\\n\", buffer);\n            write(connfd, buffer, n);  \n            printf(\"Echoed back: %s\\n\", buffer);\n        }\n        printf(\"Client disconnected.\\n\");\n        close(connfd);\n    }\n    close(listenfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q3b",
-    "num": "03",
-    "title": "Write a TCP Echo Server program using the iterative server approach, where the server handles one client at a time.",
-    "folderName": "q3_Tcp_Echo",
-    "cmd": "cat 03_tcp_echo_client.c",
-    "lang": "C",
-    "fileName": "03_tcp_echo_client.c",
-    "description": "TCP Echo Client",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\nint main() {\n    int sockfd;\n    char buffer[MAXLINE];\n    struct sockaddr_in servaddr;\n    int n;\n    sockfd = socket(AF_INET, SOCK_STREAM, 0);\n    if (sockfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_port = htons(PORT);\n    servaddr.sin_addr.s_addr = inet_addr(\"127.0.0.1\");\n    if (connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {\n        perror(\"Connect failed\");\n        exit(1);\n    }\n    printf(\"Connected to TCP Echo Server. Type messages (type 'exit' to quit):\\n\");\n    while (1) {\n        printf(\"Enter message: \");\n        fgets(buffer, MAXLINE, stdin);\n        buffer[strcspn(buffer, \"\\n\")] = '\\0';\n        if (strcmp(buffer, \"exit\") == 0)\n            break;\n        write(sockfd, buffer, strlen(buffer));\n        memset(buffer, 0, MAXLINE);\n        n = read(sockfd, buffer, MAXLINE);\n        buffer[n] = '\\0';\n        printf(\"Echo from server: %s\\n\", buffer);\n    }\n    close(sockfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q4a",
-    "num": "04",
-    "title": "Write a TCP Concurrent Server program using socket programming that handles multiple clients simultaneously.",
-    "folderName": "q4_Tcp_Concurrent",
-    "cmd": "cat 04_tcp_concurrent_server.c",
-    "lang": "C",
-    "fileName": "04_tcp_concurrent_server.c",
-    "description": "TCP Concurrent Server (using fork)",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#include <signal.h>\n#define PORT 8080\n#define MAXLINE 1024\nvoid sigchld_handler(int sig) {\n    while (waitpid(-1, NULL, WNOHANG) > 0);\n}\nint main() {\n    int listenfd, connfd;\n    char buffer[MAXLINE];\n    struct sockaddr_in servaddr, cliaddr;\n    socklen_t clilen;\n    pid_t pid;\n    int n;\n    signal(SIGCHLD, sigchld_handler);\n    listenfd = socket(AF_INET, SOCK_STREAM, 0);\n    if (listenfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    int opt = 1;\n    setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_addr.s_addr = INADDR_ANY;\n    servaddr.sin_port = htons(PORT);\n    if (bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {\n        perror(\"Bind failed\");\n        exit(1);\n    }\n    listen(listenfd, 5);\n    printf(\"TCP Concurrent Server started on port %d...\\n\", PORT);\n    while (1) {\n        clilen = sizeof(cliaddr);\n        connfd = accept(listenfd, (struct sockaddr *)&cliaddr, &clilen);\n        if (connfd < 0) {\n            perror(\"Accept failed\");\n            continue;\n        }\n        printf(\"Client connected: %s:%d\\n\",\n               inet_ntoa(cliaddr.sin_addr), ntohs(cliaddr.sin_port));\n        pid = fork();\n        if (pid < 0) {\n            perror(\"Fork failed\");\n            close(connfd);\n            continue;\n        }\n        if (pid == 0) {\n            close(listenfd);\n            while ((n = read(connfd, buffer, MAXLINE)) > 0) {\n                buffer[n] = '\\0';\n                printf(\"[Child %d] Received: %s\\n\", getpid(), buffer);\n                write(connfd, buffer, n);  \n            }\n            printf(\"[Child %d] Client disconnected.\\n\", getpid());\n            close(connfd);\n            exit(0);\n        } else {\n            close(connfd);\n        }\n    }\n    close(listenfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q4b",
-    "num": "04",
-    "title": "Write a TCP Concurrent Server program using socket programming that handles multiple clients simultaneously.",
-    "folderName": "q4_Tcp_Concurrent",
-    "cmd": "cat 04_tcp_client.c",
-    "lang": "C",
-    "fileName": "04_tcp_client.c",
-    "description": "TCP Client (for concurrent server)",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\nint main() {\n    int sockfd;\n    char buffer[MAXLINE];\n    struct sockaddr_in servaddr;\n    int n;\n    sockfd = socket(AF_INET, SOCK_STREAM, 0);\n    if (sockfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_port = htons(PORT);\n    servaddr.sin_addr.s_addr = inet_addr(\"127.0.0.1\");\n    if (connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {\n        perror(\"Connect failed\");\n        exit(1);\n    }\n    printf(\"Connected to server. Type messages (type 'exit' to quit):\\n\");\n    while (1) {\n        printf(\"Enter message: \");\n        fgets(buffer, MAXLINE, stdin);\n        buffer[strcspn(buffer, \"\\n\")] = '\\0';\n        if (strcmp(buffer, \"exit\") == 0)\n            break;\n        write(sockfd, buffer, strlen(buffer));\n        memset(buffer, 0, MAXLINE);\n        n = read(sockfd, buffer, MAXLINE);\n        buffer[n] = '\\0';\n        printf(\"Server reply: %s\\n\", buffer);\n    }\n    close(sockfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q5a",
-    "num": "05",
-    "title": "Write programs for File Transfer using TCP, where the client sends a file and the server receives and stores it.",
-    "folderName": "q5_Tcp_File_Transfer",
-    "cmd": "cat 05_file_server.c",
-    "lang": "C",
-    "fileName": "05_file_server.c",
-    "description": "TCP File Transfer - Server (Receiver)",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\nint main() {\n    int listenfd, connfd;\n    char buffer[MAXLINE];\n    char filename[256];\n    struct sockaddr_in servaddr, cliaddr;\n    socklen_t clilen;\n    FILE *fp;\n    int n;\n    listenfd = socket(AF_INET, SOCK_STREAM, 0);\n    if (listenfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    int opt = 1;\n    setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_addr.s_addr = INADDR_ANY;\n    servaddr.sin_port = htons(PORT);\n    if (bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {\n        perror(\"Bind failed\");\n        exit(1);\n    }\n    listen(listenfd, 5);\n    printf(\"File Transfer Server started on port %d...\\n\", PORT);\n    clilen = sizeof(cliaddr);\n    connfd = accept(listenfd, (struct sockaddr *)&cliaddr, &clilen);\n    if (connfd < 0) {\n        perror(\"Accept failed\");\n        exit(1);\n    }\n    printf(\"Client connected.\\n\");\n    memset(filename, 0, sizeof(filename));\n    n = read(connfd, filename, sizeof(filename));\n    filename[n] = '\\0';\n    printf(\"Receiving file: %s\\n\", filename);\n    write(connfd, \"OK\", 2);\n    char outfile[300];\n    sprintf(outfile, \"received_%s\", filename);\n    fp = fopen(outfile, \"w\");\n    if (fp == NULL) {\n        perror(\"File open failed\");\n        close(connfd);\n        exit(1);\n    }\n    while ((n = read(connfd, buffer, MAXLINE)) > 0) {\n        fwrite(buffer, 1, n, fp);\n    }\n    printf(\"File received and saved as: %s\\n\", outfile);\n    fclose(fp);\n    close(connfd);\n    close(listenfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q5b",
-    "num": "05",
-    "title": "Write programs for File Transfer using TCP, where the client sends a file and the server receives and stores it.",
-    "folderName": "q5_Tcp_File_Transfer",
-    "cmd": "cat 05_file_client.c",
-    "lang": "C",
-    "fileName": "05_file_client.c",
-    "description": "TCP File Transfer - Client (Sender)",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\nint main() {\n    int sockfd;\n    char buffer[MAXLINE];\n    char filename[256];\n    struct sockaddr_in servaddr;\n    FILE *fp;\n    int n;\n    sockfd = socket(AF_INET, SOCK_STREAM, 0);\n    if (sockfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_port = htons(PORT);\n    servaddr.sin_addr.s_addr = inet_addr(\"127.0.0.1\");\n    if (connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {\n        perror(\"Connect failed\");\n        exit(1);\n    }\n    printf(\"Enter filename to send: \");\n    scanf(\"%s\", filename);\n    fp = fopen(filename, \"r\");\n    if (fp == NULL) {\n        perror(\"File not found\");\n        close(sockfd);\n        exit(1);\n    }\n    write(sockfd, filename, strlen(filename));\n    memset(buffer, 0, MAXLINE);\n    read(sockfd, buffer, MAXLINE);\n    while ((n = fread(buffer, 1, MAXLINE, fp)) > 0) {\n        write(sockfd, buffer, n);\n    }\n    printf(\"File '%s' sent successfully.\\n\", filename);\n    fclose(fp);\n    close(sockfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q6a",
-    "num": "06",
-    "title": "Write a TCP Chat Application that allows two-way communication between client and server.",
-    "folderName": "q6_Tcp_Chat",
-    "cmd": "cat 06_chat_server.c",
-    "lang": "C",
-    "fileName": "06_chat_server.c",
-    "description": "TCP Chat Server",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\nint main() {\n    int listenfd, connfd;\n    char send_buf[MAXLINE], recv_buf[MAXLINE];\n    struct sockaddr_in servaddr, cliaddr;\n    socklen_t clilen;\n    int n;\n    listenfd = socket(AF_INET, SOCK_STREAM, 0);\n    if (listenfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    int opt = 1;\n    setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_addr.s_addr = INADDR_ANY;\n    servaddr.sin_port = htons(PORT);\n    if (bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {\n        perror(\"Bind failed\");\n        exit(1);\n    }\n    listen(listenfd, 5);\n    printf(\"Chat Server started on port %d. Waiting for client...\\n\", PORT);\n    clilen = sizeof(cliaddr);\n    connfd = accept(listenfd, (struct sockaddr *)&cliaddr, &clilen);\n    if (connfd < 0) {\n        perror(\"Accept failed\");\n        exit(1);\n    }\n    printf(\"Client connected! Start chatting (type 'exit' to quit):\\n\");\n    while (1) {\n        memset(recv_buf, 0, MAXLINE);\n        n = read(connfd, recv_buf, MAXLINE);\n        if (n <= 0) {\n            printf(\"Client disconnected.\\n\");\n            break;\n        }\n        recv_buf[n] = '\\0';\n        if (strcmp(recv_buf, \"exit\") == 0) {\n            printf(\"Client ended the chat.\\n\");\n            break;\n        }\n        printf(\"Client: %s\\n\", recv_buf);\n        printf(\"Server: \");\n        fgets(send_buf, MAXLINE, stdin);\n        send_buf[strcspn(send_buf, \"\\n\")] = '\\0';\n        write(connfd, send_buf, strlen(send_buf));\n        if (strcmp(send_buf, \"exit\") == 0) {\n            printf(\"Chat ended by server.\\n\");\n            break;\n        }\n    }\n    close(connfd);\n    close(listenfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q6b",
-    "num": "06",
-    "title": "Write a TCP Chat Application that allows two-way communication between client and server.",
-    "folderName": "q6_Tcp_Chat",
-    "cmd": "cat 06_chat_client.c",
-    "lang": "C",
-    "fileName": "06_chat_client.c",
-    "description": "TCP Chat Client",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\nint main() {\n    int sockfd;\n    char send_buf[MAXLINE], recv_buf[MAXLINE];\n    struct sockaddr_in servaddr;\n    int n;\n    sockfd = socket(AF_INET, SOCK_STREAM, 0);\n    if (sockfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_port = htons(PORT);\n    servaddr.sin_addr.s_addr = inet_addr(\"127.0.0.1\");\n    if (connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {\n        perror(\"Connect failed\");\n        exit(1);\n    }\n    printf(\"Connected to Chat Server! Start chatting (type 'exit' to quit):\\n\");\n    while (1) {\n        printf(\"Client: \");\n        fgets(send_buf, MAXLINE, stdin);\n        send_buf[strcspn(send_buf, \"\\n\")] = '\\0';\n        write(sockfd, send_buf, strlen(send_buf));\n        if (strcmp(send_buf, \"exit\") == 0) {\n            printf(\"Chat ended.\\n\");\n            break;\n        }\n        memset(recv_buf, 0, MAXLINE);\n        n = read(sockfd, recv_buf, MAXLINE);\n        if (n <= 0) {\n            printf(\"Server disconnected.\\n\");\n            break;\n        }\n        recv_buf[n] = '\\0';\n        if (strcmp(recv_buf, \"exit\") == 0) {\n            printf(\"Server ended the chat.\\n\");\n            break;\n        }\n        printf(\"Server: %s\\n\", recv_buf);\n    }\n    close(sockfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q7a",
-    "num": "07",
-    "title": "Write a UDP client-server program for performing arithmetic operations such as addition, subtraction, multiplication, and division.",
-    "folderName": "q7_Udp_Arithmetic",
-    "cmd": "cat 07_udp_arith_server.c",
-    "lang": "C",
-    "fileName": "07_udp_arith_server.c",
-    "description": "UDP Arithmetic Server",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\nint main() {\n    int sockfd;\n    char buffer[MAXLINE], result[MAXLINE];\n    struct sockaddr_in servaddr, cliaddr;\n    socklen_t len;\n    int n;\n    float num1, num2, res;\n    char op;\n    sockfd = socket(AF_INET, SOCK_DGRAM, 0);\n    if (sockfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_addr.s_addr = INADDR_ANY;\n    servaddr.sin_port = htons(PORT);\n    if (bind(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {\n        perror(\"Bind failed\");\n        exit(1);\n    }\n    printf(\"UDP Arithmetic Server started on port %d...\\n\", PORT);\n    while (1) {\n        len = sizeof(cliaddr);\n        memset(buffer, 0, MAXLINE);\n        n = recvfrom(sockfd, buffer, MAXLINE, 0,\n                     (struct sockaddr *)&cliaddr, &len);\n        buffer[n] = '\\0';\n        printf(\"Received: %s\\n\", buffer);\n        sscanf(buffer, \"%f %c %f\", &num1, &op, &num2);\n        switch (op) {\n            case '+': res = num1 + num2;\n                      sprintf(result, \"%.2f + %.2f = %.2f\", num1, num2, res);\n                      break;\n            case '-': res = num1 - num2;\n                      sprintf(result, \"%.2f - %.2f = %.2f\", num1, num2, res);\n                      break;\n            case '*': res = num1 * num2;\n                      sprintf(result, \"%.2f * %.2f = %.2f\", num1, num2, res);\n                      break;\n            case '/': if (num2 == 0)\n                          sprintf(result, \"Error: Division by zero\");\n                      else {\n                          res = num1 / num2;\n                          sprintf(result, \"%.2f / %.2f = %.2f\", num1, num2, res);\n                      }\n                      break;\n            default:  sprintf(result, \"Error: Invalid operator '%c'\", op);\n        }\n        sendto(sockfd, result, strlen(result), 0,\n               (struct sockaddr *)&cliaddr, len);\n        printf(\"Result sent: %s\\n\", result);\n    }\n    close(sockfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q7b",
-    "num": "07",
-    "title": "Write a UDP client-server program for performing arithmetic operations such as addition, subtraction, multiplication, and division.",
-    "folderName": "q7_Udp_Arithmetic",
-    "cmd": "cat 07_udp_arith_client.c",
-    "lang": "C",
-    "fileName": "07_udp_arith_client.c",
-    "description": "UDP Arithmetic Client",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\nint main() {\n    int sockfd;\n    char buffer[MAXLINE];\n    struct sockaddr_in servaddr;\n    socklen_t len;\n    int n;\n    sockfd = socket(AF_INET, SOCK_DGRAM, 0);\n    if (sockfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_port = htons(PORT);\n    servaddr.sin_addr.s_addr = inet_addr(\"127.0.0.1\");\n    printf(\"UDP Arithmetic Client (format: num1 op num2, e.g., 10 + 5)\\n\");\n    printf(\"Operators: + - * /  (type 'exit' to quit)\\n\\n\");\n    while (1) {\n        printf(\"Enter expression: \");\n        fgets(buffer, MAXLINE, stdin);\n        buffer[strcspn(buffer, \"\\n\")] = '\\0';\n        if (strcmp(buffer, \"exit\") == 0)\n            break;\n        sendto(sockfd, buffer, strlen(buffer), 0,\n               (struct sockaddr *)&servaddr, sizeof(servaddr));\n        len = sizeof(servaddr);\n        memset(buffer, 0, MAXLINE);\n        n = recvfrom(sockfd, buffer, MAXLINE, 0,\n                     (struct sockaddr *)&servaddr, &len);\n        buffer[n] = '\\0';\n        printf(\"Result: %s\\n\\n\", buffer);\n    }\n    close(sockfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q8a",
-    "num": "08",
-    "title": "Write a TCP client-server program to convert a lowercase string received from the client into uppercase at the server.",
-    "folderName": "q8_Tcp_Uppercase",
-    "cmd": "cat 08_tcp_upper_server.c",
-    "lang": "C",
-    "fileName": "08_tcp_upper_server.c",
-    "description": "TCP Uppercase Server",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <ctype.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\nint main() {\n    int listenfd, connfd;\n    char buffer[MAXLINE];\n    struct sockaddr_in servaddr, cliaddr;\n    socklen_t clilen;\n    int n, i;\n    listenfd = socket(AF_INET, SOCK_STREAM, 0);\n    if (listenfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    int opt = 1;\n    setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_addr.s_addr = INADDR_ANY;\n    servaddr.sin_port = htons(PORT);\n    if (bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {\n        perror(\"Bind failed\");\n        exit(1);\n    }\n    listen(listenfd, 5);\n    printf(\"TCP Uppercase Server started on port %d...\\n\", PORT);\n    while (1) {\n        clilen = sizeof(cliaddr);\n        connfd = accept(listenfd, (struct sockaddr *)&cliaddr, &clilen);\n        if (connfd < 0) {\n            perror(\"Accept failed\");\n            continue;\n        }\n        printf(\"Client connected.\\n\");\n        while ((n = read(connfd, buffer, MAXLINE)) > 0) {\n            buffer[n] = '\\0';\n            printf(\"Received: %s\\n\", buffer);\n            for (i = 0; i < n; i++) {\n                buffer[i] = toupper(buffer[i]);\n            }\n            write(connfd, buffer, n);\n            printf(\"Sent (uppercase): %s\\n\", buffer);\n        }\n        printf(\"Client disconnected.\\n\");\n        close(connfd);\n    }\n    close(listenfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q8b",
-    "num": "08",
-    "title": "Write a TCP client-server program to convert a lowercase string received from the client into uppercase at the server.",
-    "folderName": "q8_Tcp_Uppercase",
-    "cmd": "cat 08_tcp_upper_client.c",
-    "lang": "C",
-    "fileName": "08_tcp_upper_client.c",
-    "description": "TCP Uppercase Client",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\nint main() {\n    int sockfd;\n    char buffer[MAXLINE];\n    struct sockaddr_in servaddr;\n    int n;\n    sockfd = socket(AF_INET, SOCK_STREAM, 0);\n    if (sockfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_port = htons(PORT);\n    servaddr.sin_addr.s_addr = inet_addr(\"127.0.0.1\");\n    if (connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {\n        perror(\"Connect failed\");\n        exit(1);\n    }\n    printf(\"Connected to Uppercase Server. Enter lowercase strings (type 'exit' to quit):\\n\");\n    while (1) {\n        printf(\"Enter string: \");\n        fgets(buffer, MAXLINE, stdin);\n        buffer[strcspn(buffer, \"\\n\")] = '\\0';\n        if (strcmp(buffer, \"exit\") == 0)\n            break;\n        write(sockfd, buffer, strlen(buffer));\n        memset(buffer, 0, MAXLINE);\n        n = read(sockfd, buffer, MAXLINE);\n        buffer[n] = '\\0';\n        printf(\"Uppercase: %s\\n\", buffer);\n    }\n    close(sockfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q9a",
-    "num": "09",
-    "title": "Write a TCP client-server program for user login authentication using a username and password.",
-    "folderName": "q9_Tcp_Auth",
-    "cmd": "cat 09_tcp_login_server.c",
-    "lang": "C",
-    "fileName": "09_tcp_login_server.c",
-    "description": "TCP Login Authentication Server",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\n#define MAX_USERS 3\nstruct User {\n    char username[50];\n    char password[50];\n};\nstruct User users[MAX_USERS] = {\n    {\"admin\", \"admin123\"},\n    {\"user1\", \"pass123\"},\n    {\"student\", \"student456\"}\n};\nint authenticate(char *username, char *password) {\n    int i;\n    for (i = 0; i < MAX_USERS; i++) {\n        if (strcmp(users[i].username, username) == 0 &&\n            strcmp(users[i].password, password) == 0) {\n            return 1;  \n        }\n    }\n    return 0;  \n}\nint main() {\n    int listenfd, connfd;\n    char buffer[MAXLINE];\n    char username[50], password[50];\n    struct sockaddr_in servaddr, cliaddr;\n    socklen_t clilen;\n    int n;\n    listenfd = socket(AF_INET, SOCK_STREAM, 0);\n    if (listenfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    int opt = 1;\n    setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_addr.s_addr = INADDR_ANY;\n    servaddr.sin_port = htons(PORT);\n    if (bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {\n        perror(\"Bind failed\");\n        exit(1);\n    }\n    listen(listenfd, 5);\n    printf(\"TCP Login Server started on port %d...\\n\", PORT);\n    printf(\"Valid users: admin/admin123, user1/pass123, student/student456\\n\\n\");\n    while (1) {\n        clilen = sizeof(cliaddr);\n        connfd = accept(listenfd, (struct sockaddr *)&cliaddr, &clilen);\n        if (connfd < 0) {\n            perror(\"Accept failed\");\n            continue;\n        }\n        printf(\"Client connected from %s:%d\\n\",\n               inet_ntoa(cliaddr.sin_addr), ntohs(cliaddr.sin_port));\n        memset(username, 0, sizeof(username));\n        n = read(connfd, username, sizeof(username));\n        username[n] = '\\0';\n        printf(\"Username received: %s\\n\", username);\n        memset(password, 0, sizeof(password));\n        n = read(connfd, password, sizeof(password));\n        password[n] = '\\0';\n        printf(\"Password received: ****\\n\");\n        if (authenticate(username, password)) {\n            write(connfd, \"LOGIN SUCCESS\", 13);\n            printf(\"Result: Authentication successful!\\n\\n\");\n        } else {\n            write(connfd, \"LOGIN FAILED\", 12);\n            printf(\"Result: Authentication failed!\\n\\n\");\n        }\n        close(connfd);\n    }\n    close(listenfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q9b",
-    "num": "09",
-    "title": "Write a TCP client-server program for user login authentication using a username and password.",
-    "folderName": "q9_Tcp_Auth",
-    "cmd": "cat 09_tcp_login_client.c",
-    "lang": "C",
-    "fileName": "09_tcp_login_client.c",
-    "description": "TCP Login Authentication Client",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\nint main() {\n    int sockfd;\n    char buffer[MAXLINE];\n    char username[50], password[50];\n    struct sockaddr_in servaddr;\n    int n;\n    sockfd = socket(AF_INET, SOCK_STREAM, 0);\n    if (sockfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_port = htons(PORT);\n    servaddr.sin_addr.s_addr = inet_addr(\"127.0.0.1\");\n    if (connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {\n        perror(\"Connect failed\");\n        exit(1);\n    }\n    printf(\"=== Login Authentication ===\\n\");\n    printf(\"Enter username: \");\n    scanf(\"%s\", username);\n    write(sockfd, username, strlen(username));\n    usleep(100000); \n    printf(\"Enter password: \");\n    scanf(\"%s\", password);\n    write(sockfd, password, strlen(password));\n    memset(buffer, 0, MAXLINE);\n    n = read(sockfd, buffer, MAXLINE);\n    buffer[n] = '\\0';\n    printf(\"\\nServer Response: %s\\n\", buffer);\n    close(sockfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q10a",
-    "num": "10",
-    "title": "Write a UDP client-server program to find the largest number among a set of numbers sent by the client.",
-    "folderName": "q10_Udp_Largest",
-    "cmd": "cat 10_udp_largest_server.c",
-    "lang": "C",
-    "fileName": "10_udp_largest_server.c",
-    "description": "UDP Find Largest Number - Server",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\nint main() {\n    int sockfd;\n    char buffer[MAXLINE], result[MAXLINE];\n    struct sockaddr_in servaddr, cliaddr;\n    socklen_t len;\n    int n, i, count;\n    int numbers[100], largest;\n    sockfd = socket(AF_INET, SOCK_DGRAM, 0);\n    if (sockfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_addr.s_addr = INADDR_ANY;\n    servaddr.sin_port = htons(PORT);\n    if (bind(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {\n        perror(\"Bind failed\");\n        exit(1);\n    }\n    printf(\"UDP Largest Number Server started on port %d...\\n\", PORT);\n    while (1) {\n        len = sizeof(cliaddr);\n        memset(buffer, 0, MAXLINE);\n        n = recvfrom(sockfd, buffer, MAXLINE, 0,\n                     (struct sockaddr *)&cliaddr, &len);\n        buffer[n] = '\\0';\n        printf(\"Received numbers: %s\\n\", buffer);\n        count = 0;\n        char *token = strtok(buffer, \" \");\n        while (token != NULL) {\n            numbers[count++] = atoi(token);\n            token = strtok(NULL, \" \");\n        }\n        largest = numbers[0];\n        for (i = 1; i < count; i++) {\n            if (numbers[i] > largest)\n                largest = numbers[i];\n        }\n        sprintf(result, \"Largest number is: %d\", largest);\n        sendto(sockfd, result, strlen(result), 0,\n               (struct sockaddr *)&cliaddr, len);\n        printf(\"Result sent: %s\\n\\n\", result);\n    }\n    close(sockfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q10b",
-    "num": "10",
-    "title": "Write a UDP client-server program to find the largest number among a set of numbers sent by the client.",
-    "folderName": "q10_Udp_Largest",
-    "cmd": "cat 10_udp_largest_client.c",
-    "lang": "C",
-    "fileName": "10_udp_largest_client.c",
-    "description": "UDP Find Largest Number - Client",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\nint main() {\n    int sockfd;\n    char buffer[MAXLINE];\n    struct sockaddr_in servaddr;\n    socklen_t len;\n    int n, i, count, num;\n    sockfd = socket(AF_INET, SOCK_DGRAM, 0);\n    if (sockfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_port = htons(PORT);\n    servaddr.sin_addr.s_addr = inet_addr(\"127.0.0.1\");\n    printf(\"Enter how many numbers: \");\n    scanf(\"%d\", &count);\n    memset(buffer, 0, MAXLINE);\n    for (i = 0; i < count; i++) {\n        printf(\"Enter number %d: \", i + 1);\n        scanf(\"%d\", &num);\n        char temp[20];\n        sprintf(temp, \"%d \", num);\n        strcat(buffer, temp);\n    }\n    printf(\"Sending numbers: %s\\n\", buffer);\n    sendto(sockfd, buffer, strlen(buffer), 0,\n           (struct sockaddr *)&servaddr, sizeof(servaddr));\n    len = sizeof(servaddr);\n    memset(buffer, 0, MAXLINE);\n    n = recvfrom(sockfd, buffer, MAXLINE, 0,\n                 (struct sockaddr *)&servaddr, &len);\n    buffer[n] = '\\0';\n    printf(\"Server Response: %s\\n\", buffer);\n    close(sockfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q11",
-    "num": "11",
-    "title": "write a c code for perform SELECT() system call",
-    "folderName": "q11_Select_System",
-    "cmd": "cat 11_select_demo.c",
-    "lang": "C",
-    "fileName": "11_select_demo.c",
-    "description": "SELECT() System Call Demo",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/select.h>\n#include <sys/time.h>\n#define MAXLINE 1024\nint main() {\n    fd_set readfds;           \n    struct timeval timeout;   \n    char buffer[MAXLINE];\n    int retval, n;\n    printf(\"=== SELECT() System Call Demo ===\\n\");\n    printf(\"select() allows a program to wait for I/O operations on\\n\");\n    printf(\"multiple file descriptors simultaneously and determine\\n\");\n    printf(\"which ones are ready for reading or writing.\\n\\n\");\n    printf(\"Waiting for input on STDIN (fd 0) with 5-second timeout...\\n\");\n    printf(\"Type something and press Enter, or wait 5 seconds:\\n\\n\");\n    FD_ZERO(&readfds);\n    FD_SET(0, &readfds);  \n    timeout.tv_sec = 5;   \n    timeout.tv_usec = 0;  \n    retval = select(1, &readfds, NULL, NULL, &timeout);\n    if (retval == -1) {\n        perror(\"select() error\");\n        exit(1);\n    } else if (retval == 0) {\n        printf(\"Time out\\n\");\n    } else {\n        if (FD_ISSET(0, &readfds)) {\n            memset(buffer, 0, MAXLINE);\n            n = read(0, buffer, MAXLINE);  \n            buffer[n] = '\\0';\n            printf(\"You typed: %s\", buffer);\n        }\n    }\n    printf(\"\\n=== select() Summary ===\\n\");\n    printf(\"select() returned: %d\\n\", retval);\n    printf(\"  -1 = error\\n\");\n    printf(\"   0 = timeout (no fd ready)\\n\");\n    printf(\"  >0 = number of ready file descriptors\\n\");\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q12",
-    "num": "12",
-    "title": "Write a C code snippet to set a receive timeout of 10 second on a socket using setssockopt()",
-    "folderName": "q12_Snippet_Receive",
-    "cmd": "cat 12_recv_timeout.c",
-    "lang": "C",
-    "fileName": "12_recv_timeout.c",
-    "description": "setsockopt() - Set Receive Timeout of 10 seconds",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#include <sys/socket.h>\n#include <errno.h>\n#define PORT 8080\n#define MAXLINE 1024\nint main() {\n    int sockfd;\n    char buffer[MAXLINE];\n    struct sockaddr_in servaddr;\n    struct timeval tv;\n    socklen_t len;\n    int n;\n    printf(\"=== setsockopt() - Receive Timeout Demo ===\\n\\n\");\n    sockfd = socket(AF_INET, SOCK_DGRAM, 0);\n    if (sockfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    printf(\"Socket created successfully (fd = %d)\\n\", sockfd);\n    tv.tv_sec = 10;   \n    tv.tv_usec = 0;   \n    if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) < 0) {\n        perror(\"setsockopt SO_RCVTIMEO failed\");\n        exit(1);\n    }\n    printf(\"Receive timeout set to 10 seconds using setsockopt()\\n\");\n    len = sizeof(tv);\n    getsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &tv, &len);\n    printf(\"Verified: Receive timeout = %ld sec, %ld usec\\n\\n\",\n           tv.tv_sec, tv.tv_usec);\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_addr.s_addr = INADDR_ANY;\n    servaddr.sin_port = htons(PORT);\n    if (bind(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {\n        perror(\"Bind failed\");\n        exit(1);\n    }\n    printf(\"Waiting for data (will timeout after 10 seconds)...\\n\");\n    struct sockaddr_in cliaddr;\n    len = sizeof(cliaddr);\n    n = recvfrom(sockfd, buffer, MAXLINE, 0,\n                 (struct sockaddr *)&cliaddr, &len);\n    if (n < 0) {\n        if (errno == EAGAIN || errno == EWOULDBLOCK) {\n            printf(\"Receive TIMED OUT after 10 seconds (as expected).\\n\");\n        } else {\n            perror(\"recvfrom error\");\n        }\n    } else {\n        buffer[n] = '\\0';\n        printf(\"Received: %s\\n\", buffer);\n    }\n    close(sockfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q13",
-    "num": "13",
-    "title": "write a  C code setsockopt() to increase send buffer size of a socket to 1024 bytes.",
-    "folderName": "q13_Setsockopt_Increase",
-    "cmd": "cat 13_send_buffer.c",
-    "lang": "C",
-    "fileName": "13_send_buffer.c",
-    "description": "setsockopt() - Increase Send Buffer Size to 1024 bytes",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <sys/socket.h>\n#include <arpa/inet.h>\nint main() {\n    int sockfd;\n    int send_buf_size;\n    socklen_t optlen;\n    printf(\"=== setsockopt() - Send Buffer Size Demo ===\\n\\n\");\n    sockfd = socket(AF_INET, SOCK_STREAM, 0);\n    if (sockfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    printf(\"Socket created successfully (fd = %d)\\n\", sockfd);\n    optlen = sizeof(send_buf_size);\n    getsockopt(sockfd, SOL_SOCKET, SO_SNDBUF, &send_buf_size, &optlen);\n    printf(\"Default send buffer size: %d bytes\\n\", send_buf_size);\n    send_buf_size = 1024;\n    if (setsockopt(sockfd, SOL_SOCKET, SO_SNDBUF, &send_buf_size, sizeof(send_buf_size)) < 0) {\n        perror(\"setsockopt SO_SNDBUF failed\");\n        exit(1);\n    }\n    printf(\"Send buffer size set to 1024 bytes using setsockopt()\\n\");\n    optlen = sizeof(send_buf_size);\n    getsockopt(sockfd, SOL_SOCKET, SO_SNDBUF, &send_buf_size, &optlen);\n    printf(\"Verified send buffer size: %d bytes\\n\", send_buf_size);\n    printf(\"(Note: Kernel may double the requested value for internal use)\\n\");\n    close(sockfd);\n    printf(\"\\nSocket closed. Program completed.\\n\");\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q14",
-    "num": "14",
-    "title": "Write a code to differentiate readv() / writev() , to enable scatter read and gather write operations.",
-    "folderName": "q14_Readv_Writev",
-    "cmd": "cat 14_readv_writev.c",
-    "lang": "C",
-    "fileName": "14_readv_writev.c",
-    "description": "readv() and writev() - Scatter Read and Gather Write",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <fcntl.h>\n#include <sys/uio.h>  \nint main() {\n    int fd;\n    ssize_t bytes_written, bytes_read;\n    printf(\"=== readv() / writev() - Scatter Read and Gather Write ===\\n\\n\");\n    printf(\"--- writev() (Gather Write) ---\\n\");\n    printf(\"Writes data from MULTIPLE buffers into a SINGLE file in one call.\\n\\n\");\n    char buf1[] = \"Hello, \";\n    char buf2[] = \"this is a \";\n    char buf3[] = \"gather write demo!\\n\";\n    struct iovec iov_write[3];\n    iov_write[0].iov_base = buf1;\n    iov_write[0].iov_len = strlen(buf1);\n    iov_write[1].iov_base = buf2;\n    iov_write[1].iov_len = strlen(buf2);\n    iov_write[2].iov_base = buf3;\n    iov_write[2].iov_len = strlen(buf3);\n    fd = open(\"test_writev.txt\", O_WRONLY | O_CREAT | O_TRUNC, 0644);\n    if (fd < 0) {\n        perror(\"open failed\");\n        exit(1);\n    }\n    bytes_written = writev(fd, iov_write, 3);\n    printf(\"writev(): Wrote %zd bytes from 3 buffers into file\\n\", bytes_written);\n    printf(\"  Buffer 1: \\\"%s\\\" (%zu bytes)\\n\", buf1, strlen(buf1));\n    printf(\"  Buffer 2: \\\"%s\\\" (%zu bytes)\\n\", buf2, strlen(buf2));\n    printf(\"  Buffer 3: \\\"%s\\\" (%zu bytes)\\n\", buf3, strlen(buf3));\n    close(fd);\n    printf(\"\\n--- readv() (Scatter Read) ---\\n\");\n    printf(\"Reads data from a SINGLE file into MULTIPLE buffers in one call.\\n\\n\");\n    char rbuf1[8];   \n    char rbuf2[11];  \n    char rbuf3[20];  \n    memset(rbuf1, 0, sizeof(rbuf1));\n    memset(rbuf2, 0, sizeof(rbuf2));\n    memset(rbuf3, 0, sizeof(rbuf3));\n    struct iovec iov_read[3];\n    iov_read[0].iov_base = rbuf1;\n    iov_read[0].iov_len = 7;   \n    iov_read[1].iov_base = rbuf2;\n    iov_read[1].iov_len = 10;  \n    iov_read[2].iov_base = rbuf3;\n    iov_read[2].iov_len = 19;  \n    fd = open(\"test_writev.txt\", O_RDONLY);\n    if (fd < 0) {\n        perror(\"open failed\");\n        exit(1);\n    }\n    bytes_read = readv(fd, iov_read, 3);\n    printf(\"readv(): Read %zd bytes into 3 buffers from file\\n\", bytes_read);\n    printf(\"  Buffer 1: \\\"%s\\\" (7 bytes)\\n\", rbuf1);\n    printf(\"  Buffer 2: \\\"%s\\\" (10 bytes)\\n\", rbuf2);\n    printf(\"  Buffer 3: \\\"%s\\\" (19 bytes)\\n\", rbuf3);\n    close(fd);\n    printf(\"\\n=== Comparison: readv/writev vs read/write ===\\n\");\n    printf(\"+-----------+----------------------------------+\\n\");\n    printf(\"| Function  | Description                      |\\n\");\n    printf(\"+-----------+----------------------------------+\\n\");\n    printf(\"| write()   | Writes from ONE buffer           |\\n\");\n    printf(\"| writev()  | Writes from MULTIPLE buffers     |\\n\");\n    printf(\"|           | (Gather Write - gathers data     |\\n\");\n    printf(\"|           |  from multiple sources)           |\\n\");\n    printf(\"+-----------+----------------------------------+\\n\");\n    printf(\"| read()    | Reads into ONE buffer            |\\n\");\n    printf(\"| readv()   | Reads into MULTIPLE buffers      |\\n\");\n    printf(\"|           | (Scatter Read - scatters data     |\\n\");\n    printf(\"|           |  into multiple destinations)      |\\n\");\n    printf(\"+-----------+----------------------------------+\\n\");\n    printf(\"\\nAdvantage: Fewer system calls = better performance!\\n\");\n    remove(\"test_writev.txt\");\n    return 0;\n}\n15 ) write Mini DNS"
-  },
-  {
-    "id": "cn-q15",
-    "num": "14",
-    "title": "Write a code to differentiate readv() / writev() , to enable scatter read and gather write operations.",
-    "folderName": "q14_Readv_Writev",
-    "cmd": "cat 15_mini_dns.c",
-    "lang": "C",
-    "fileName": "15_mini_dns.c",
-    "description": "Mini DNS Resolver",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <netdb.h>\n#include <arpa/inet.h>\n#include <sys/socket.h>\n#define MAX_HOSTNAME 256\nint main() {\n    char hostname[MAX_HOSTNAME];\n    struct addrinfo hints, *res, *p;\n    char ipstr[INET6_ADDRSTRLEN];\n    int status;\n    printf(\"=== Mini DNS Resolver ===\\n\");\n    printf(\"Resolves domain names to IP addresses.\\n\\n\");\n    printf(\"Enter domain name (e.g., www.google.com): \");\n    scanf(\"%s\", hostname);\n    memset(&hints, 0, sizeof(hints));\n    hints.ai_family = AF_UNSPEC;      \n    hints.ai_socktype = SOCK_STREAM;  \n    printf(\"\\nResolving '%s'...\\n\\n\", hostname);\n    status = getaddrinfo(hostname, NULL, &hints, &res);\n    if (status != 0) {\n        fprintf(stderr, \"DNS resolution failed: %s\\n\", gai_strerror(status));\n        exit(1);\n    }\n    printf(\"IP Addresses for %s:\\n\", hostname);\n    printf(\"------------------------------\\n\");\n    int count = 0;\n    for (p = res; p != NULL; p = p->ai_next) {\n        void *addr;\n        char *ipver;\n        if (p->ai_family == AF_INET) {\n            struct sockaddr_in *ipv4 = (struct sockaddr_in *)p->ai_addr;\n            addr = &(ipv4->sin_addr);\n            ipver = \"IPv4\";\n        } else {\n            struct sockaddr_in6 *ipv6 = (struct sockaddr_in6 *)p->ai_addr;\n            addr = &(ipv6->sin6_addr);\n            ipver = \"IPv6\";\n        }\n        inet_ntop(p->ai_family, addr, ipstr, sizeof(ipstr));\n        printf(\"  %s: %s\\n\", ipver, ipstr);\n        count++;\n    }\n    printf(\"------------------------------\\n\");\n    printf(\"Total addresses found: %d\\n\", count);\n    printf(\"\\n--- Reverse DNS Lookup ---\\n\");\n    if (res != NULL) {\n        char host[NI_MAXHOST];\n        status = getnameinfo(res->ai_addr, res->ai_addrlen,\n                             host, sizeof(host), NULL, 0, 0);\n        if (status == 0) {\n            printf(\"Reverse lookup: %s\\n\", host);\n        } else {\n            printf(\"Reverse lookup failed: %s\\n\", gai_strerror(status));\n        }\n    }\n    freeaddrinfo(res);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q16",
-    "num": "16",
-    "title": "Write  Traceroute ( max 30 hops )",
-    "folderName": "q16_Traceroute_Max_30_Hops",
-    "cmd": "cat 16_traceroute.c",
-    "lang": "C",
-    "fileName": "16_traceroute.c",
-    "description": "Mini Traceroute (Max 30 Hops)",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#include <netinet/ip.h>\n#include <netinet/ip_icmp.h>\n#include <netdb.h>\n#include <sys/time.h>\n#include <sys/socket.h>\n#include <errno.h>\n#define MAX_HOPS 30\n#define PACKET_SIZE 64\n#define TIMEOUT 3  \nunsigned short checksum(void *b, int len) {\n    unsigned short *buf = b;\n    unsigned int sum = 0;\n    unsigned short result;\n    for (sum = 0; len > 1; len -= 2)\n        sum += *buf++;\n    if (len == 1)\n        sum += *(unsigned char *)buf;\n    sum = (sum >> 16) + (sum & 0xFFFF);\n    sum += (sum >> 16);\n    result = ~sum;\n    return result;\n}\nint main() {\n    char hostname[256];\n    struct sockaddr_in dest, recv_addr;\n    struct hostent *host;\n    int send_sock, recv_sock;\n    int ttl, seq = 0;\n    char send_buf[PACKET_SIZE], recv_buf[512];\n    struct icmphdr *icmp_hdr;\n    struct timeval tv, start, end;\n    socklen_t addr_len;\n    int n;\n    fd_set fds;\n    printf(\"=== Mini Traceroute (Max %d Hops) ===\\n\\n\", MAX_HOPS);\n    printf(\"Enter destination (e.g., www.google.com): \");\n    scanf(\"%s\", hostname);\n    host = gethostbyname(hostname);\n    if (host == NULL) {\n        fprintf(stderr, \"Could not resolve hostname: %s\\n\", hostname);\n        exit(1);\n    }\n    memset(&dest, 0, sizeof(dest));\n    dest.sin_family = AF_INET;\n    memcpy(&dest.sin_addr, host->h_addr, host->h_length);\n    printf(\"Traceroute to %s (%s), %d hops max\\n\\n\",\n           hostname, inet_ntoa(dest.sin_addr), MAX_HOPS);\n    send_sock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);\n    if (send_sock < 0) {\n        perror(\"Socket creation failed (need root/sudo)\");\n        exit(1);\n    }\n    for (ttl = 1; ttl <= MAX_HOPS; ttl++) {\n        setsockopt(send_sock, IPPROTO_IP, IP_TTL, &ttl, sizeof(ttl));\n        memset(send_buf, 0, PACKET_SIZE);\n        icmp_hdr = (struct icmphdr *)send_buf;\n        icmp_hdr->type = ICMP_ECHO;\n        icmp_hdr->code = 0;\n        icmp_hdr->un.echo.id = getpid();\n        icmp_hdr->un.echo.sequence = seq++;\n        icmp_hdr->checksum = 0;\n        icmp_hdr->checksum = checksum(send_buf, PACKET_SIZE);\n        gettimeofday(&start, NULL);\n        if (sendto(send_sock, send_buf, PACKET_SIZE, 0,\n                   (struct sockaddr *)&dest, sizeof(dest)) < 0) {\n            perror(\"sendto failed\");\n            continue;\n        }\n        FD_ZERO(&fds);\n        FD_SET(send_sock, &fds);\n        tv.tv_sec = TIMEOUT;\n        tv.tv_usec = 0;\n        int ret = select(send_sock + 1, &fds, NULL, NULL, &tv);\n        if (ret == 0) {\n            printf(\"%2d  *  *  * (Request timed out)\\n\", ttl);\n            continue;\n        }\n        if (ret < 0) {\n            perror(\"select failed\");\n            continue;\n        }\n        addr_len = sizeof(recv_addr);\n        n = recvfrom(send_sock, recv_buf, sizeof(recv_buf), 0,\n                     (struct sockaddr *)&recv_addr, &addr_len);\n        gettimeofday(&end, NULL);\n        if (n < 0) {\n            printf(\"%2d  *  *  * (No reply)\\n\", ttl);\n            continue;\n        }\n        double rtt = (end.tv_sec - start.tv_sec) * 1000.0 +\n                     (end.tv_usec - start.tv_usec) / 1000.0;\n        char router_name[NI_MAXHOST];\n        int name_ret = getnameinfo((struct sockaddr *)&recv_addr, addr_len,\n                                   router_name, sizeof(router_name),\n                                   NULL, 0, 0);\n        if (name_ret == 0) {\n            printf(\"%2d  %s (%s)  %.3f ms\\n\", ttl,\n                   router_name, inet_ntoa(recv_addr.sin_addr), rtt);\n        } else {\n            printf(\"%2d  %s  %.3f ms\\n\", ttl,\n                   inet_ntoa(recv_addr.sin_addr), rtt);\n        }\n        if (recv_addr.sin_addr.s_addr == dest.sin_addr.s_addr) {\n            printf(\"\\nTrace complete. Destination reached!\\n\");\n            break;\n        }\n    }\n    if (ttl > MAX_HOPS)\n        printf(\"\\nMax hops (%d) reached. Destination not reached.\\n\", MAX_HOPS);\n    close(send_sock);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q17",
-    "num": "17",
-    "title": "Write  PING routine( mini )",
-    "folderName": "q17_Ping_Routine_Mini",
-    "cmd": "cat 17_ping.c",
-    "lang": "C",
-    "fileName": "17_ping.c",
-    "description": "Mini PING",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#include <netinet/ip.h>\n#include <netinet/ip_icmp.h>\n#include <netdb.h>\n#include <sys/time.h>\n#include <sys/socket.h>\n#include <signal.h>\n#define PACKET_SIZE 64\n#define PING_COUNT 5\nint ping_count = 0;\nint recv_count = 0;\nunsigned short checksum(void *b, int len) {\n    unsigned short *buf = b;\n    unsigned int sum = 0;\n    unsigned short result;\n    for (sum = 0; len > 1; len -= 2)\n        sum += *buf++;\n    if (len == 1)\n        sum += *(unsigned char *)buf;\n    sum = (sum >> 16) + (sum & 0xFFFF);\n    sum += (sum >> 16);\n    result = ~sum;\n    return result;\n}\nint main() {\n    char hostname[256];\n    struct sockaddr_in dest_addr, recv_addr;\n    struct hostent *host;\n    int sockfd;\n    char send_buf[PACKET_SIZE], recv_buf[512];\n    struct icmphdr *icmp_hdr;\n    struct timeval start, end, tv;\n    socklen_t addr_len;\n    int i, n;\n    printf(\"=== Mini PING ===\\n\\n\");\n    printf(\"Enter hostname or IP (e.g., www.google.com): \");\n    scanf(\"%s\", hostname);\n    host = gethostbyname(hostname);\n    if (host == NULL) {\n        fprintf(stderr, \"Could not resolve: %s\\n\", hostname);\n        exit(1);\n    }\n    memset(&dest_addr, 0, sizeof(dest_addr));\n    dest_addr.sin_family = AF_INET;\n    memcpy(&dest_addr.sin_addr, host->h_addr, host->h_length);\n    printf(\"PING %s (%s): %d bytes data\\n\\n\",\n           hostname, inet_ntoa(dest_addr.sin_addr), PACKET_SIZE);\n    sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);\n    if (sockfd < 0) {\n        perror(\"Socket creation failed (need root/sudo)\");\n        exit(1);\n    }\n    tv.tv_sec = 2;\n    tv.tv_usec = 0;\n    setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));\n    double total_rtt = 0, min_rtt = 99999, max_rtt = 0;\n    for (i = 0; i < PING_COUNT; i++) {\n        memset(send_buf, 0, PACKET_SIZE);\n        icmp_hdr = (struct icmphdr *)send_buf;\n        icmp_hdr->type = ICMP_ECHO;\n        icmp_hdr->code = 0;\n        icmp_hdr->un.echo.id = getpid();\n        icmp_hdr->un.echo.sequence = i;\n        icmp_hdr->checksum = 0;\n        icmp_hdr->checksum = checksum(send_buf, PACKET_SIZE);\n        gettimeofday(&start, NULL);\n        if (sendto(sockfd, send_buf, PACKET_SIZE, 0,\n                   (struct sockaddr *)&dest_addr, sizeof(dest_addr)) < 0) {\n            perror(\"sendto failed\");\n            continue;\n        }\n        ping_count++;\n        addr_len = sizeof(recv_addr);\n        n = recvfrom(sockfd, recv_buf, sizeof(recv_buf), 0,\n                     (struct sockaddr *)&recv_addr, &addr_len);\n        gettimeofday(&end, NULL);\n        if (n < 0) {\n            printf(\"Request timeout for icmp_seq %d\\n\", i);\n        } else {\n            recv_count++;\n            double rtt = (end.tv_sec - start.tv_sec) * 1000.0 +\n                         (end.tv_usec - start.tv_usec) / 1000.0;\n            total_rtt += rtt;\n            if (rtt < min_rtt) min_rtt = rtt;\n            if (rtt > max_rtt) max_rtt = rtt;\n            struct iphdr *ip_hdr = (struct iphdr *)recv_buf;\n            printf(\"%d bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms\\n\",\n                   n, inet_ntoa(recv_addr.sin_addr), i,\n                   ip_hdr->ttl, rtt);\n        }\n        sleep(1);  \n    }\n    printf(\"\\n--- %s ping statistics ---\\n\", hostname);\n    printf(\"%d packets transmitted, %d received, %.0f%% packet loss\\n\",\n           ping_count, recv_count,\n           ((float)(ping_count - recv_count) / ping_count) * 100);\n    if (recv_count > 0) {\n        printf(\"rtt min/avg/max = %.3f/%.3f/%.3f ms\\n\",\n               min_rtt, total_rtt / recv_count, max_rtt);\n    }\n    close(sockfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q18a",
-    "num": "18",
-    "title": "input : unsorted elemetns : at client-side Output : sorted elements. : at server side",
-    "folderName": "q18_Tcp_Input_Unsorted",
-    "cmd": "cat 18_tcp_sort_server.c",
-    "lang": "C",
-    "fileName": "18_tcp_sort_server.c",
-    "description": "TCP Sort Server (Iterative + Concurrent)",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#include <signal.h>\n#include <sys/wait.h>\n#define PORT 8080\n#define MAXLINE 1024\n#define MAX_ELEMENTS 100\nvoid bubble_sort(int arr[], int n) {\n    int i, j, temp;\n    for (i = 0; i < n - 1; i++) {\n        for (j = 0; j < n - i - 1; j++) {\n            if (arr[j] > arr[j + 1]) {\n                temp = arr[j];\n                arr[j] = arr[j + 1];\n                arr[j + 1] = temp;\n            }\n        }\n    }\n}\nvoid handle_client(int connfd) {\n    char buffer[MAXLINE], result[MAXLINE];\n    int arr[MAX_ELEMENTS];\n    int n, count, i;\n    memset(buffer, 0, MAXLINE);\n    n = read(connfd, buffer, MAXLINE);\n    buffer[n] = '\\0';\n    printf(\"Received unsorted: %s\\n\", buffer);\n    count = 0;\n    char *token = strtok(buffer, \" \");\n    while (token != NULL && count < MAX_ELEMENTS) {\n        arr[count++] = atoi(token);\n        token = strtok(NULL, \" \");\n    }\n    bubble_sort(arr, count);\n    memset(result, 0, MAXLINE);\n    for (i = 0; i < count; i++) {\n        char temp[20];\n        sprintf(temp, \"%d \", arr[i]);\n        strcat(result, temp);\n    }\n    printf(\"Sorted result: %s\\n\", result);\n    write(connfd, result, strlen(result));\n}\nvoid sigchld_handler(int sig) {\n    while (waitpid(-1, NULL, WNOHANG) > 0);\n}\nint main() {\n    int listenfd, connfd;\n    struct sockaddr_in servaddr, cliaddr;\n    socklen_t clilen;\n    pid_t pid;\n    signal(SIGCHLD, sigchld_handler);\n    listenfd = socket(AF_INET, SOCK_STREAM, 0);\n    if (listenfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    int opt = 1;\n    setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_addr.s_addr = INADDR_ANY;\n    servaddr.sin_port = htons(PORT);\n    if (bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {\n        perror(\"Bind failed\");\n        exit(1);\n    }\n    listen(listenfd, 5);\n    printf(\"TCP Sort Server (Concurrent) started on port %d...\\n\", PORT);\n    while (1) {\n        clilen = sizeof(cliaddr);\n        connfd = accept(listenfd, (struct sockaddr *)&cliaddr, &clilen);\n        if (connfd < 0) {\n            perror(\"Accept failed\");\n            continue;\n        }\n        printf(\"Client connected: %s:%d\\n\",\n               inet_ntoa(cliaddr.sin_addr), ntohs(cliaddr.sin_port));\n        pid = fork();\n        if (pid == 0) {\n            close(listenfd);\n            handle_client(connfd);\n            close(connfd);\n            exit(0);\n        } else {\n            close(connfd);\n        }\n    }\n    close(listenfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q18b",
-    "num": "18",
-    "title": "input : unsorted elemetns : at client-side Output : sorted elements. : at server side",
-    "folderName": "q18_Tcp_Input_Unsorted",
-    "cmd": "cat 18_tcp_sort_client.c",
-    "lang": "C",
-    "fileName": "18_tcp_sort_client.c",
-    "description": "TCP Sort Client",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\nint main() {\n    int sockfd;\n    char buffer[MAXLINE];\n    struct sockaddr_in servaddr;\n    int n, i, count, num;\n    sockfd = socket(AF_INET, SOCK_STREAM, 0);\n    if (sockfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_port = htons(PORT);\n    servaddr.sin_addr.s_addr = inet_addr(\"127.0.0.1\");\n    if (connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {\n        perror(\"Connect failed\");\n        exit(1);\n    }\n    printf(\"=== TCP Sort Client ===\\n\");\n    printf(\"Enter number of elements: \");\n    scanf(\"%d\", &count);\n    memset(buffer, 0, MAXLINE);\n    for (i = 0; i < count; i++) {\n        printf(\"Enter element %d: \", i + 1);\n        scanf(\"%d\", &num);\n        char temp[20];\n        sprintf(temp, \"%d \", num);\n        strcat(buffer, temp);\n    }\n    printf(\"\\nUnsorted elements sent: %s\\n\", buffer);\n    write(sockfd, buffer, strlen(buffer));\n    memset(buffer, 0, MAXLINE);\n    n = read(sockfd, buffer, MAXLINE);\n    buffer[n] = '\\0';\n    printf(\"Sorted elements from server: %s\\n\", buffer);\n    close(sockfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q19a",
-    "num": "19",
-    "title": "input : unsorted elemetns : at client side Output : sorted elements. : at server side",
-    "folderName": "q19_Udp_Input_Unsorted",
-    "cmd": "cat 19_udp_sort_server.c",
-    "lang": "C",
-    "fileName": "19_udp_sort_server.c",
-    "description": "UDP Sort Server",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\n#define MAX_ELEMENTS 100\nvoid bubble_sort(int arr[], int n) {\n    int i, j, temp;\n    for (i = 0; i < n - 1; i++) {\n        for (j = 0; j < n - i - 1; j++) {\n            if (arr[j] > arr[j + 1]) {\n                temp = arr[j];\n                arr[j] = arr[j + 1];\n                arr[j + 1] = temp;\n            }\n        }\n    }\n}\nint main() {\n    int sockfd;\n    char buffer[MAXLINE], result[MAXLINE];\n    struct sockaddr_in servaddr, cliaddr;\n    socklen_t len;\n    int n, count, i;\n    int arr[MAX_ELEMENTS];\n    sockfd = socket(AF_INET, SOCK_DGRAM, 0);\n    if (sockfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_addr.s_addr = INADDR_ANY;\n    servaddr.sin_port = htons(PORT);\n    if (bind(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {\n        perror(\"Bind failed\");\n        exit(1);\n    }\n    printf(\"UDP Sort Server started on port %d...\\n\", PORT);\n    while (1) {\n        len = sizeof(cliaddr);\n        memset(buffer, 0, MAXLINE);\n        n = recvfrom(sockfd, buffer, MAXLINE, 0,\n                     (struct sockaddr *)&cliaddr, &len);\n        buffer[n] = '\\0';\n        printf(\"Received unsorted: %s\\n\", buffer);\n        count = 0;\n        char temp_buf[MAXLINE];\n        strcpy(temp_buf, buffer);\n        char *token = strtok(temp_buf, \" \");\n        while (token != NULL && count < MAX_ELEMENTS) {\n            arr[count++] = atoi(token);\n            token = strtok(NULL, \" \");\n        }\n        bubble_sort(arr, count);\n        memset(result, 0, MAXLINE);\n        for (i = 0; i < count; i++) {\n            char temp[20];\n            sprintf(temp, \"%d \", arr[i]);\n            strcat(result, temp);\n        }\n        printf(\"Sorted result: %s\\n\\n\", result);\n        sendto(sockfd, result, strlen(result), 0,\n               (struct sockaddr *)&cliaddr, len);\n    }\n    close(sockfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q19b",
-    "num": "19",
-    "title": "input : unsorted elemetns : at client side Output : sorted elements. : at server side",
-    "folderName": "q19_Udp_Input_Unsorted",
-    "cmd": "cat 19_udp_sort_client.c",
-    "lang": "C",
-    "fileName": "19_udp_sort_client.c",
-    "description": "UDP Sort Client",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\nint main() {\n    int sockfd;\n    char buffer[MAXLINE];\n    struct sockaddr_in servaddr;\n    socklen_t len;\n    int n, i, count, num;\n    sockfd = socket(AF_INET, SOCK_DGRAM, 0);\n    if (sockfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_port = htons(PORT);\n    servaddr.sin_addr.s_addr = inet_addr(\"127.0.0.1\");\n    printf(\"=== UDP Sort Client ===\\n\");\n    printf(\"Enter number of elements: \");\n    scanf(\"%d\", &count);\n    memset(buffer, 0, MAXLINE);\n    for (i = 0; i < count; i++) {\n        printf(\"Enter element %d: \", i + 1);\n        scanf(\"%d\", &num);\n        char temp[20];\n        sprintf(temp, \"%d \", num);\n        strcat(buffer, temp);\n    }\n    printf(\"\\nUnsorted elements sent: %s\\n\", buffer);\n    sendto(sockfd, buffer, strlen(buffer), 0,\n           (struct sockaddr *)&servaddr, sizeof(servaddr));\n    len = sizeof(servaddr);\n    memset(buffer, 0, MAXLINE);\n    n = recvfrom(sockfd, buffer, MAXLINE, 0,\n                 (struct sockaddr *)&servaddr, &len);\n    buffer[n] = '\\0';\n    printf(\"Sorted elements from server: %s\\n\", buffer);\n    close(sockfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q20a",
-    "num": "20",
-    "title": ".  Input : searching an element in a list of 10 sorted elements Output : set of 10 sorted elements Use either TCP / UDP system calls",
-    "folderName": "q20_Input_Search",
-    "cmd": "cat 20_tcp_search_server.c",
-    "lang": "C",
-    "fileName": "20_tcp_search_server.c",
-    "description": "TCP Binary Search Server",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\nint binary_search(int arr[], int n, int key) {\n    int low = 0, high = n - 1, mid;\n    while (low <= high) {\n        mid = (low + high) / 2;\n        if (arr[mid] == key)\n            return mid;  \n        else if (arr[mid] < key)\n            low = mid + 1;\n        else\n            high = mid - 1;\n    }\n    return -1;  \n}\nint main() {\n    int listenfd, connfd;\n    char buffer[MAXLINE], result[MAXLINE];\n    struct sockaddr_in servaddr, cliaddr;\n    socklen_t clilen;\n    int n, i;\n    listenfd = socket(AF_INET, SOCK_STREAM, 0);\n    if (listenfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    int opt = 1;\n    setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_addr.s_addr = INADDR_ANY;\n    servaddr.sin_port = htons(PORT);\n    if (bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {\n        perror(\"Bind failed\");\n        exit(1);\n    }\n    listen(listenfd, 5);\n    printf(\"TCP Binary Search Server started on port %d...\\n\", PORT);\n    while (1) {\n        clilen = sizeof(cliaddr);\n        connfd = accept(listenfd, (struct sockaddr *)&cliaddr, &clilen);\n        if (connfd < 0) {\n            perror(\"Accept failed\");\n            continue;\n        }\n        printf(\"Client connected.\\n\");\n        memset(buffer, 0, MAXLINE);\n        n = read(connfd, buffer, MAXLINE);\n        buffer[n] = '\\0';\n        printf(\"Received: %s\\n\", buffer);\n        int arr[100], count = 0, key;\n        char *token = strtok(buffer, \" \");\n        count = atoi(token);\n        for (i = 0; i < count; i++) {\n            token = strtok(NULL, \" \");\n            if (token)\n                arr[i] = atoi(token);\n        }\n        token = strtok(NULL, \" \");\n        if (token)\n            key = atoi(token);\n        printf(\"Sorted elements: \");\n        for (i = 0; i < count; i++)\n            printf(\"%d \", arr[i]);\n        printf(\"\\nSearching for: %d\\n\", key);\n        int pos = binary_search(arr, count, key);\n        if (pos != -1) {\n            sprintf(result, \"Element %d FOUND at position %d (0-indexed) in the sorted list.\", key, pos);\n        } else {\n            sprintf(result, \"Element %d NOT FOUND in the sorted list.\", key);\n        }\n        char sorted_str[MAXLINE];\n        memset(sorted_str, 0, MAXLINE);\n        strcat(sorted_str, \"Sorted elements: \");\n        for (i = 0; i < count; i++) {\n            char temp[20];\n            sprintf(temp, \"%d \", arr[i]);\n            strcat(sorted_str, temp);\n        }\n        strcat(sorted_str, \"\\n\");\n        strcat(sorted_str, result);\n        printf(\"Result: %s\\n\\n\", result);\n        write(connfd, sorted_str, strlen(sorted_str));\n        close(connfd);\n    }\n    close(listenfd);\n    return 0;\n}"
-  },
-  {
-    "id": "cn-q20b",
-    "num": "20",
-    "title": ".  Input : searching an element in a list of 10 sorted elements Output : set of 10 sorted elements Use either TCP / UDP system calls",
-    "folderName": "q20_Input_Search",
-    "cmd": "cat 20_tcp_search_client.c",
-    "lang": "C",
-    "fileName": "20_tcp_search_client.c",
-    "description": "TCP Binary Search Client",
-    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <unistd.h>\n#include <arpa/inet.h>\n#define PORT 8080\n#define MAXLINE 1024\n#define NUM_ELEMENTS 10\nint main() {\n    int sockfd;\n    char buffer[MAXLINE];\n    struct sockaddr_in servaddr;\n    int n, i, key;\n    int arr[NUM_ELEMENTS];\n    sockfd = socket(AF_INET, SOCK_STREAM, 0);\n    if (sockfd < 0) {\n        perror(\"Socket creation failed\");\n        exit(1);\n    }\n    memset(&servaddr, 0, sizeof(servaddr));\n    servaddr.sin_family = AF_INET;\n    servaddr.sin_port = htons(PORT);\n    servaddr.sin_addr.s_addr = inet_addr(\"127.0.0.1\");\n    if (connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {\n        perror(\"Connect failed\");\n        exit(1);\n    }\n    printf(\"=== TCP Binary Search Client ===\\n\");\n    printf(\"Enter %d sorted elements:\\n\", NUM_ELEMENTS);\n    for (i = 0; i < NUM_ELEMENTS; i++) {\n        printf(\"Element %d: \", i + 1);\n        scanf(\"%d\", &arr[i]);\n    }\n    printf(\"Enter element to search: \");\n    scanf(\"%d\", &key);\n    memset(buffer, 0, MAXLINE);\n    sprintf(buffer, \"%d \", NUM_ELEMENTS);\n    for (i = 0; i < NUM_ELEMENTS; i++) {\n        char temp[20];\n        sprintf(temp, \"%d \", arr[i]);\n        strcat(buffer, temp);\n    }\n    char temp[20];\n    sprintf(temp, \"%d\", key);\n    strcat(buffer, temp);\n    printf(\"\\nSending to server: %s\\n\", buffer);\n    write(sockfd, buffer, strlen(buffer));\n    memset(buffer, 0, MAXLINE);\n    n = read(sockfd, buffer, MAXLINE);\n    buffer[n] = '\\0';\n    printf(\"\\nServer Response:\\n%s\\n\", buffer);\n    close(sockfd);\n    return 0;\n}"
-  }
-];
 
 export const allLabs: Record<string, LabExperiment[]> = {
   cd: cdLabData,
-  dl: dlLabData,
-  cn: cnLabData
+  record: recordLabData
 };
