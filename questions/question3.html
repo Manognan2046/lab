@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 3 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 3</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question2.html">← Previous</a>
+    <a class="btn" href="question4.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 3</h2>
+    <div class="question">Write a HTML program to demonstrate ONCLICK and ONLOAD</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>&lt;!DOCTYPE html&gt; 
+&lt;html&gt; 
+&lt;head&gt; 
+    &lt;title&gt;ONCLICK and ONLOAD Example&lt;/title&gt; 
+    &lt;script&gt; 
+        
+        function pageLoaded() { 
+            alert(&quot;Welcome! This alert is shown using ONLOAD.&quot;); 
+
+ 
+        } 
+ 
+       
+        function showMessage() { 
+            alert(&quot;Button was clicked! This is ONCLICK.&quot;); 
+        } 
+    &lt;/script&gt; 
+&lt;/head&gt; 
+&lt;body onload=&quot;pageLoaded()&quot;&gt; 
+ 
+    &lt;h2&gt;ONCLICK and ONLOAD Example&lt;/h2&gt; 
+ 
+    &lt;p&gt;Click the button below to see the ONCLICK event in action:&lt;/p&gt; 
+    &lt;button onclick=&quot;showMessage()&quot;&gt;Click Me&lt;/button&gt; 
+&lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 29 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 29</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question28.html">← Previous</a>
+    <a class="btn" href="question30.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 29</h2>
+    <div class="question">Write a Java script that can handle form data submitted via post</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>&lt;!DOCTYPE html&gt; 
+&lt;html&gt; 
+&lt;head&gt; 
+  &lt;title&gt;Form POST with JavaScript&lt;/title&gt; 
+  &lt;script&gt; 
+    function submitForm(event) { 
+      event.preventDefault(); // prevent default form submission 
+ 
+      var formData = new FormData(document.getElementById(&quot;myForm&quot;)); 
+ 
+      // Convert form data to JSON object 
+      var jsonData = {}; 
+      formData.forEach(function(value, key){ 
+
+ 
+          jsonData[key] = value; 
+      }); 
+ 
+      // Display data before POST 
+      alert(&quot;Form data to be sent: &quot; + JSON.stringify(jsonData)); 
+ 
+      // POST request using fetch 
+      fetch(&#x27;https://httpbin.org/post&#x27;, { // using httpbin for demo POST endpoint 
+        method: &#x27;POST&#x27;, 
+        headers: { 
+          &#x27;Content-Type&#x27;: &#x27;application/json&#x27; 
+        }, 
+        body: JSON.stringify(jsonData) 
+      }) 
+      .then(response =&gt; response.json()) 
+      .then(data =&gt; { 
+        console.log(data); 
+        alert(&quot;POST request successful!\nResponse: &quot; + JSON.stringify(data.json)); 
+      }) 
+      .catch(error =&gt; { 
+        console.error(&#x27;Error:&#x27;, error); 
+        alert(&quot;POST request failed.&quot;); 
+      }); 
+    } 
+  &lt;/script&gt; 
+&lt;/head&gt; 
+ 
+&lt;body&gt; 
+
+ 
+  &lt;h2&gt;Form POST Submission using JavaScript Fetch&lt;/h2&gt; 
+ 
+  &lt;form id=&quot;myForm&quot; onsubmit=&quot;submitForm(event)&quot;&gt; 
+    Name: &lt;input type=&quot;text&quot; name=&quot;name&quot; required&gt;&lt;br&gt;&lt;br&gt; 
+    Email: &lt;input type=&quot;email&quot; name=&quot;email&quot; required&gt;&lt;br&gt;&lt;br&gt; 
+    &lt;button type=&quot;submit&quot;&gt;Submit&lt;/button&gt; 
+  &lt;/form&gt; 
+ 
+  &lt;p&gt;Check console or alert box for POST response.&lt;/p&gt; 
+&lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

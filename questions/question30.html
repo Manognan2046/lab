@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 30 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 30</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question29.html">← Previous</a>
+    <a class="btn" href="question31.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 30</h2>
+    <div class="question">Write an HTML page including any required JavaScript that takes a</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>text field in the range of 0 to 999 and shows it in words. It should not accept four and 
+above digits, alphabets and special characters. 
+&lt;!DOCTYPE html&gt; 
+
+ 
+&lt;html lang=&quot;en&quot;&gt; 
+&lt;head&gt; 
+    &lt;title&gt;Number to Words&lt;/title&gt; 
+    &lt;style&gt; 
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 50px; 
+        } 
+        .container { 
+            max-width: 500px; 
+            margin: auto; 
+            padding: 20px; 
+            border: 1px solid #ccc; 
+            border-radius: 8px; 
+            background-color: #f9f9f9; 
+        } 
+        input { 
+            width: 100%; 
+            padding: 10px; 
+            margin: 10px 0; 
+            border: 1px solid #ccc; 
+            border-radius: 4px; 
+        } 
+        button { 
+            padding: 10px 20px; 
+            border: none; 
+
+ 
+            border-radius: 4px; 
+            background-color: #007BFF; 
+            color: #fff; 
+            cursor: pointer; 
+        } 
+        button:hover { 
+            background-color: #0056b3; 
+        } 
+        .output { 
+            margin-top: 20px; 
+            font-size: 18px; 
+            font-weight: bold; 
+        } 
+    &lt;/style&gt; 
+&lt;/head&gt; 
+&lt;body&gt; 
+    &lt;div class=&quot;container&quot;&gt; 
+        &lt;h2&gt;Number to Words Converter&lt;/h2&gt; 
+        &lt;form id=&quot;numberForm&quot;&gt; 
+            &lt;label for=&quot;number&quot;&gt;Enter a number (0-999):&lt;/label&gt; 
+            &lt;input type=&quot;text&quot; id=&quot;number&quot; name=&quot;number&quot; placeholder=&quot;Enter a number&quot;&gt; 
+            &lt;button type=&quot;button&quot; onclick=&quot;convertToWords()&quot;&gt;Convert&lt;/button&gt; 
+        &lt;/form&gt; 
+        &lt;div class=&quot;output&quot; id=&quot;output&quot;&gt;&lt;/div&gt; 
+    &lt;/div&gt; 
+    &lt;script&gt; 
+
+ 
+        function convertToWords() { 
+            const numberInput = document.getElementById(&quot;number&quot;).value.trim(); 
+            const outputDiv = document.getElementById(&quot;output&quot;); 
+            outputDiv.textContent = &quot;&quot;; 
+            if (!/^\d+$/.test(numberInput)) { 
+                outputDiv.textContent = &quot;Invalid input. Please enter a valid number (0-999).&quot;; 
+                return; 
+            } 
+            const number = parseInt(numberInput, 10); 
+            if (number &lt; 0 || number &gt; 999) { 
+                outputDiv.textContent = &quot;Number out of range. Please enter a number between 0 
+and 999.&quot;; 
+                return; 
+            } 
+            const singleDigits = [&quot;&quot;, &quot;One&quot;, &quot;Two&quot;, &quot;Three&quot;, &quot;Four&quot;, &quot;Five&quot;, &quot;Six&quot;, &quot;Seven&quot;, &quot;Eight&quot;, 
+&quot;Nine&quot;]; 
+            const teens = [&quot;Ten&quot;, &quot;Eleven&quot;, &quot;Twelve&quot;, &quot;Thirteen&quot;, &quot;Fourteen&quot;, &quot;Fifteen&quot;, &quot;Sixteen&quot;, 
+&quot;Seventeen&quot;, &quot;Eighteen&quot;, &quot;Nineteen&quot;]; 
+            const tens = [&quot;&quot;, &quot;&quot;, &quot;Twenty&quot;, &quot;Thirty&quot;, &quot;Forty&quot;, &quot;Fifty&quot;, &quot;Sixty&quot;, &quot;Seventy&quot;, &quot;Eighty&quot;, 
+&quot;Ninety&quot;]; 
+            let words = &quot;&quot;; 
+            if (number === 0) { 
+                words = &quot;Zero&quot;; 
+            } else { 
+                if (Math.floor(number / 100) &gt; 0) { 
+                    words += singleDigits[Math.floor(number / 100)] + &quot; Hundred &quot;; 
+                } 
+                const remainder = number % 100; 
+
+ 
+                if (remainder &gt;= 10 &amp;&amp; remainder &lt; 20) { 
+                    words += teens[remainder - 10]; 
+                } else { 
+                    if (Math.floor(remainder / 10) &gt; 0) { 
+                        words += tens[Math.floor(remainder / 10)] + &quot; &quot;; 
+                    } 
+                    if (remainder % 10 &gt; 0) { 
+                        words += singleDigits[remainder % 10]; 
+                    } 
+                } 
+            } 
+            outputDiv.textContent = &quot;In words: &quot; + words.trim(); 
+        } 
+    &lt;/script&gt; 
+&lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

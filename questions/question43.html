@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 43 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 43</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question42.html">← Previous</a>
+    <a class="btn" href="question44.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 43</h2>
+    <div class="question">Write a console application that obtains four integer values from the user and displays the</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>displays the product using ASP.NET  
+using System; 
+ 
+namespace ProductCalculator 
+{ 
+    class Program 
+    { 
+        static void Main(string[] args) 
+        { 
+
+ 
+            int[] numbers = new int[4]; 
+            int product = 1; 
+ 
+            Console.WriteLine(&quot;Enter four integer values:&quot;); 
+ 
+            for (int i = 0; i &lt; 4; i++) 
+            { 
+                Console.Write(&quot;Enter number {0}: &quot;, i + 1); 
+                string input = Console.ReadLine(); 
+ 
+                // Input validation 
+                while (!int.TryParse(input, out numbers[i])) 
+                { 
+                    Console.Write(&quot;Invalid input. Enter an integer for number {0}: &quot;, i + 1); 
+                    input = Console.ReadLine(); 
+                } 
+ 
+                product *= numbers[i]; 
+            } 
+ 
+            Console.WriteLine(&quot;The product of the entered numbers is: &quot; + product); 
+        } 
+    } 
+}</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

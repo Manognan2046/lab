@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 20 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 20</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question19.html">← Previous</a>
+    <a class="btn" href="question21.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 20</h2>
+    <div class="question">Create a function that accepts an array by reference, modifies it by doubling all its elements,</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>elements, and returns the modified array. 
+&lt;html&gt; 
+  &lt;body&gt; 
+    &lt;h3&gt;Double Array Elements (Dynamic Input)&lt;/h3&gt; 
+    &lt;script&gt; 
+      function doubleArray(arr) { 
+        for (var i = 0; i &lt; arr.length; i++) { 
+          arr[i] = arr[i] * 2; 
+        } 
+        return arr; 
+
+ 
+      } 
+      var input = prompt(&quot;Enter numbers separated by commas:&quot;); 
+      var numbers = input.split(&quot;,&quot;).map(Number); 
+      document.write(&quot;Original Array: &quot; + numbers + &quot;&lt;br&gt;&lt;br&gt;&quot;); 
+      var modified = doubleArray(numbers); 
+      document.write(&quot;Modified Array (Doubled): &quot; + modified); 
+    &lt;/script&gt; 
+  &lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

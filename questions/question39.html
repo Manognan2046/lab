@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 39 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 39</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question38.html">← Previous</a>
+    <a class="btn" href="question40.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 39</h2>
+    <div class="question">Write a program on &amp; quot raw &amp; quot AJAX implementation using the XMLHttpRequest</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>XMLHttpRequest object to fetch and display data from an XML file.  
+data.xml 
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; 
+&lt;books&gt; 
+  &lt;book&gt; 
+    &lt;title&gt;The Alchemist&lt;/title&gt; 
+
+ 
+    &lt;author&gt;Paulo Coelho&lt;/author&gt; 
+  &lt;/book&gt; 
+  &lt;book&gt; 
+    &lt;title&gt;Harry Potter&lt;/title&gt; 
+    &lt;author&gt;J.K. Rowling&lt;/author&gt; 
+  &lt;/book&gt; 
+&lt;/books&gt; 
+ 
+index.html 
+&lt;!DOCTYPE html&gt; 
+&lt;html&gt; 
+&lt;head&gt; 
+  &lt;title&gt;AJAX XML Data Fetch&lt;/title&gt; 
+  &lt;style&gt; 
+    body { font-family: Arial; padding: 20px; } 
+    .book { margin-bottom: 10px; } 
+  &lt;/style&gt; 
+&lt;/head&gt; 
+&lt;body&gt; 
+  &lt;h2&gt;Books from XML&lt;/h2&gt; 
+  &lt;button onclick=&quot;loadXMLData()&quot;&gt;Load Books&lt;/button&gt; 
+  &lt;div id=&quot;output&quot;&gt;&lt;/div&gt; 
+ 
+  &lt;script&gt; 
+    function loadXMLData() { 
+      // Create an XMLHttpRequest object 
+      var xhr = new XMLHttpRequest(); 
+ 
+      // Define the request 
+      xhr.open(&quot;GET&quot;, &quot;data.xml&quot;, true); 
+ 
+      // When the request is complete 
+      xhr.onload = function() { 
+        if (xhr.status === 200) { 
+          var xml = xhr.responseXML; 
+          var books = xml.getElementsByTagName(&quot;book&quot;); 
+          var output = &quot;&quot;; 
+ 
+          for (var i = 0; i &lt; books.length; i++) { 
+            var title = books[i].getElementsByTagName(&quot;title&quot;)[0].textContent; 
+            var author = books[i].getElementsByTagName(&quot;author&quot;)[0].textContent; 
+ 
+            output += &quot;&lt;div class=&#x27;book&#x27;&gt;&lt;strong&gt;&quot; + title + &quot;&lt;/strong&gt;&lt;br&gt;by &quot; + author + 
+&quot;&lt;/div&gt;&quot;; 
+          } 
+ 
+        document.getElementById(&quot;output&quot;).innerHTML = output; 
+        } else { 
+
+ 
+          document.getElementById(&quot;output&quot;).innerHTML = &quot;Error fetching data.&quot;; 
+        } 
+      };  
+ 
+      // Send the request 
+      xhr.send(); 
+    } 
+  &lt;/script&gt; 
+&lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

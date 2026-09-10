@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 36 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 36</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question35.html">← Previous</a>
+    <a class="btn" href="question37.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 36</h2>
+    <div class="question">Write a program to illustrate XML and XSLT</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>Cars.xml 
+ 
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; 
+&lt;stock&gt; 
+    &lt;new-car&gt; 
+        &lt;model&gt;Fiat Panda&lt;/model&gt; 
+        &lt;price&gt;12000&lt;/price&gt; 
+    &lt;/new-car&gt; 
+    &lt;used-car&gt; 
+        &lt;model&gt;Fiat Bravo&lt;/model&gt; 
+        &lt;price&gt;4000&lt;/price&gt; 
+        &lt;mileage&gt;1000&lt;/mileage&gt; 
+        &lt;condition&gt;Good&lt;/condition&gt; 
+    &lt;/used-car&gt; 
+    &lt;used-car&gt; 
+        &lt;model&gt;Ferrari&lt;/model&gt; 
+        &lt;price&gt;400000&lt;/price&gt; 
+        &lt;mileage&gt;100&lt;/mileage&gt; 
+        &lt;condition&gt;Excellent&lt;/condition&gt; 
+    &lt;/used-car&gt; 
+&lt;/stock&gt; 
+ 
+Cars.xsl 
+ 
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; 
+&lt;xsl:stylesheet version=&quot;1.0&quot; xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot;&gt; 
+    &lt;xsl:template match=&quot;/&quot;&gt; 
+        &lt;html&gt; 
+            &lt;head&gt; 
+
+ 
+                &lt;title&gt;Car Stock&lt;/title&gt; 
+                &lt;style&gt; 
+                    table { 
+                        width: 50%; 
+                        border-collapse: collapse; 
+                        margin: 20px 0; 
+                    } 
+                    table, th, td { 
+                        border: 1px solid black; 
+                    } 
+                    th, td { 
+                        padding: 8px; 
+                        text-align: left; 
+                    } 
+                    th { 
+                        background-color: #f2f2f2; 
+                    } 
+                &lt;/style&gt; 
+            &lt;/head&gt; 
+            &lt;body&gt; 
+                &lt;h2&gt;Car Stock Information&lt;/h2&gt; 
+                &lt;table&gt; 
+                    &lt;tr&gt; 
+                        &lt;th&gt;Type&lt;/th&gt; 
+                        &lt;th&gt;Model&lt;/th&gt; 
+                        &lt;th&gt;Price&lt;/th&gt; 
+                        &lt;th&gt;Mileage&lt;/th&gt; 
+                        &lt;th&gt;Condition&lt;/th&gt; 
+                    &lt;/tr&gt; 
+                    &lt;xsl:for-each select=&quot;stock/new-car&quot;&gt; 
+                        &lt;tr&gt; 
+                            &lt;td&gt;New Car&lt;/td&gt; 
+                            &lt;td&gt;&lt;xsl:value-of select=&quot;model&quot;/&gt;&lt;/td&gt; 
+                            &lt;td&gt;&lt;xsl:value-of select=&quot;price&quot;/&gt;&lt;/td&gt; 
+                            &lt;td&gt;N/A&lt;/td&gt; 
+                            &lt;td&gt;N/A&lt;/td&gt; 
+                        &lt;/tr&gt; 
+                    &lt;/xsl:for-each&gt; 
+                    &lt;xsl:for-each select=&quot;stock/used-car&quot;&gt; 
+                        &lt;tr&gt; 
+                            &lt;td&gt;Used Car&lt;/td&gt; 
+                            &lt;td&gt;&lt;xsl:value-of select=&quot;model&quot;/&gt;&lt;/td&gt; 
+                            &lt;td&gt;&lt;xsl:value-of select=&quot;price&quot;/&gt;&lt;/td&gt; 
+                            &lt;td&gt;&lt;xsl:value-of select=&quot;mileage&quot;/&gt;&lt;/td&gt; 
+                            &lt;td&gt;&lt;xsl:value-of select=&quot;condition&quot;/&gt;&lt;/td&gt; 
+                        &lt;/tr&gt; 
+                    &lt;/xsl:for-each&gt; 
+                &lt;/table&gt; 
+
+ 
+            &lt;/body&gt; 
+        &lt;/html&gt; 
+    &lt;/xsl:template&gt; 
+&lt;/xsl:stylesheet&gt; 
+ 
+Display.html 
+ 
+&lt;!DOCTYPE html&gt; 
+&lt;html&gt; 
+&lt;head&gt; 
+    &lt;title&gt;Car Stock&lt;/title&gt; 
+&lt;/head&gt; 
+&lt;body&gt; 
+    &lt;h1&gt;Car Stock Information&lt;/h1&gt; 
+    &lt;div id=&quot;content&quot;&gt;&lt;/div&gt; 
+ 
+    &lt;script&gt; 
+        const xmlUrl = &#x27;cars.xml&#x27;; 
+        const xslUrl = &#x27;cars.xsl&#x27;; 
+ 
+        async function loadAndTransform() { 
+            const parser = new DOMParser(); 
+ 
+            const [xmlRes, xslRes] = await Promise.all([fetch(xmlUrl), fetch(xslUrl)]); 
+            const xmlDoc = parser.parseFromString(await xmlRes.text(), &#x27;text/xml&#x27;); 
+            const xslDoc = parser.parseFromString(await xslRes.text(), &#x27;text/xml&#x27;); 
+ 
+            if (window.ActiveXObject || &#x27;ActiveXObject&#x27; in window) { 
+                const ex = new ActiveXObject(&#x27;MSXML2.DOMDocument&#x27;); 
+                ex.load(xslDoc); 
+                const output = xmlDoc.transformNode(xslDoc); 
+                document.getElementById(&#x27;content&#x27;).innerHTML = output; 
+            } else if (document.implementation &amp;&amp; document.implementation.createDocument) { 
+                const xsltProcessor = new XSLTProcessor(); 
+                xsltProcessor.importStylesheet(xslDoc); 
+                const resultDocument = xsltProcessor.transformToFragment(xmlDoc, document); 
+                document.getElementById(&#x27;content&#x27;).appendChild(resultDocument); 
+            } else { 
+                console.log(&#x27;Your browser does not support XSLT processing.&#x27;); 
+            } 
+        } 
+ 
+        loadAndTransform(); 
+    &lt;/script&gt; 
+&lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

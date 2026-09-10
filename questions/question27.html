@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 27 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 27</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question26.html">← Previous</a>
+    <a class="btn" href="question28.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 27</h2>
+    <div class="question">Develop and demonstrate a HTML file that includes Java script for the following</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>problems: 
+Input: A number n obtained using prompt 
+Output: A table of numbers from 1 to n and their squares using alert 
+ 
+&lt;!DOCTYPE html&gt; 
+&lt;html&gt; 
+&lt;head&gt; 
+  &lt;title&gt;Numbers and Squares using JS Pop-Ups&lt;/title&gt; 
+  &lt;script&gt; 
+    function showSquaresTable() { 
+      var n = prompt(&quot;Enter a number:&quot;); 
+      n = Number(n); // Convert input to number 
+ 
+
+ 
+      if (isNaN(n) || n &lt; 1) { 
+        alert(&quot;Invalid input. Please enter a positive number.&quot;); 
+        return; 
+      } 
+ 
+      var result = &quot;Number\tSquare\n&quot;; 
+      for (var i = 1; i &lt;= n; i++) { 
+        result += i + &quot;\t&quot; + (i * i) + &quot;\n&quot;; 
+      } 
+ 
+      alert(result); 
+    } 
+  &lt;/script&gt; 
+&lt;/head&gt; 
+ 
+&lt;body onload=&quot;showSquaresTable()&quot;&gt; 
+  &lt;h2&gt;Numbers and their Squares using JavaScript Pop-Up Boxes&lt;/h2&gt; 
+  &lt;p&gt;Check the alert box for output when the page loads.&lt;/p&gt; 
+&lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

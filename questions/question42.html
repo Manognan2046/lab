@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 42 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 42</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question41.html">← Previous</a>
+    <a class="btn" href="question43.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 42</h2>
+    <div class="question">Installing a Personal Web Server (PWS).</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>environment on your local machine. Here&#x27;s a&#x27; step-by-step guide to installing PWS: 
+Step 1: Download XAMPP 
+Go to:
+ https://www.apachefriends.org/index.html
+ Download the installer for Windows. 
+Step 2: Install XAMPP 
+Double-click the .exe file and follow the setup wizard. 
+Step 3: Start Apache and MySQL 
+Open XAMPP Control Panel and click: 
+● Start next to Apache
+ 
+● Start next to MySQL
+ 
+Step 4: Place your files 
+Put your .html or .php files in: 
+makefile 
+CopyEdit 
+C:\xampp\htdocs\ 
+Step 5: Open browser 
+Visit: 
+http://localhost 
+ 
+or for a project folder: 
+arduino 
+CopyEdit 
+http://localhost/yourfolder 
+ 
+ 
+2. For Linux (Ubuntu): Using LAMP Stack 
+Step 1: Update system 
+bash 
+CopyEdit 
+sudo apt update 
+
+ 
+sudo apt upgrade 
+Step 2: Install Apache 
+bash 
+CopyEdit 
+sudo apt install apache2 
+Step 3: Install MySQL (if needed) 
+bash 
+CopyEdit 
+sudo apt install mysql-server 
+Step 4: Install PHP 
+bash 
+CopyEdit 
+sudo apt install php libapache2-mod-php php-mysql 
+Step 5: Restart Apache 
+bash 
+CopyEdit 
+sudo systemctl restart apache2 
+Step 6: Test Apache 
+Open browser: 
+arduino 
+CopyEdit 
+http://localhost 
+Step 7: Create a test file 
+bash 
+CopyEdit 
+echo &quot;&lt;?php phpinfo(); ?&gt;&quot; | sudo tee /var/www/html/info.php 
+Visit: arduino  
+http://localhost/info.php</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

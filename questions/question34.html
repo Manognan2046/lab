@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 34 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 34</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question33.html">← Previous</a>
+    <a class="btn" href="question35.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 34</h2>
+    <div class="question">Develop HTML5 form with client validations using Java Script</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>&lt;!DOCTYPE html&gt; 
+&lt;html lang=&quot;en&quot;&gt; 
+&lt;head&gt; 
+  &lt;meta charset=&quot;UTF-8&quot;&gt; 
+  &lt;title&gt;Registration Form with Validation&lt;/title&gt; 
+  &lt;style&gt; 
+    body { 
+      font-family: Arial, sans-serif; 
+      margin: 40px; 
+    } 
+    form { 
+      width: 300px; 
+      padding: 20px; 
+      border: 1px solid #ccc; 
+      border-radius: 8px; 
+    } 
+    label, input { 
+      display: block; 
+      width: 100%; 
+
+ 
+      margin-bottom: 10px; 
+    } 
+    input[type=&quot;submit&quot;] { 
+      background-color: #28a745; 
+      color: white; 
+      border: none; 
+      padding: 10px; 
+      cursor: pointer; 
+      border-radius: 5px; 
+    } 
+    .error { 
+      color: red; 
+      font-size: 14px; 
+    } 
+  &lt;/style&gt; 
+&lt;/head&gt; 
+&lt;body&gt; 
+&lt;h2&gt;Registration Form&lt;/h2&gt; 
+&lt;form id=&quot;regForm&quot; onsubmit=&quot;return validateForm()&quot;&gt; 
+  &lt;label&gt;Name:&lt;/label&gt; 
+  &lt;input type=&quot;text&quot; id=&quot;name&quot; required&gt; 
+  &lt;label&gt;Email:&lt;/label&gt; 
+  &lt;input type=&quot;email&quot; id=&quot;email&quot; required&gt; 
+  &lt;label&gt;Age:&lt;/label&gt; 
+  &lt;input type=&quot;number&quot; id=&quot;age&quot; required&gt; 
+  &lt;label&gt;Password:&lt;/label&gt; 
+
+ 
+  &lt;input type=&quot;password&quot; id=&quot;password&quot; required&gt; 
+  &lt;input type=&quot;submit&quot; value=&quot;Register&quot;&gt; 
+  &lt;p id=&quot;errorMsg&quot; class=&quot;error&quot;&gt;&lt;/p&gt; 
+&lt;/form&gt; 
+ 
+&lt;script&gt; 
+  function validateForm() { 
+    const name = document.getElementById(&quot;name&quot;).value.trim(); 
+    const email = document.getElementById(&quot;email&quot;).value.trim(); 
+    const age = parseInt(document.getElementById(&quot;age&quot;).value); 
+    const password = document.getElementById(&quot;password&quot;).value; 
+    const errorMsg = document.getElementById(&quot;errorMsg&quot;); 
+    errorMsg.textContent = &quot;&quot;;  
+    if (name === &quot;&quot; || email === &quot;&quot; || isNaN(age) || password === &quot;&quot;) { 
+      errorMsg.textContent = &quot;All fields are required.&quot;; 
+      return false; 
+    } 
+    if (age &lt; 18) { 
+      errorMsg.textContent = &quot;You must be at least 18 years old.&quot;; 
+      return false; 
+    } 
+    const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/; 
+    if (!emailRegex.test(email)) { 
+      errorMsg.textContent = &quot;Enter a valid email address.&quot;; 
+      return false; 
+    } 
+
+ 
+    if (password.length &lt; 6) { 
+      errorMsg.textContent = &quot;Password must be at least 6 characters long.&quot;; 
+      return false; 
+    } 
+    alert(&quot;Form submitted successfully!&quot;); 
+    return true;  
+  } 
+&lt;/script&gt; 
+&lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

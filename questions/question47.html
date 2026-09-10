@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 47 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 47</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question46.html">← Previous</a>
+    <a class="btn" href="question48.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 47</h2>
+    <div class="question">Creation of an application to have access from a database using JDBC</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>Create Database and Table 
+Run this in MySQL: 
+CREATE DATABASE testdb; 
+ 
+USE testdb; 
+ 
+CREATE TABLE users ( 
+    id INT PRIMARY KEY, 
+    name VARCHAR(100), 
+    email VARCHAR(100) 
+); 
+
+ 
+ 
+INSERT INTO users VALUES 
+(1, &#x27;John Doe&#x27;, &#x27;john@example.com&#x27;), 
+(2, &#x27;Jane Smith&#x27;, &#x27;jane@example.com&#x27;); 
+ 
+Java Program to Access the Database 
+Create a file named JDBCExample.java: 
+import java.sql.*; 
+ 
+public class JDBCExample { 
+    public static void main(String[] args) { 
+        String url = &quot;jdbc:mysql://localhost:3306/testdb&quot;;  
+        String user = &quot;root&quot;; // your DB username 
+        String password = &quot;&quot;; // your DB password 
+ 
+        try { 
+            // Load MySQL JDBC driver 
+            Class.forName(&quot;com.mysql.cj.jdbc.Driver&quot;); 
+ 
+            // Connect to database 
+            Connection conn = DriverManager.getConnection(url, user, password); 
+ 
+            // Create statement and execute query 
+            Statement stmt = conn.createStatement(); 
+            ResultSet rs = stmt.executeQuery(&quot;SELECT * FROM users&quot;); 
+ 
+            while (rs.next()) { 
+                System.out.println(&quot;ID: &quot; + rs.getInt(&quot;id&quot;)); 
+                System.out.println(&quot;Name: &quot; + rs.getString(&quot;name&quot;)); 
+                System.out.println(&quot;Email: &quot; + rs.getString(&quot;email&quot;)); 
+                System.out.println(&quot;---------------------------&quot;); 
+            } 
+ 
+            rs.close(); 
+            stmt.close(); 
+            conn.close(); 
+        } catch (Exception e) { 
+            System.out.println(&quot;Error: &quot; + e.getMessage()); 
+        } 
+    } 
+}</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

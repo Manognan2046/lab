@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 49 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 49</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question48.html">← Previous</a>
+    <a class="btn" href="question50.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 49</h2>
+    <div class="question">Implement the following web applications using (a) PHP, (b)</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>i) A user validation web application, where the user submits the login name and 
+password to the server. The name and password are checked against the data already 
+available in Database and if the data matches, a successful login page is returned. 
+Otherwise a failure message is shown to the user. 
+ii) Modify the above program to use an XML file instead of database. 
+iii) Modify the above program using AJAX to show the result on the same page below 
+the submit button. 
+iv) A simple calculator application that takes two numbers and an operator (+,-,*,/,%) 
+from an HTML page and returns the result page with the operation performed on the 
+operands. 
+
+ 
+v) A web application takes a name as input and on submit it shows a 
+hello&lt;name&gt;page where &lt;name&gt; is taken from the request. It shows the start time at 
+the right top corner of the page and provides the logout button. On clicking this 
+button, it should show a logout page with Thank You&lt;name&gt; message with the 
+duration of usage.(Use session to store name and time). 
+  
+i) 
+  
+&lt;!DOCTYPE html&gt; 
+&lt;html&gt; 
+&lt;head&gt; 
+
+&lt;title&gt;Login Page&lt;/title&gt; 
+&lt;/head&gt; 
+&lt;body&gt; 
+
+&lt;h2&gt;Login&lt;/h2&gt; 
+
+&lt;form method=&quot;POST&quot; action=&quot;validate.php&quot;&gt; 
+        &lt;label for=&quot;username&quot;&gt;Username:&lt;/label&gt; 
+     &lt;input type=&quot;text&quot; id=&quot;username&quot; name=&quot;username&quot; required&gt;&lt;br&gt;&lt;br&gt; 
+     &lt;label for=&quot;password&quot;&gt;Password:&lt;/label&gt; 
+     &lt;input type=&quot;password&quot; id=&quot;password&quot; name=&quot;password&quot; required&gt;&lt;br&gt;&lt;br&gt; 
+     &lt;button type=&quot;submit&quot;&gt;Login&lt;/button&gt; 
+
+&lt;/form&gt; 
+&lt;/body&gt; 
+&lt;/html&gt; 
+  
+Validate.php 
+&lt;?php 
+$servername = &quot;localhost&quot;; 
+$dbUsername = &quot;root&quot;; 
+$dbPassword = &quot;&quot;; 
+$dbName = &quot;wp_record&quot;; 
+$conn = new mysqli($servername, $dbUsername, $dbPassword, $dbName); 
+if ($conn-&gt;connect_error) { 
+
+die(&quot;Connection failed: &quot; . $conn-&gt;connect_error); 
+} 
+if ($_SERVER[&#x27;REQUEST_METHOD&#x27;] == &#x27;POST&#x27;) { 
+
+$username = $_POST[&#x27;username&#x27;]; 
+
+$password = $_POST[&#x27;password&#x27;]; 
+
+$stmt = $conn-&gt;prepare(&quot;SELECT password FROM users WHERE username = ?&quot;); 
+
+$stmt-&gt;bind_param(&quot;s&quot;, $username); 
+
+$stmt-&gt;execute(); 
+
+$result = $stmt-&gt;get_result(); 
+
+if ($result-&gt;num_rows &gt; 0) { 
+     $user = $result-&gt;fetch_assoc(); 
+     if ($password === $user[&#x27;password&#x27;]) { 
+        
+echo &quot;Login Successful! Welcome, &quot; . htmlspecialchars($username); 
+     } else { 
+        
+echo &quot;Login Failed! Invalid password.&quot;; 
+
+ 
+     } 
+
+} else { 
+     echo &quot;Login Failed! User not found.&quot;; 
+
+} 
+
+$stmt-&gt;close(); 
+
+$conn-&gt;close(); 
+} 
+?&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

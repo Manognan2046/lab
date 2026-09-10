@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 8 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 8</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question7.html">← Previous</a>
+    <a class="btn" href="question9.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 8</h2>
+    <div class="question">Use frames to implement a restaurant webpage</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>&lt;!DOCTYPE html&gt; 
+&lt;html lang=&quot;en&quot;&gt; 
+&lt;head&gt; 
+    &lt;meta charset=&quot;UTF-8&quot;&gt; 
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt; 
+    &lt;title&gt;Pizza Order Form&lt;/title&gt; 
+    &lt;style&gt; 
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+        } 
+        table { 
+            border-collapse: collapse; 
+            width: 50%; 
+            margin-bottom: 20px; 
+        } 
+        th, td { 
+            border: 1px solid #000; 
+            padding: 10px; 
+            text-align: left; 
+        } 
+        th { 
+            background-color: #f4f4f4; 
+        } 
+        input[type=&quot;text&quot;], input[type=&quot;number&quot;] { 
+            width: 100%; 
+            padding: 5px; 
+            box-sizing: border-box; 
+        } 
+        button { 
+            padding: 10px 15px; 
+            margin: 5px; 
+            cursor: pointer; 
+        } 
+    &lt;/style&gt; 
+&lt;/head&gt; 
+&lt;body&gt; 
+ &lt;div style=&quot;display:flex;justify-content:center;align-items:center;&quot;&gt; 
+  &lt;div &gt; 
+    &lt;h1 style=&quot;margin-left: 75px;&quot;&gt;Pizza Order Form&lt;/h1&gt; 
+    &lt;form id=&quot;pizzaForm&quot; &gt; 
+        &lt;table style=&quot;min-width: 400px;&quot;&gt; 
+            &lt;thead&gt; 
+                &lt;tr&gt; 
+                    &lt;th&gt;Item Name&lt;/th&gt; 
+                    &lt;th&gt;Price&lt;/th&gt; 
+
+ 
+                    &lt;th&gt;Quantity&lt;/th&gt; 
+                &lt;/tr&gt; 
+            &lt;/thead&gt; 
+            &lt;tbody&gt; 
+                &lt;tr&gt; 
+                    &lt;td&gt;Chicken Pizza&lt;/td&gt; 
+                    &lt;td&gt;100&lt;/td&gt; 
+                    &lt;td&gt;&lt;input type=&quot;number&quot; id=&quot;chickenQty&quot; min=&quot;0&quot; value=&quot;0&quot;&gt;&lt;/td&gt; 
+                &lt;/tr&gt; 
+                &lt;tr&gt; 
+                    &lt;td&gt;Paneer Pizza&lt;/td&gt; 
+                    &lt;td&gt;80&lt;/td&gt; 
+                    &lt;td&gt;&lt;input type=&quot;number&quot; id=&quot;paneerQty&quot; min=&quot;0&quot; value=&quot;0&quot;&gt;&lt;/td&gt; 
+                &lt;/tr&gt; 
+                &lt;tr&gt; 
+                    &lt;td&gt;Veg Pizza&lt;/td&gt; 
+                    &lt;td&gt;70&lt;/td&gt; 
+                    &lt;td&gt;&lt;input type=&quot;number&quot; id=&quot;vegQty&quot; min=&quot;0&quot; value=&quot;0&quot;&gt;&lt;/td&gt; 
+                &lt;/tr&gt; 
+            &lt;/tbody&gt; 
+        &lt;/table&gt; 
+        &lt;label for=&quot;totalCost&quot;&gt;Total Cost:&lt;/label&gt; 
+        &lt;input type=&quot;text&quot; id=&quot;totalCost&quot; readonly&gt; 
+        &lt;br&gt;&lt;br&gt; 
+        &lt;button type=&quot;button&quot; onclick=&quot;calculateTotal()&quot;&gt;Calculate Total&lt;/button&gt; 
+        &lt;button type=&quot;button&quot; onclick=&quot;confirmOrder()&quot;&gt;Confirm Order&lt;/button&gt; 
+        &lt;button type=&quot;button&quot; onclick=&quot;cancelOrder()&quot;&gt;Cancel Order&lt;/button&gt; 
+    &lt;/form&gt; 
+   &lt;/div&gt; 
+  &lt;/div&gt; 
+    &lt;script&gt; 
+        function calculateTotal() { 
+            const chickenQty = parseInt(document.getElementById(&#x27;chickenQty&#x27;).value) || 0; 
+            const paneerQty = parseInt(document.getElementById(&#x27;paneerQty&#x27;).value) || 0; 
+            const vegQty = parseInt(document.getElementById(&#x27;vegQty&#x27;).value) || 0; 
+            const chickenPrice = 100; 
+            const paneerPrice = 80; 
+            const vegPrice = 70; 
+            const totalCost = (chickenQty * chickenPrice) + (paneerQty * paneerPrice) + 
+(vegQty * vegPrice); 
+            document.getElementById(&#x27;totalCost&#x27;).value = totalCost; 
+        } 
+        function confirmOrder() { 
+            const totalCost = document.getElementById(&#x27;totalCost&#x27;).value; 
+            if (totalCost === &quot;&quot; || totalCost === &quot;0&quot;) { 
+                alert(&quot;Please calculate the total cost before confirming the order.&quot;); 
+                return; 
+            } 
+
+ 
+            alert(&quot;Your order is confirmed. It will reach you in 10 minutes.&quot;); 
+        } 
+        function cancelOrder() { 
+            document.getElementById(&#x27;pizzaForm&#x27;).reset(); 
+            document.getElementById(&#x27;totalCost&#x27;).value = &quot;&quot;; 
+        } 
+  
+    &lt;/script&gt; 
+&lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

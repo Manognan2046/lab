@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 15 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 15</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question14.html">← Previous</a>
+    <a class="btn" href="question16.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 15</h2>
+    <div class="question">Drag the W3Schools image into the rectangle and repeating an Image Border</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>&lt;!DOCTYPE html&gt; 
+&lt;html&gt; 
+&lt;head&gt; 
+  &lt;title&gt;Drag and Drop with Image Border&lt;/title&gt; 
+  &lt;style&gt; 
+    #dropZone { 
+      width: 300px; 
+      height: 200px; 
+      border: 20px solid transparent; 
+      border-image: url(&#x27;border.png&#x27;) 30 round; /* image border with repeating */ 
+      text-align: center; 
+      line-height: 160px; 
+      margin: 20px auto; 
+      background-color: #f0f0f0; 
+    } 
+ 
+    #w3Image { 
+      width: 150px; 
+      cursor: grab; 
+    } 
+  &lt;/style&gt; 
+&lt;/head&gt; 
+&lt;body&gt; 
+&lt;h2 align=&quot;center&quot;&gt;Drag W3Schools Image into Rectangle&lt;/h2&gt; 
+ &lt;div align=&quot;center&quot;&gt; 
+    &lt;img src=&quot;https://www.w3schools.com/images/w3schools_green.jpg&quot; id=&quot;w3Image&quot; 
+draggable=&quot;true&quot; ondragstart=&quot;drag(event)&quot;&gt; 
+  &lt;/div&gt; 
+
+ 
+ 
+  &lt;div id=&quot;dropZone&quot; ondrop=&quot;drop(event)&quot; ondragover=&quot;allowDrop(event)&quot;&gt; 
+    Drop Here 
+  &lt;/div&gt; 
+  &lt;script&gt; 
+    function allowDrop(ev) { 
+      ev.preventDefault(); 
+    } 
+    function drag(ev) { 
+      ev.dataTransfer.setData(&quot;text&quot;, ev.target.id); 
+    } 
+     function drop(ev) { 
+      ev.preventDefault(); 
+      var data = ev.dataTransfer.getData(&quot;text&quot;); 
+      var draggedImage = document.getElementById(data); 
+      ev.target.innerHTML = &quot;&quot;; 
+      ev.target.appendChild(draggedImage); 
+    } 
+  &lt;/script&gt; 
+  &lt;/body&gt; 
+  &lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

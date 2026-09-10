@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 44 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 44</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question43.html">← Previous</a>
+    <a class="btn" href="question45.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 44</h2>
+    <div class="question">Develop a simple Java Servlet application</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>SimpleServletApp/ 
+├── WEB-INF/ 
+│   ├── web.xml 
+│   └── classes/ 
+│       └── HelloServlet.class 
+ 
+I.
+HelloServlet.java 
+import java.io.*; 
+import javax.servlet.*; 
+import javax.servlet.http.*; 
+ 
+
+ 
+public class HelloServlet extends HttpServlet { 
+    public void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException { 
+ 
+        response.setContentType(&quot;text/html&quot;); 
+        PrintWriter out = response.getWriter(); 
+        out.println(&quot;&lt;h2&gt;Hello from Servlet!&lt;/h2&gt;&quot;); 
+    } 
+} 
+ 
+II.
+web.xml 
+&lt;web-app xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot; 
+         version=&quot;3.0&quot;&gt; 
+    &lt;servlet&gt; 
+        &lt;servlet-name&gt;HelloServlet&lt;/servlet-name&gt; 
+        &lt;servlet-class&gt;HelloServlet&lt;/servlet-class&gt; 
+    &lt;/servlet&gt; 
+    &lt;servlet-mapping&gt; 
+        &lt;servlet-name&gt;HelloServlet&lt;/servlet-name&gt; 
+        &lt;url-pattern&gt;/hello&lt;/url-pattern&gt; 
+    &lt;/servlet-mapping&gt; 
+&lt;/web-app&gt; 
+ 
+III.
+Compile  
+javac -classpath &quot;path_to_tomcat/lib/servlet-api.jar&quot; HelloServlet.java 
+ 
+IV.
+Run in tomcat 
+http://localhost:8080/SimpleServletApp/hello</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

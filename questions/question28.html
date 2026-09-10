@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 28 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 28</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question27.html">← Previous</a>
+    <a class="btn" href="question29.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 28</h2>
+    <div class="question">Write a Java script with string processing and regular expressions</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>&lt;!DOCTYPE html&gt; 
+&lt;html&gt; 
+&lt;head&gt; 
+  &lt;title&gt;String Processing and RegEx Demo&lt;/title&gt; 
+  &lt;script&gt; 
+    function processString() { 
+      var input = prompt(&quot;Enter a sentence:&quot;); 
+ 
+      // 1. Check if string contains only alphabets and spaces 
+      var alphaRegex = /^[A-Za-z\s]+$/; 
+      var isAlphabetic = alphaRegex.test(input); 
+ 
+      // 2. Replace multiple spaces with a single space 
+      var cleaned = input.replace(/\s+/g, &#x27; &#x27;).trim(); 
+ 
+      // 3. Extract all words into an array 
+      var words = cleaned.split(&quot; &quot;); 
+ 
+      // Prepare output message 
+      var message = &quot;Original Input: &quot; + input + &quot;\n&quot;; 
+      message += &quot;Contains only alphabets and spaces? &quot; + isAlphabetic + &quot;\n&quot;; 
+      message += &quot;Cleaned String (single spaces): &quot; + cleaned + &quot;\n&quot;; 
+      message += &quot;Words Extracted (&quot; + words.length + &quot;): &quot; + words.join(&quot;, &quot;); 
+ 
+      // Display result using alert 
+      alert(message); 
+    } 
+  &lt;/script&gt; 
+
+ 
+&lt;/head&gt; 
+ 
+&lt;body onload=&quot;processString()&quot;&gt; 
+  &lt;h2&gt;JavaScript String Processing with RegEx&lt;/h2&gt; 
+  &lt;p&gt;Check the alert box for output when page loads.&lt;/p&gt; 
+&lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

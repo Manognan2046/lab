@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 18 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 18</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question17.html">← Previous</a>
+    <a class="btn" href="question19.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 18</h2>
+    <div class="question">Develop and demonstrate a HTML file that includes Java script for the following problems</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>problems input: A number n obtained using prompt Output: The first n Fibonacci 
+numbers 
+&lt;html&gt; 
+  &lt;body&gt; 
+    &lt;h3&gt;Fibonacci Numbers&lt;/h3&gt; 
+    &lt;script&gt; 
+      var n = parseInt(prompt(&quot;Enter how many Fibonacci numbers to print:&quot;)); 
+
+ 
+      if ( n &lt;= 0) { 
+        document.write(&quot;Please enter a valid positive number.&quot;); 
+      } else { 
+        var a = 0, b = 1, c; 
+        var result = &quot;&quot;; 
+      for (var i = 0; i &lt; n; i++) { 
+          result += a + &quot; &quot;; 
+          c = a + b; 
+          a = b; 
+          b = c; 
+        } 
+       document.write(&quot;First &quot; + n + &quot; Fibonacci numbers:&lt;br&gt;&quot; + result); 
+      } 
+    &lt;/script&gt; 
+  &lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

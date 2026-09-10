@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 25 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 25</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question24.html">← Previous</a>
+    <a class="btn" href="question26.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 25</h2>
+    <div class="question">Write a function that checks if a number is an integer and returns a Boolean value</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>indicating whether it is true or false. 
+&lt;!DOCTYPE html&gt; 
+&lt;html&gt; 
+&lt;head&gt; 
+  &lt;title&gt;Check if Number is Integer&lt;/title&gt; 
+  &lt;script&gt; 
+    function isInteger(num) { 
+      return Number.isInteger(num); 
+       
+      // Alternatively, manual check: 
+      // return typeof num === &#x27;number&#x27; &amp;&amp; num % 1 === 0; 
+
+ 
+    } 
+ 
+    function checkNumber() { 
+      var input = document.getElementById(&quot;numInput&quot;).value; 
+      var number = Number(input); // convert input to number 
+      var result = isInteger(number); 
+      document.getElementById(&quot;result&quot;).innerHTML =  
+        &quot;Is &quot; + input + &quot; an integer? -&gt; &quot; + result; 
+    } 
+  &lt;/script&gt; 
+&lt;/head&gt; 
+&lt;body&gt; 
+  &lt;h2&gt;Check if a Number is Integer&lt;/h2&gt; 
+  &lt;input type=&quot;text&quot; id=&quot;numInput&quot; placeholder=&quot;Enter a number&quot;&gt; 
+  &lt;button onclick=&quot;checkNumber()&quot;&gt;Check&lt;/button&gt; 
+ 
+  &lt;p id=&quot;result&quot;&gt;&lt;/p&gt; 
+&lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

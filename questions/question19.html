@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 19 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 19</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question18.html">← Previous</a>
+    <a class="btn" href="question20.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 19</h2>
+    <div class="question">Write a program that initializes an array of numbers, removes the first element, adds a</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>adds a new element to the end, and logs the modified array. in simple and easier way 
+&lt;html&gt; 
+  &lt;body&gt; 
+    &lt;h3&gt;Array operation&lt;/h3&gt; 
+&lt;script&gt; 
+      var input = prompt(&quot;Enter numbers separated by commas:&quot;); 
+
+ 
+      var arr = input.split(&quot;,&quot;);  
+      document.write(&quot;Original Array: &quot; + input + &quot;&lt;br&gt;&lt;br&gt;&quot;); 
+      var newElement = prompt(&quot;Enter a number to add at the end:&quot;); 
+      arr.shift();            
+      arr.push(newElement);  
+      document.write(&quot;Modified Array: &quot; + arr); 
+    &lt;/script&gt; 
+  &lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

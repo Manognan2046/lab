@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 50 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 50</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question49.html">← Previous</a>
+    
+  </div>
+
+  <section class="card">
+    <h2>Question 50</h2>
+    <div class="question">Write a web application using Ajax to do the following: A. check to make sure that the</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>the credit card number is composed of exactly 16 numerical digits A check to make 
+sure that a Visa card number starts with a &quot;4&quot; and a MasterCard number starts with a 
+&quot;5&quot; You can check for these things using regular expressions in combination with the 
+PHP function preg_match. A really good regex will allow for an optional ―-― between 
+every grouping of 4 numbers. For example, 4111111111111111 and 4111-1111-1111-1111 
+would both be valid credit card numbers. If the user has not supplied a card number 
+with the correct number of digits, show an error message.
+
+&lt;!DOCTYPE html&gt; 
+&lt;html lang=&quot;en&quot;&gt; 
+&lt;head&gt; 
+    &lt;meta charset=&quot;UTF-8&quot;&gt; 
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt; 
+    &lt;title&gt;Credit Card Validation with AJAX&lt;/title&gt; 
+    &lt;style&gt; 
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 600px; 
+            margin: 50px auto; 
+            padding: 20px; 
+            background-color: #f5f5f5; 
+        } 
+         
+        .container { 
+            background-color: white; 
+            padding: 30px; 
+            border-radius: 10px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+        } 
+         
+
+ 
+        h1 { 
+            text-align: center; 
+            color: #333; 
+            margin-bottom: 30px; 
+        } 
+         
+        .form-group { 
+            margin-bottom: 20px; 
+        } 
+         
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: bold; 
+            color: #555; 
+        } 
+         
+        input[type=&quot;text&quot;] { 
+            width: 100%; 
+            padding: 12px; 
+            border: 2px solid #ddd; 
+            border-radius: 5px; 
+            font-size: 16px; 
+            box-sizing: border-box; 
+            transition: border-color 0.3s; 
+        } 
+         
+        input[type=&quot;text&quot;]:focus { 
+            border-color: #4CAF50; 
+            outline: none; 
+        } 
+         
+        button { 
+            background-color: #4CAF50; 
+            color: white; 
+            padding: 12px 30px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            width: 100%; 
+            transition: background-color 0.3s; 
+        } 
+         
+        button:hover { 
+            background-color: #45a049; 
+        } 
+         
+
+ 
+        button:disabled { 
+            background-color: #cccccc; 
+            cursor: not-allowed; 
+        } 
+         
+        .result { 
+            margin-top: 20px; 
+            padding: 15px; 
+            border-radius: 5px; 
+            font-weight: bold; 
+            display: none; 
+        } 
+         
+        .success { 
+            background-color: #d4edda; 
+            color: #155724; 
+            border: 1px solid #c3e6cb; 
+        } 
+         
+        .error { 
+            background-color: #f8d7da; 
+            color: #721c24; 
+            border: 1px solid #f5c6cb; 
+        } 
+         
+        .loading { 
+            background-color: #fff3cd; 
+            color: #856404; 
+            border: 1px solid #ffeaa7; 
+        } 
+         
+        .card-info { 
+            background-color: #e3f2fd; 
+            padding: 15px; 
+            border-radius: 5px; 
+            margin-bottom: 20px; 
+        } 
+         
+        .card-type { 
+            font-weight: bold; 
+            color: #1976d2; 
+        } 
+         
+        .validation-details { 
+            margin-top: 10px; 
+            font-size: 14px; 
+        } 
+         
+
+ 
+        .check-item { 
+            margin: 5px 0; 
+            padding: 5px; 
+            border-radius: 3px; 
+        } 
+         
+        .check-pass { 
+            background-color: #d4edda; 
+            color: #155724; 
+        } 
+         
+        .check-fail { 
+            background-color: #f8d7da; 
+            color: #721c24; 
+        } 
+    &lt;/style&gt; 
+&lt;/head&gt; 
+&lt;body&gt; 
+    &lt;div class=&quot;container&quot;&gt; 
+        &lt;h1&gt;Credit Card Validation System&lt;/h1&gt; 
+         
+        &lt;div class=&quot;card-info&quot;&gt; 
+            &lt;h3&gt;Supported Card Types:&lt;/h3&gt; 
+            &lt;p&gt;&lt;strong&gt;Visa:&lt;/strong&gt; Starts with 4 (16 digits)&lt;/p&gt; 
+            &lt;p&gt;&lt;strong&gt;MasterCard:&lt;/strong&gt; Starts with 5 (16 digits)&lt;/p&gt; 
+            &lt;p&gt;&lt;strong&gt;Format:&lt;/strong&gt; You can use dashes between groups of 4 digits 
+(optional)&lt;/p&gt; 
+            &lt;p&gt;&lt;strong&gt;Example:&lt;/strong&gt; 4111-1111-1111-1111 or 4111111111111111&lt;/p&gt; 
+        &lt;/div&gt; 
+         
+        &lt;form id=&quot;creditCardForm&quot;&gt; 
+            &lt;div class=&quot;form-group&quot;&gt; 
+                &lt;label for=&quot;cardNumber&quot;&gt;Credit Card Number:&lt;/label&gt; 
+                &lt;input type=&quot;text&quot;  
+                       id=&quot;cardNumber&quot;  
+                       name=&quot;cardNumber&quot;  
+                       placeholder=&quot;Enter 16-digit card number (with or without dashes)&quot; 
+                       maxlength=&quot;19&quot;&gt; 
+            &lt;/div&gt; 
+             
+            &lt;button type=&quot;submit&quot; id=&quot;validateBtn&quot;&gt;Validate Card Number&lt;/button&gt; 
+        &lt;/form&gt; 
+         
+        &lt;div id=&quot;result&quot; class=&quot;result&quot;&gt;&lt;/div&gt; 
+    &lt;/div&gt; 
+ 
+    &lt;script&gt; 
+        document.getElementById(&#x27;creditCardForm&#x27;).addEventListener(&#x27;submit&#x27;, function(e) { 
+
+ 
+            e.preventDefault(); 
+            validateCreditCard(); 
+        }); 
+         
+       
+        document.getElementById(&#x27;cardNumber&#x27;).addEventListener(&#x27;input&#x27;, function(e) { 
+            let value = e.target.value.replace(/\D/g, &#x27;&#x27;); // Remove non-digits 
+            let formattedValue = value.replace(/(\d{4})(?=\d)/g, &#x27;$1-&#x27;); // Add dashes 
+            if (formattedValue.length &lt;= 19) { // Max length with dashes 
+                e.target.value = formattedValue; 
+            } 
+        }); 
+         
+        function validateCreditCard() { 
+            const cardNumber = document.getElementById(&#x27;cardNumber&#x27;).value; 
+            const resultDiv = document.getElementById(&#x27;result&#x27;); 
+            const validateBtn = document.getElementById(&#x27;validateBtn&#x27;); 
+             
+             
+            resultDiv.style.display = &#x27;block&#x27;; 
+            resultDiv.className = &#x27;result loading&#x27;; 
+            resultDiv.innerHTML = &#x27;Validating card number...&#x27;; 
+            validateBtn.disabled = true; 
+             
+             
+            setTimeout(() =&gt; { 
+                // Create FormData to send to PHP (simulated) 
+                const formData = new FormData(); 
+                formData.append(&#x27;cardNumber&#x27;, cardNumber); 
+                 
+                // Simulate AJAX request 
+                performValidation(cardNumber); 
+                 
+                validateBtn.disabled = false; 
+            }, 1000); // Simulate network delay 
+        } 
+         
+        function performValidation(cardNumber) { 
+            const resultDiv = document.getElementById(&#x27;result&#x27;); 
+             
+            
+            const cleanNumber = cardNumber.replace(/\D/g, &#x27;&#x27;); 
+             
+            let isValid = true; 
+            let cardType = &#x27;&#x27;; 
+            let validationDetails = []; 
+             
+            if (cleanNumber.length === 16) { 
+
+ 
+                validationDetails.push({ 
+                    check: &#x27;Length Check&#x27;, 
+                    result: &#x27;PASS&#x27;, 
+                    message: &#x27;Card number has exactly 16 digits&#x27; 
+                }); 
+            } else { 
+                validationDetails.push({ 
+                    check: &#x27;Length Check&#x27;, 
+                    result: &#x27;FAIL&#x27;, 
+                    message: `Card number has ${cleanNumber.length} digits, but 16 required` 
+                }); 
+                isValid = false; 
+            } 
+             
+            
+            if (/^\d+$/.test(cleanNumber)) { 
+                validationDetails.push({ 
+                    check: &#x27;Digit Check&#x27;, 
+                    result: &#x27;PASS&#x27;, 
+                    message: &#x27;All characters are numeric&#x27; 
+                }); 
+            } else { 
+                validationDetails.push({ 
+                    check: &#x27;Digit Check&#x27;, 
+                    result: &#x27;FAIL&#x27;, 
+                    message: &#x27;Card number contains non-numeric characters&#x27; 
+                }); 
+                isValid = false; 
+            } 
+             
+               if (cleanNumber.charAt(0) === &#x27;4&#x27;) { 
+                cardType = &#x27;Visa&#x27;; 
+                validationDetails.push({ 
+                    check: &#x27;Card Type&#x27;, 
+                    result: &#x27;PASS&#x27;, 
+                    message: &#x27;Valid Visa card (starts with 4)&#x27; 
+                }); 
+            } else if (cleanNumber.charAt(0) === &#x27;5&#x27;) { 
+                cardType = &#x27;MasterCard&#x27;; 
+                validationDetails.push({ 
+                    check: &#x27;Card Type&#x27;, 
+                    result: &#x27;PASS&#x27;, 
+                    message: &#x27;Valid MasterCard (starts with 5)&#x27; 
+                }); 
+            } else { 
+                validationDetails.push({ 
+                    check: &#x27;Card Type&#x27;, 
+                    result: &#x27;FAIL&#x27;, 
+
+ 
+                    message: &#x27;Invalid card type. Must start with 4 (Visa) or 5 (MasterCard)&#x27; 
+                }); 
+                isValid = false; 
+            } 
+             
+            const formatRegex = /^(\d{4}-?\d{4}-?\d{4}-?\d{4})$/; 
+            if (formatRegex.test(cardNumber)) { 
+                validationDetails.push({ 
+                    check: &#x27;Format Check&#x27;, 
+                    result: &#x27;PASS&#x27;, 
+                    message: &#x27;Card number format is valid&#x27; 
+                }); 
+            } else { 
+                validationDetails.push({ 
+                    check: &#x27;Format Check&#x27;, 
+                    result: &#x27;FAIL&#x27;, 
+                    message: &#x27;Invalid format. Use XXXX-XXXX-XXXX-XXXX or 
+XXXXXXXXXXXXXXXX&#x27; 
+                }); 
+                isValid = false; 
+            } 
+            
+            let luhnValid = luhnCheck(cleanNumber); 
+            if (luhnValid) { 
+                validationDetails.push({ 
+                    check: &#x27;Luhn Algorithm&#x27;, 
+                    result: &#x27;PASS&#x27;, 
+                    message: &#x27;Card number passes Luhn checksum validation&#x27; 
+                }); 
+            } else { 
+                validationDetails.push({ 
+                    check: &#x27;Luhn Algorithm&#x27;, 
+                    result: &#x27;FAIL&#x27;, 
+                    message: &#x27;Card number fails Luhn checksum validation&#x27; 
+                }); 
+                isValid = false; 
+            } 
+             
+            
+            displayValidationResult(isValid, cardType, cleanNumber, validationDetails); 
+        } 
+         
+        function luhnCheck(cardNumber) { 
+            // Luhn Algorithm implementation 
+            let sum = 0; 
+            let alternate = false; 
+             
+             
+
+ 
+            for (let i = cardNumber.length - 1; i &gt;= 0; i--) { 
+                let digit = parseInt(cardNumber.charAt(i)); 
+                 
+                if (alternate) { 
+                    digit *= 2; 
+                    if (digit &gt; 9) { 
+                        digit = (digit % 10) + 1; 
+                    } 
+                } 
+                 
+                sum += digit; 
+                alternate = !alternate; 
+            } 
+             
+            return (sum % 10) === 0; 
+        } 
+         
+        function displayValidationResult(isValid, cardType, cleanNumber, validationDetails) { 
+            const resultDiv = document.getElementById(&#x27;result&#x27;); 
+             
+            let resultHTML = &#x27;&#x27;; 
+             
+            if (isValid) { 
+                resultDiv.className = &#x27;result success&#x27;; 
+                resultHTML = ` 
+                    &lt;h3&gt;Valid Credit Card!&lt;/h3&gt; 
+                    &lt;p&gt;&lt;span class=&quot;card-type&quot;&gt;Card Type:&lt;/span&gt; ${cardType}&lt;/p&gt; 
+                    &lt;p&gt;&lt;span class=&quot;card-type&quot;&gt;Card Number:&lt;/span&gt; 
+${formatCardNumber(cleanNumber)}&lt;/p&gt; 
+                    &lt;p&gt;&lt;span class=&quot;card-type&quot;&gt;Status:&lt;/span&gt; This card number is valid and 
+ready for processing.&lt;/p&gt; 
+                `; 
+            } else { 
+                resultDiv.className = &#x27;result error&#x27;; 
+                resultHTML = ` 
+                    &lt;h3&gt; Invalid Credit Card&lt;/h3&gt; 
+                    &lt;p&gt;The credit card number you entered is not valid.&lt;/p&gt; 
+                `; 
+            } 
+             
+            resultHTML += &#x27;&lt;div class=&quot;validation-details&quot;&gt;&lt;h4&gt;Validation Details:&lt;/h4&gt;&#x27;; 
+            validationDetails.forEach(detail =&gt; { 
+                const checkClass = detail.result === &#x27;PASS&#x27; ? &#x27;check-pass&#x27; : &#x27;check-fail&#x27;; 
+                resultHTML += ` 
+                    &lt;div class=&quot;check-item ${checkClass}&quot;&gt; 
+                        &lt;strong&gt;${detail.check}:&lt;/strong&gt; ${detail.result} - ${detail.message} 
+                    &lt;/div&gt; 
+                `; 
+
+ 
+            }); 
+            resultHTML += &#x27;&lt;/div&gt;&#x27;; 
+             
+            resultDiv.innerHTML = resultHTML; 
+        } 
+         
+        function formatCardNumber(cardNumber) { 
+            return cardNumber.replace(/(\d{4})(?=\d)/g, &#x27;$1-&#x27;); 
+        } 
+         
+         
+        function fillSampleCard(type) { 
+            const cardInput = document.getElementById(&#x27;cardNumber&#x27;); 
+            if (type === &#x27;visa&#x27;) { 
+                cardInput.value = &#x27;4111-1111-1111-1111&#x27;; // Valid Visa test number 
+            } else if (type === &#x27;mastercard&#x27;) { 
+                cardInput.value = &#x27;5555-5555-5555-4444&#x27;; // Valid MasterCard test number 
+            } 
+        } 
+         
+        window.addEventListener(&#x27;load&#x27;, function() { 
+            const container = document.querySelector(&#x27;.container&#x27;); 
+            const sampleDiv = document.createElement(&#x27;div&#x27;); 
+            sampleDiv.innerHTML = ` 
+                &lt;div style=&quot;margin-top: 20px; text-align: center;&quot;&gt; 
+                    &lt;p&gt;&lt;strong&gt;Test with sample cards:&lt;/strong&gt;&lt;/p&gt; 
+                    &lt;button type=&quot;button&quot; onclick=&quot;fillSampleCard(&#x27;visa&#x27;)&quot; style=&quot;margin: 5px; width: 
+auto; background-color: #2196F3;&quot;&gt;Test Visa&lt;/button&gt; 
+                    &lt;button type=&quot;button&quot; onclick=&quot;fillSampleCard(&#x27;mastercard&#x27;)&quot; style=&quot;margin: 
+5px; width: auto; background-color: #FF9800;&quot;&gt;Test MasterCard&lt;/button&gt; 
+                &lt;/div&gt; 
+            `; 
+            container.appendChild(sampleDiv); 
+        }); 
+    &lt;/script&gt; 
+&lt;/body&gt; 
+&lt;/html&gt; 
+ 
+&lt;!--  
+PHP Backend Script (validate_card.php): 
+&lt;?php 
+header(&#x27;Content-Type: application/json&#x27;); 
+header(&#x27;Access-Control-Allow-Origin: *&#x27;); 
+header(&#x27;Access-Control-Allow-Methods: POST&#x27;); 
+header(&#x27;Access-Control-Allow-Headers: Content-Type&#x27;); 
+ 
+if ($_SERVER[&#x27;REQUEST_METHOD&#x27;] === &#x27;POST&#x27;) { 
+    $cardNumber = $_POST[&#x27;cardNumber&#x27;] ?? &#x27;&#x27;; 
+
+ 
+     
+    $cleanNumber = preg_replace(&#x27;/\D/&#x27;, &#x27;&#x27;, $cardNumber); 
+     
+    $response = array( 
+        &#x27;isValid&#x27; =&gt; false, 
+        &#x27;cardType&#x27; =&gt; &#x27;&#x27;, 
+        &#x27;errors&#x27; =&gt; array(), 
+        &#x27;checks&#x27; =&gt; array() 
+    ); 
+     
+     
+    if (strlen($cleanNumber) === 16) { 
+        $response[&#x27;checks&#x27;][] = array( 
+            &#x27;check&#x27; =&gt; &#x27;Length Check&#x27;, 
+            &#x27;result&#x27; =&gt; &#x27;PASS&#x27;, 
+            &#x27;message&#x27; =&gt; &#x27;Card number has exactly 16 digits&#x27; 
+        ); 
+    } else { 
+        $response[&#x27;errors&#x27;][] = &#x27;Card number must be exactly 16 digits&#x27;; 
+        $response[&#x27;checks&#x27;][] = array( 
+            &#x27;check&#x27; =&gt; &#x27;Length Check&#x27;, 
+            &#x27;result&#x27; =&gt; &#x27;FAIL&#x27;, 
+            &#x27;message&#x27; =&gt; &#x27;Card number has &#x27; . strlen($cleanNumber) . &#x27; digits, but 16 required&#x27; 
+        ); 
+    } 
+     
+    if (preg_match(&#x27;/^\d+$/&#x27;, $cleanNumber)) { 
+        $response[&#x27;checks&#x27;][] = array( 
+            &#x27;check&#x27; =&gt; &#x27;Digit Check&#x27;, 
+            &#x27;result&#x27; =&gt; &#x27;PASS&#x27;, 
+            &#x27;message&#x27; =&gt; &#x27;All characters are numeric&#x27; 
+        ); 
+    } else { 
+        $response[&#x27;errors&#x27;][] = &#x27;Card number must contain only digits&#x27;; 
+        $response[&#x27;checks&#x27;][] = array( 
+            &#x27;check&#x27; =&gt; &#x27;Digit Check&#x27;, 
+            &#x27;result&#x27; =&gt; &#x27;FAIL&#x27;, 
+            &#x27;message&#x27; =&gt; &#x27;Card number contains non-numeric characters&#x27; 
+        ); 
+    } 
+     
+     if (substr($cleanNumber, 0, 1) === &#x27;4&#x27;) { 
+        $response[&#x27;cardType&#x27;] = &#x27;Visa&#x27;; 
+        $response[&#x27;checks&#x27;][] = array( 
+            &#x27;check&#x27; =&gt; &#x27;Card Type&#x27;, 
+            &#x27;result&#x27; =&gt; &#x27;PASS&#x27;, 
+            &#x27;message&#x27; =&gt; &#x27;Valid Visa card (starts with 4)&#x27; 
+        ); 
+
+ 
+    } elseif (substr($cleanNumber, 0, 1) === &#x27;5&#x27;) { 
+        $response[&#x27;cardType&#x27;] = &#x27;MasterCard&#x27;; 
+        $response[&#x27;checks&#x27;][] = array( 
+            &#x27;check&#x27; =&gt; &#x27;Card Type&#x27;, 
+            &#x27;result&#x27; =&gt; &#x27;PASS&#x27;, 
+            &#x27;message&#x27; =&gt; &#x27;Valid MasterCard (starts with 5)&#x27; 
+        ); 
+    } else { 
+        $response[&#x27;errors&#x27;][] = &#x27;Invalid card type. Must start with 4 (Visa) or 5 (MasterCard)&#x27;; 
+        $response[&#x27;checks&#x27;][] = array( 
+            &#x27;check&#x27; =&gt; &#x27;Card Type&#x27;, 
+            &#x27;result&#x27; =&gt; &#x27;FAIL&#x27;, 
+            &#x27;message&#x27; =&gt; &#x27;Invalid card type. Must start with 4 (Visa) or 5 (MasterCard)&#x27; 
+        ); 
+    } 
+     
+     if (preg_match(&#x27;/^(\d{4}-?\d{4}-?\d{4}-?\d{4})$/&#x27;, $cardNumber)) { 
+        $response[&#x27;checks&#x27;][] = array( 
+            &#x27;check&#x27; =&gt; &#x27;Format Check&#x27;, 
+            &#x27;result&#x27; =&gt; &#x27;PASS&#x27;, 
+            &#x27;message&#x27; =&gt; &#x27;Card number format is valid&#x27; 
+        ); 
+    } else { 
+        $response[&#x27;errors&#x27;][] = &#x27;Invalid format. Use XXXX-XXXX-XXXX-XXXX or 
+XXXXXXXXXXXXXXXX&#x27;; 
+        $response[&#x27;checks&#x27;][] = array( 
+            &#x27;check&#x27; =&gt; &#x27;Format Check&#x27;, 
+            &#x27;result&#x27; =&gt; &#x27;FAIL&#x27;, 
+            &#x27;message&#x27; =&gt; &#x27;Invalid format. Use XXXX-XXXX-XXXX-XXXX or 
+XXXXXXXXXXXXXXXX&#x27; 
+        ); 
+    } 
+     
+    $response[&#x27;isValid&#x27;] = empty($response[&#x27;errors&#x27;]); 
+     
+    echo json_encode($response); 
+} else { 
+    http_response_code(405); 
+    echo json_encode(array(&#x27;error&#x27; =&gt; &#x27;Method not allowed&#x27;)); 
+} 
+?&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

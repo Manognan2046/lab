@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 9 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 9</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question8.html">← Previous</a>
+    <a class="btn" href="question10.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 9</h2>
+    <div class="question">Write a HTML page that has one input, which can take multi-line</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>button. Once the user clicks the submit button, it should show the number of 
+characters, words and lines in the text entered using an alert message. Words are 
+separated with white spaces and lines are separated with new line character. 
+  
+&lt;!DOCTYPE html&gt; 
+&lt;html lang=&quot;en&quot;&gt; 
+&lt;head&gt; 
+    &lt;title&gt;Text Statistics&lt;/title&gt; 
+    &lt;style&gt; 
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+        } 
+        textarea, button { 
+            padding: 10px; 
+            margin: 5px 0; 
+        } 
+    &lt;/style&gt; 
+&lt;/head&gt; 
+&lt;body&gt; 
+    &lt;h1&gt;Text Statistics&lt;/h1&gt; 
+    &lt;label for=&quot;textInput&quot;&gt;Enter your text below:&lt;/label&gt;&lt;br&gt; 
+
+ 
+    &lt;textarea id=&quot;textInput&quot; rows=&quot;10&quot; cols=&quot;50&quot; placeholder=&quot;Type your text 
+here...&quot;&gt;&lt;/textarea&gt;&lt;br&gt; 
+    &lt;button onclick=&quot;calculateStats()&quot;&gt;Submit&lt;/button&gt; 
+    &lt;script&gt; 
+        function calculateStats() { 
+            const text = document.getElementById(&quot;textInput&quot;).value; 
+            const charCount = text.length; 
+            const wordCount = text.trim() === &quot;&quot; ? 0 : text.trim().split(/\s+/).length; 
+            const lineCount = text.split(&quot;\n&quot;).length; 
+            alert(`Characters: ${charCount}\nWords: ${wordCount}\nLines: ${lineCount}`); 
+        } 
+    &lt;/script&gt; 
+&lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

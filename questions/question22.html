@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 22 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 22</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question21.html">← Previous</a>
+    <a class="btn" href="question23.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 22</h2>
+    <div class="question">Write a program that uses a 2D array to store a matrix and calculates the sum of each</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>&lt;!DOCTYPE html&gt; 
+&lt;html lang=&quot;en&quot;&gt; 
+&lt;head&gt; 
+    &lt;title&gt;Matrix Column Sum&lt;/title&gt; 
+
+ 
+&lt;/head&gt; 
+&lt;body style=&quot;text-align: center;&quot;&gt; 
+    &lt;h2&gt;Matrix Column Sum Calculator&lt;/h2&gt; 
+    &lt;p&gt;Enter matrix rows (comma-separated numbers, one row per line):&lt;/p&gt; 
+    &lt;textarea id=&quot;matrixInput&quot; rows=&quot;5&quot; cols=&quot;40&quot;&gt;&lt;/textarea&gt;&lt;br&gt;&lt;br&gt; 
+    &lt;button onclick=&quot;calculateColumnSums()&quot;&gt;Calculate Column Sums&lt;/button&gt; 
+    &lt;p id=&quot;matrixResult&quot;&gt;&lt;/p&gt; 
+ 
+    &lt;script&gt; 
+        function calculateColumnSums() { 
+            const rawInput = document.getElementById(&quot;matrixInput&quot;).value.trim(); 
+            const rows = rawInput.split(&#x27;\n&#x27;).map(row =&gt; row.split(&#x27;,&#x27;).map(Number)); 
+ 
+            if (rows.length === 0 || rows.some(r =&gt; r.some(isNaN))) { 
+                document.getElementById(&quot;matrixResult&quot;).innerText = &quot;Invalid matrix input.&quot;; 
+                return; 
+            } 
+            const cols = rows[0].length; 
+            const sums = Array(cols).fill(0); 
+ 
+            for (let r of rows) { 
+                if (r.length !== cols) { 
+                    document.getElementById(&quot;matrixResult&quot;).innerText = &quot;Rows must have same 
+number of columns.&quot;; 
+                    return; 
+                } 
+                for (let i = 0; i &lt; cols; i++) { 
+
+ 
+                    sums[i] += r[i]; 
+                } 
+            } 
+            document.getElementById(&quot;matrixResult&quot;).innerText = &quot;Column Sums: &quot; + 
+sums.join(&quot;, &quot;); 
+        } 
+    &lt;/script&gt; 
+&lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

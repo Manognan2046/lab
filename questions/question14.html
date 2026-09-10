@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 14 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 14</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question13.html">← Previous</a>
+    <a class="btn" href="question15.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 14</h2>
+    <div class="question">Write a program to create blurred pictures and text with different direction and strength</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>strength using Motion Blur filter in CSS. 
+&lt;!DOCTYPE html&gt; 
+&lt;html&gt; 
+&lt;head&gt; 
+  &lt;title&gt;Motion Blur Simulation in CSS&lt;/title&gt; 
+  &lt;style&gt; 
+    .container { 
+      display: flex; 
+      flex-wrap: wrap; 
+      gap: 20px; 
+      justify-content: center; 
+      padding: 20px; 
+    } 
+ 
+
+ 
+    .blur-horizontal { 
+      filter: blur(0.5px); 
+      transform: translateX(3px); 
+    } 
+ 
+    .blur-vertical { 
+      filter: blur(1px); 
+      transform: translateY(5px); 
+    } 
+ 
+    .blur-strong { 
+      filter: blur(4px); 
+      transform: translateX(10px); 
+    } 
+ 
+    .text-blur { 
+      color: black; 
+      font-size: 24px; 
+      text-shadow: 5px 0 3px rgba(0,0,0,0.3); /* horizontal motion blur simulation */ 
+    } 
+ 
+    .text-blur-vertical { 
+      color: darkblue; 
+      font-size: 24px; 
+      text-shadow: 0 5px 3px rgba(0,0,0,0.3); /* vertical motion blur simulation */ 
+    } 
+
+ 
+ 
+    img { 
+      width: 200px; 
+      height: auto; 
+    } 
+  &lt;/style&gt; 
+&lt;/head&gt; 
+ 
+&lt;body&gt; 
+  &lt;h2 align=&quot;center&quot;&gt;CSS Motion Blur Simulation&lt;/h2&gt; 
+   
+  &lt;div class=&quot;container&quot;&gt; 
+    &lt;div&gt; 
+      &lt;p&gt;Original Image&lt;/p&gt; 
+      &lt;img src=&quot;image.jpg&quot; alt=&quot;Original&quot;&gt; 
+    &lt;/div&gt; 
+    &lt;div&gt; 
+      &lt;p&gt;Horizontal Motion Blur&lt;/p&gt; 
+      &lt;img src=&quot;image.jpg&quot; class=&quot;blur-horizontal&quot; alt=&quot;Horizontal Blur&quot;&gt; 
+    &lt;/div&gt; 
+    &lt;div&gt; 
+      &lt;p&gt;Vertical Motion Blur&lt;/p&gt; 
+      &lt;img src=&quot;image.jpg&quot; class=&quot;blur-vertical&quot; alt=&quot;Vertical Blur&quot;&gt; 
+    &lt;/div&gt; 
+    &lt;div&gt; 
+      &lt;p&gt;Strong Motion Blur&lt;/p&gt; 
+
+ 
+      &lt;img src=&quot;image.jpg&quot; class=&quot;blur-strong&quot; alt=&quot;Strong Blur&quot;&gt; 
+    &lt;/div&gt; 
+  &lt;/div&gt; 
+ 
+  &lt;div class=&quot;container&quot;&gt; 
+    &lt;div&gt; 
+      &lt;p class=&quot;text-blur&quot;&gt;This is Horizontal Blurred Text&lt;/p&gt; 
+    &lt;/div&gt; 
+    &lt;div&gt; 
+      &lt;p class=&quot;text-blur-vertical&quot;&gt;This is Vertical Blurred Text&lt;/p&gt; 
+    &lt;/div&gt; 
+  &lt;/div&gt; 
+ 
+&lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

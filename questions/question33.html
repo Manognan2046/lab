@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 33 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 33</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question32.html">← Previous</a>
+    <a class="btn" href="question34.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 33</h2>
+    <div class="question">Write a Javascript code to validate ALL Fields in user registration form</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>a. First Name (Name should contains alphabets and the length should not be less 
+than 6 
+characters). 
+b. Password (Password should not be less than 6 characters length). 
+c. E-mail id (should not contain any invalid and must follow the standard pattern 
+name@domain.com) 
+d. Mobile Number (Phone number should contain 10 digits only). 
+e. Last Name and Address (should not be Empty). 
+
+ 
+ 
+&lt;!DOCTYPE html&gt; 
+&lt;html lang=&quot;en&quot;&gt; 
+&lt;head&gt; 
+    &lt;meta charset=&quot;UTF-8&quot;&gt; 
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt; 
+    &lt;title&gt;Registration Page Validation&lt;/title&gt; 
+    &lt;script src=&quot;validation.js&quot; defer&gt;&lt;/script&gt; 
+&lt;/head&gt; 
+&lt;body&gt; 
+    &lt;h2&gt;Registration Form&lt;/h2&gt; 
+    &lt;form id=&quot;registration-form&quot;&gt; 
+        &lt;label for=&quot;first-name&quot;&gt;First Name:&lt;/label&gt; 
+        &lt;input type=&quot;text&quot; id=&quot;first-name&quot; name=&quot;first-name&quot; required&gt; 
+        &lt;br&gt;&lt;br&gt; 
+        &lt;label for=&quot;last-name&quot;&gt;Last Name:&lt;/label&gt; 
+        &lt;input type=&quot;text&quot; id=&quot;last-name&quot; name=&quot;last-name&quot; required&gt; 
+        &lt;br&gt;&lt;br&gt; 
+        &lt;label for=&quot;password&quot;&gt;Password:&lt;/label&gt; 
+        &lt;input type=&quot;password&quot; id=&quot;password&quot; name=&quot;password&quot; required&gt; 
+        &lt;br&gt;&lt;br&gt; 
+        &lt;label for=&quot;email&quot;&gt;E-mail:&lt;/label&gt; 
+        &lt;input type=&quot;email&quot; id=&quot;email&quot; name=&quot;email&quot; required&gt; 
+        &lt;br&gt;&lt;br&gt; 
+        &lt;label for=&quot;mobile&quot;&gt;Mobile Number:&lt;/label&gt; 
+        &lt;input type=&quot;text&quot; id=&quot;mobile&quot; name=&quot;mobile&quot; required&gt; 
+
+ 
+        &lt;br&gt;&lt;br&gt; 
+        &lt;label for=&quot;address&quot;&gt;Address:&lt;/label&gt; 
+        &lt;textarea id=&quot;address&quot; name=&quot;address&quot; required&gt;&lt;/textarea&gt; 
+        &lt;br&gt;&lt;br&gt; 
+        &lt;button type=&quot;submit&quot;&gt;Submit&lt;/button&gt; 
+    &lt;/form&gt; 
+&lt;/body&gt; 
+&lt;/html&gt; 
+ 
+Validate.js 
+document.getElementById(&quot;registration-form&quot;).addEventListener(&quot;submit&quot;, function (event) { 
+    let isValid = true; 
+    const firstName = document.getElementById(&quot;first-name&quot;).value.trim(); 
+    if (firstName.length &lt; 6 || !/^[A-Za-z]+$/.test(firstName)) { 
+        alert(&quot;First Name must contain only alphabets and be at least 6 characters long.&quot;); 
+        isValid = false; 
+    } 
+    const lastName = document.getElementById(&quot;last-name&quot;).value.trim(); 
+    if (lastName === &quot;&quot;) { 
+        alert(&quot;Last Name cannot be empty.&quot;); 
+        isValid = false; 
+    } 
+    const password = document.getElementById(&quot;password&quot;).value.trim(); 
+    if (password.length &lt; 6) { 
+        alert(&quot;Password must be at least 6 characters long.&quot;); 
+        isValid = false; 
+
+ 
+    } 
+    const email = document.getElementById(&quot;email&quot;).value.trim(); 
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; 
+    if (!emailRegex.test(email)) { 
+        alert(&quot;Please enter a valid email address (e.g., name@domain.com).&quot;); 
+        isValid = false; 
+    } 
+    const mobile = document.getElementById(&quot;mobile&quot;).value.trim(); 
+    if (!/^\d{10}$/.test(mobile)) { 
+        alert(&quot;Mobile Number must contain exactly 10 digits.&quot;); 
+        isValid = false; 
+    } 
+    const address = document.getElementById(&quot;address&quot;).value.trim(); 
+    if (address === &quot;&quot;) { 
+        alert(&quot;Address cannot be empty.&quot;); 
+        isValid = false; 
+    } 
+    if (!isValid) { 
+        event.preventDefault(); 
+    } 
+});</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 13 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 13</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question12.html">← Previous</a>
+    <a class="btn" href="question14.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 13</h2>
+    <div class="question">Write a program that changes the background color of a webpage dynamically using inline</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>using inline styles, and also includes a button to toggle between two external 
+stylesheets. 
+&lt;!DOCTYPE html&gt; 
+&lt;html&gt; 
+&lt;head&gt; 
+  &lt;title&gt;Dynamic Styles and Stylesheet Toggle&lt;/title&gt; 
+  &lt;link id=&quot;styleSheet&quot; rel=&quot;stylesheet&quot; href=&quot;style1.css&quot;&gt; 
+  &lt;script&gt; 
+    function changeBgColor(color) { 
+      document.body.style.backgroundColor = color; 
+    } 
+    function toggleStyleSheet() { 
+      var sheet = document.getElementById(&quot;styleSheet&quot;); 
+      if (sheet.getAttribute(&quot;href&quot;) === &quot;style1.css&quot;) { 
+        sheet.setAttribute(&quot;href&quot;, &quot;style2.css&quot;); 
+      } else { 
+        sheet.setAttribute(&quot;href&quot;, &quot;style1.css&quot;); 
+
+ 
+      } 
+    } 
+  &lt;/script&gt; 
+&lt;/head&gt; 
+&lt;body&gt; 
+  &lt;h2&gt;Dynamic Background Color and Stylesheet Toggle&lt;/h2&gt; 
+   &lt;button onclick=&quot;changeBgColor(&#x27;lightblue&#x27;)&quot;&gt;Light Blue&lt;/button&gt; 
+  &lt;button onclick=&quot;changeBgColor(&#x27;lightgreen&#x27;)&quot;&gt;Light Green&lt;/button&gt; 
+  &lt;button onclick=&quot;changeBgColor(&#x27;lightpink&#x27;)&quot;&gt;Light Pink&lt;/button&gt; 
+ &lt;br&gt;&lt;br&gt; 
+ &lt;button onclick=&quot;toggleStyleSheet()&quot;&gt;Toggle Stylesheet&lt;/button&gt; 
+  &lt;p&gt;This paragraph will reflect styles from the external stylesheet.&lt;/p&gt; 
+&lt;/body&gt; 
+&lt;/html&gt; 
+style1.css 
+body { 
+  font-family: Arial, sans-serif; 
+  color: darkblue; 
+} 
+p { 
+  font-size: 18px; 
+} 
+style2.css  
+body { 
+  font-family: &quot;Courier New&quot;, monospace; 
+  color: darkgreen; 
+
+ 
+} 
+p { 
+  font-size: 20px; 
+  font-weight: bold; 
+}</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 21 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 21</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question20.html">← Previous</a>
+    <a class="btn" href="question22.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 21</h2>
+    <div class="question">Write a function that accepts an array and returns the average of</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>that array.
+&lt;!DOCTYPE html&gt; 
+&lt;html lang=&quot;en&quot;&gt; 
+&lt;head&gt; 
+    &lt;title&gt;Array Average Calculator&lt;/title&gt; 
+&lt;/head&gt; 
+&lt;body style=&quot;text-align: center;&quot;&gt; 
+    &lt;h2&gt;Average of Numbers&lt;/h2&gt; 
+    &lt;p&gt;Enter numbers separated by commas:&lt;/p&gt; 
+    &lt;input type=&quot;text&quot; id=&quot;numbers&quot;&gt; 
+    &lt;button onclick=&quot;calculateAverage()&quot;&gt;Calculate Average&lt;/button&gt; 
+
+ 
+    &lt;p id=&quot;avgResult&quot;&gt;&lt;/p&gt; 
+    &lt;script&gt; 
+        function calculateAverage() { 
+            const input = document.getElementById(&quot;numbers&quot;).value; 
+            const nums = input.split(&#x27;,&#x27;).map(Number).filter(n =&gt; !isNaN(n)); 
+            if (nums.length === 0) { 
+                document.getElementById(&quot;avgResult&quot;).innerText = &quot;Please enter valid numbers.&quot;; 
+                return; } 
+            const sum = nums.reduce((acc, val) =&gt; acc + val, 0); 
+            const avg = sum / nums.length; 
+            document.getElementById(&quot;avgResult&quot;).innerText = &quot;Average: &quot; + avg.toFixed(2); 
+        } 
+    &lt;/script&gt; 
+&lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

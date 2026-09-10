@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 12 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 12</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question11.html">← Previous</a>
+    <a class="btn" href="question13.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 12</h2>
+    <div class="question">Write an HTML program that contains a selection box with a list of 5 countries. When the</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>the user selects a country, its capital should be printed next to the list. Add CSS to 
+customize the properties of the font of the capital (color, bold and font size). 
+ 
+&lt;!DOCTYPE html&gt; 
+&lt;html lang=&quot;en&quot;&gt; 
+&lt;head&gt; 
+    &lt;title&gt;Country and Capital&lt;/title&gt; 
+    &lt;style&gt; 
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+        } 
+        select { 
+            padding: 10px; 
+            font-size: 16px; 
+            margin-right: 10px; 
+        } 
+        .capital { 
+            font-weight: bold; 
+            font-size: 18px; 
+            color: #007BFF; /* Blue color */ 
+        } 
+    &lt;/style&gt; 
+&lt;/head&gt; 
+&lt;body&gt; 
+    &lt;h1&gt;Country and Capital&lt;/h1&gt; 
+    &lt;label for=&quot;countrySelect&quot;&gt;Select a country:&lt;/label&gt; 
+    &lt;select id=&quot;countrySelect&quot; onchange=&quot;showCapital()&quot;&gt; 
+        &lt;option value=&quot;&quot; disabled selected&gt;Select a country&lt;/option&gt; 
+        &lt;option value=&quot;India&quot;&gt;India&lt;/option&gt; 
+        &lt;option value=&quot;USA&quot;&gt;USA&lt;/option&gt; 
+        &lt;option value=&quot;France&quot;&gt;France&lt;/option&gt; 
+        &lt;option value=&quot;Japan&quot;&gt;Japan&lt;/option&gt; 
+        &lt;option value=&quot;Australia&quot;&gt;Australia&lt;/option&gt; 
+    &lt;/select&gt; 
+    &lt;span class=&quot;capital&quot; id=&quot;capitalDisplay&quot;&gt;&lt;/span&gt; 
+    &lt;script&gt; 
+        function showCapital() { 
+            const countryToCapital = { 
+                &quot;India&quot;: &quot;New Delhi&quot;, 
+                &quot;USA&quot;: &quot;Washington, D.C.&quot;, 
+                &quot;France&quot;: &quot;Paris&quot;, 
+                &quot;Japan&quot;: &quot;Tokyo&quot;, 
+                &quot;Australia&quot;: &quot;Canberra&quot; 
+            }; 
+            const selectedCountry = document.getElementById(&quot;countrySelect&quot;).value; 
+
+ 
+            const capitalDisplay = document.getElementById(&quot;capitalDisplay&quot;); 
+  
+            capitalDisplay.textContent = countryToCapital[selectedCountry] || &quot;&quot;; 
+        } 
+    &lt;/script&gt; 
+&lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

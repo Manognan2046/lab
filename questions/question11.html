@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 11 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 11</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question10.html">← Previous</a>
+    <a class="btn" href="question12.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 11</h2>
+    <div class="question">Develop College Website using HTML5 and CSS</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>Index.html 
+&lt;!DOCTYPE html&gt; 
+&lt;html lang=&quot;en&quot;&gt; 
+&lt;head&gt; 
+
+ 
+  &lt;meta charset=&quot;UTF-8&quot; /&gt; 
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt; 
+  &lt;title&gt;Osmania College&lt;/title&gt; 
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;style.css&quot; /&gt; 
+&lt;/head&gt; 
+&lt;body&gt; 
+  &lt;header&gt; 
+    &lt;div class=&quot;container&quot;&gt; 
+      &lt;h1&gt;Osmania College&lt;/h1&gt; 
+      &lt;nav&gt; 
+        &lt;ul&gt; 
+          &lt;li&gt;&lt;a href=&quot;#home&quot;&gt;Home&lt;/a&gt;&lt;/li&gt; 
+          &lt;li&gt;&lt;a href=&quot;#about&quot;&gt;About Us&lt;/a&gt;&lt;/li&gt; 
+          &lt;li&gt;&lt;a href=&quot;#courses&quot;&gt;Courses&lt;/a&gt;&lt;/li&gt; 
+          &lt;li&gt;&lt;a href=&quot;#contact&quot;&gt;Contact&lt;/a&gt;&lt;/li&gt; 
+        &lt;/ul&gt; 
+      &lt;/nav&gt; 
+    &lt;/div&gt; 
+  &lt;/header&gt; 
+ 
+  &lt;section id=&quot;home&quot; class=&quot;hero&quot;&gt; 
+    &lt;div class=&quot;container&quot;&gt; 
+      &lt;h2&gt;Welcome to Osmania College&lt;/h2&gt; 
+      &lt;p&gt;Your future begins here. Learn, grow, and succeed with us.&lt;/p&gt; 
+    &lt;/div&gt; 
+  &lt;/section&gt; 
+ 
+  &lt;section id=&quot;about&quot;&gt; 
+    &lt;div class=&quot;container&quot;&gt; 
+      &lt;h2&gt;About Us&lt;/h2&gt; 
+      &lt;p&gt;Osmania College was established in 1990. We are dedicated to excellence in 
+teaching and innovation, offering a range of undergraduate and postgraduate programs.&lt;/p&gt; 
+    &lt;/div&gt; 
+  &lt;/section&gt; 
+ 
+  &lt;section id=&quot;courses&quot;&gt; 
+    &lt;div class=&quot;container&quot;&gt; 
+      &lt;h2&gt;Courses Offered&lt;/h2&gt; 
+      &lt;ul&gt; 
+        &lt;li&gt;B.Sc Computer Science&lt;/li&gt; 
+        &lt;li&gt;B.Com&lt;/li&gt; 
+        &lt;li&gt;BBA&lt;/li&gt; 
+        &lt;li&gt;BA English&lt;/li&gt; 
+      &lt;/ul&gt; 
+    &lt;/div&gt; 
+  &lt;/section&gt; 
+  &lt;section id=&quot;contact&quot;&gt; 
+    &lt;div class=&quot;container&quot;&gt; 
+
+ 
+      &lt;h2&gt;Contact Us&lt;/h2&gt; 
+      &lt;p&gt;Email: info@osmaniacollege.edu | Phone: +91-12345-67890&lt;/p&gt; 
+      &lt;p&gt;Address: 123 Main Road, City, State, Country&lt;/p&gt; 
+    &lt;/div&gt; 
+  &lt;/section&gt; 
+  &lt;footer&gt; 
+    &lt;div class=&quot;container&quot;&gt; 
+      &lt;p&gt;&amp;copy; 2025 Osmanania College. All rights reserved.&lt;/p&gt; 
+    &lt;/div&gt; 
+  &lt;/footer&gt; 
+&lt;/body&gt; 
+&lt;/html&gt; 
+ 
+styles.css 
+ 
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+} 
+ 
+body { 
+  font-family: &#x27;Segoe UI&#x27;, sans-serif; 
+  line-height: 1.6; 
+  background-color: #f4f4f4; 
+  color: #333; 
+} 
+.container { 
+  width: 90%; 
+  max-width: 1200px; 
+  margin: auto; 
+  padding: 20px 0; 
+} 
+header { 
+  background: #003366; 
+  color: white; 
+  padding: 20px 0; 
+} 
+header h1 { 
+  text-align: center; 
+  margin-bottom: 10px; 
+} 
+nav ul { 
+  display: flex; 
+  justify-content: center; 
+  list-style: none; 
+} 
+nav ul li { 
+
+ 
+  margin: 0 15px; 
+} 
+nav ul li a { 
+  color: white; 
+  text-decoration: none; 
+  font-weight: bold; 
+} 
+nav ul li a:hover { 
+  text-decoration: underline; 
+} 
+.hero { 
+  background: #cce5ff; 
+  text-align: center; 
+  padding: 60px 20px; 
+} 
+section { 
+  padding: 40px 0; 
+} 
+h2 { 
+  margin-bottom: 20px; 
+  color: #003366; 
+} 
+ul { 
+  list-style-type: disc; 
+  padding-left: 40px; 
+} 
+footer { 
+  background: #003366; 
+  color: white; 
+  text-align: center; 
+  padding: 20px 0; 
+}</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

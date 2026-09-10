@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 35 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 35</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question34.html">← Previous</a>
+    <a class="btn" href="question36.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 35</h2>
+    <div class="question">Write a Python program which generates an output file based on one-line instructions in</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>instructions in an input file
+# program.py 
+def process_instruction(line): 
+    parts = line.strip().split() 
+    if not parts: 
+
+ 
+        return &quot;Invalid instruction&quot; 
+    command = parts[0].upper() 
+    try: 
+        if command == &quot;ADD&quot;: 
+            return f&quot;Result: {int(parts[1]) + int(parts[2])}&quot; 
+        elif command == &quot;SUBTRACT&quot;: 
+            return f&quot;Result: {int(parts[1]) - int(parts[2])}&quot; 
+        elif command == &quot;MULTIPLY&quot;: 
+            return f&quot;Result: {int(parts[1]) * int(parts[2])}&quot; 
+        elif command == &quot;DIVIDE&quot;: 
+            return f&quot;Result: {int(parts[1]) / int(parts[2])}&quot; 
+        elif command == &quot;REVERSE&quot;: 
+            return f&quot;Result: {parts[1][::-1]}&quot; 
+        elif command == &quot;UPPERCASE&quot;: 
+            return f&quot;Result: {parts[1].upper()}&quot; 
+        else: 
+            return &quot;Unknown command&quot; 
+    except (IndexError, ValueError, ZeroDivisionError) as e: 
+        return f&quot;Error: {str(e)}&quot; 
+def main(): 
+    input_file = &quot;input.txt&quot; 
+    output_file = &quot;output.txt&quot; 
+    with open(input_file, &quot;r&quot;) as infile, open(output_file, &quot;w&quot;) as outfile: 
+        for line in infile: 
+            result = process_instruction(line) 
+            outfile.write(result + &quot;\n&quot;) 
+    print(f&quot;Instructions processed. Results saved to &#x27;{output_file}&#x27;.&quot;) 
+if __name__ == &quot;__main__&quot;: 
+
+ 
+    main() 
+input.txt 
+ADD 10 20 
+SUBTRACT 50 15 
+MULTIPLY 6 7 
+DIVIDE 9 3 
+REVERSE Python 
+UPPERCASE openai 
+
+output.txt 
+Result: 30 
+Result: 35 
+Result: 42 
+Result: 3.0 
+Result: nohtyP 
+Result: OPENAI</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

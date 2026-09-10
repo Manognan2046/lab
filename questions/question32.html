@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 32 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 32</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question31.html">← Previous</a>
+    <a class="btn" href="question33.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 32</h2>
+    <div class="question">To design a basic calculator using javascript.</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>&lt;!DOCTYPE html&gt; 
+&lt;html lang=&quot;en&quot;&gt; 
+&lt;head&gt; 
+    &lt;title&gt;Calculator&lt;/title&gt; 
+    &lt;style&gt; 
+        body { 
+            font-family: &#x27;Arial&#x27;, sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            background-color: #f4f4f4; 
+        } 
+        .calculator { 
+            background: white; 
+            border: 2px solid #ccc; 
+            border-radius: 8px; 
+            padding: 20px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+
+ 
+        } 
+        .calculator input[type=&#x27;text&#x27;] { 
+            width: 100%; 
+            height: 50px; 
+            margin-bottom: 10px; 
+            text-align: right; 
+            font-size: 24px; 
+            border: 1px solid #ccc; 
+            border-radius: 4px; 
+            padding: 10px; 
+            background-color: #f9f9f9; 
+        } 
+        .buttons { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            grid-gap: 10px; 
+        } 
+        .buttons button { 
+            height: 50px; 
+            font-size: 18px; 
+            border: none; 
+            border-radius: 4px; 
+            background: #007bff; 
+            color: white; 
+            cursor: pointer; 
+            transition: background 0.3s; 
+
+ 
+        } 
+        .buttons button:hover { 
+            background: #0056b3; 
+        } 
+        .buttons button.clear { 
+            background: #dc3545; 
+        } 
+        .buttons button.clear:hover { 
+            background: #a71d2a; 
+        } 
+    &lt;/style&gt; 
+&lt;/head&gt; 
+&lt;body&gt; 
+&lt;div class=&quot;calculator&quot;&gt; 
+    &lt;input type=&quot;text&quot; id=&quot;result&quot; disabled placeholder=&quot;0&quot;&gt; 
+    &lt;div class=&quot;buttons&quot;&gt; 
+        &lt;button onclick=&quot;clearResult()&quot; class=&quot;clear&quot;&gt;C&lt;/button&gt; 
+        &lt;button onclick=&quot;appendValue(&#x27;(&#x27;)&quot;&gt;(&lt;/button&gt; 
+        &lt;button onclick=&quot;appendValue(&#x27;)&#x27;)&quot;&gt;)&lt;/button&gt; 
+        &lt;button onclick=&quot;appendValue(&#x27;/&#x27;)&quot;&gt;/&lt;/button&gt; 
+        &lt;button onclick=&quot;appendValue(&#x27;7&#x27;)&quot;&gt;7&lt;/button&gt; 
+        &lt;button onclick=&quot;appendValue(&#x27;8&#x27;)&quot;&gt;8&lt;/button&gt; 
+        &lt;button onclick=&quot;appendValue(&#x27;9&#x27;)&quot;&gt;9&lt;/button&gt; 
+        &lt;button onclick=&quot;appendValue(&#x27;&#x27;)&quot;&gt;&lt;/button&gt; 
+        &lt;button onclick=&quot;appendValue(&#x27;4&#x27;)&quot;&gt;4&lt;/button&gt; 
+        &lt;button onclick=&quot;appendValue(&#x27;5&#x27;)&quot;&gt;5&lt;/button&gt; 
+
+ 
+        &lt;button onclick=&quot;appendValue(&#x27;6&#x27;)&quot;&gt;6&lt;/button&gt; 
+        &lt;button onclick=&quot;appendValue(&#x27;-&#x27;)&quot;&gt;-&lt;/button&gt; 
+        &lt;button onclick=&quot;appendValue(&#x27;1&#x27;)&quot;&gt;1&lt;/button&gt; 
+        &lt;button onclick=&quot;appendValue(&#x27;2&#x27;)&quot;&gt;2&lt;/button&gt; 
+        &lt;button onclick=&quot;appendValue(&#x27;3&#x27;)&quot;&gt;3&lt;/button&gt; 
+        &lt;button onclick=&quot;appendValue(&#x27;+&#x27;)&quot;&gt;+&lt;/button&gt; 
+        &lt;button onclick=&quot;appendValue(&#x27;0&#x27;)&quot;&gt;0&lt;/button&gt; 
+        &lt;button onclick=&quot;appendValue(&#x27;.&#x27;)&quot;&gt;.&lt;/button&gt; 
+        &lt;button onclick=&quot;calculateResult()&quot;&gt;=&lt;/button&gt; 
+    &lt;/div&gt; 
+&lt;/div&gt; 
+&lt;script&gt; 
+    const resultField = document.getElementById(&#x27;result&#x27;); 
+    function appendValue(value) { 
+        if (resultField.value === &#x27;0&#x27; &amp;&amp; !isNaN(value)) { 
+            resultField.value = value; 
+        } else { 
+            resultField.value += value; 
+        } 
+    } 
+    function clearResult() { 
+        resultField.value = &quot;&quot;; 
+    } 
+    function calculateResult() { 
+        try { 
+            resultField.value = eval(resultField.value); 
+
+ 
+        } catch (error) { 
+            resultField.value = &quot;Error&quot;; 
+        } 
+    } 
+&lt;/script&gt; 
+ 
+&lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

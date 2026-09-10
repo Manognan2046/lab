@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 37 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 37</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question36.html">← Previous</a>
+    <a class="btn" href="question38.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 37</h2>
+    <div class="question">Create and save an XML document at the server, which contains 10</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>information. Write a program which takes User Id as input and returns the user details 
+by taking the user information from the XML document. 
+Create XML File — users.xml 
+&lt;?xml version=&quot;1.0&quot;?&gt; 
+&lt;users&gt; 
+  &lt;user id=&quot;U001&quot;&gt; 
+    &lt;name&gt;John Doe&lt;/name&gt; 
+    &lt;email&gt;john@example.com&lt;/email&gt; 
+    &lt;age&gt;28&lt;/age&gt; 
+  &lt;/user&gt; 
+  &lt;user id=&quot;U002&quot;&gt; 
+    &lt;name&gt;Jane Smith&lt;/name&gt; 
+    &lt;email&gt;jane@example.com&lt;/email&gt; 
+    &lt;age&gt;24&lt;/age&gt; 
+  &lt;/user&gt; 
+  &lt;user id=&quot;U003&quot;&gt; 
+    &lt;name&gt;Mike Johnson&lt;/name&gt; 
+    &lt;email&gt;mike@example.com&lt;/email&gt; 
+    &lt;age&gt;30&lt;/age&gt; 
+  &lt;/user&gt; 
+  &lt;user id=&quot;U004&quot;&gt; 
+    &lt;name&gt;Emily Davis&lt;/name&gt; 
+    &lt;email&gt;emily@example.com&lt;/email&gt; 
+    &lt;age&gt;26&lt;/age&gt; 
+  &lt;/user&gt; 
+  &lt;user id=&quot;U005&quot;&gt; 
+    &lt;name&gt;David Wilson&lt;/name&gt; 
+    &lt;email&gt;david@example.com&lt;/email&gt; 
+    &lt;age&gt;32&lt;/age&gt; 
+  &lt;/user&gt; 
+  &lt;user id=&quot;U006&quot;&gt; 
+    &lt;name&gt;Sophia Brown&lt;/name&gt; 
+    &lt;email&gt;sophia@example.com&lt;/email&gt; 
+    &lt;age&gt;29&lt;/age&gt; 
+
+ 
+  &lt;/user&gt; 
+  &lt;user id=&quot;U007&quot;&gt; 
+    &lt;name&gt;Chris Green&lt;/name&gt; 
+    &lt;email&gt;chris@example.com&lt;/email&gt; 
+    &lt;age&gt;31&lt;/age&gt; 
+  &lt;/user&gt; 
+  &lt;user id=&quot;U008&quot;&gt; 
+    &lt;name&gt;Olivia Hall&lt;/name&gt; 
+    &lt;email&gt;olivia@example.com&lt;/email&gt; 
+    &lt;age&gt;27&lt;/age&gt; 
+  &lt;/user&gt; 
+  &lt;user id=&quot;U009&quot;&gt; 
+    &lt;name&gt;Daniel King&lt;/name&gt; 
+    &lt;email&gt;daniel@example.com&lt;/email&gt; 
+    &lt;age&gt;33&lt;/age&gt; 
+  &lt;/user&gt; 
+  &lt;user id=&quot;U010&quot;&gt; 
+    &lt;name&gt;Grace Lee&lt;/name&gt; 
+    &lt;email&gt;grace@example.com&lt;/email&gt; 
+    &lt;age&gt;25&lt;/age&gt; 
+  &lt;/user&gt; 
+&lt;/users&gt;
+Python Program to Query User — user_query.py 
+python 
+CopyEdit 
+import xml.etree.ElementTree as ET 
+ 
+def get_user_details(user_id): 
+    try: 
+        tree = ET.parse(&quot;users.xml&quot;) 
+        root = tree.getroot() 
+ 
+        for user in root.findall(&#x27;user&#x27;): 
+            if user.attrib.get(&#x27;id&#x27;) == user_id: 
+                name = user.find(&#x27;name&#x27;).text 
+                email = user.find(&#x27;email&#x27;).text 
+                age = user.find(&#x27;age&#x27;).text 
+                return f&quot;User ID: {user_id}\nName: {name}\nEmail: {email}\nAge: {age}&quot; 
+         
+        return f&quot;No user found with ID: {user_id}&quot; 
+    except Exception as e: 
+        return f&quot;Error reading XML: {e}&quot; 
+ 
+if __name__ == &quot;__main__&quot;: 
+    user_input = input(&quot;Enter User ID (e.g., U003): &quot;).strip() 
+    print(get_user_details(user_input)) 
+ 
+ 
+
+ 
+Sample Output: 
+ 
+Enter User ID (e.g., U003): U004 
+User ID: U004 
+Name: Emily Davis 
+Email: emily@example.com 
+Age: 26</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

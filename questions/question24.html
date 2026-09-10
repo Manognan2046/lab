@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 24 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 24</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question23.html">← Previous</a>
+    <a class="btn" href="question25.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 24</h2>
+    <div class="question">Write a program that uses the String object to reverse a given string.</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>s_reverse.html 
+&lt;!DOCTYPE html&gt; 
+&lt;html&gt; 
+      &lt;head&gt; 
+  
+  &lt;title&gt;String Reverser&lt;/title&gt; 
+      &lt;/head&gt; 
+      &lt;body style=&quot;text-align: center; margin-top: 50px;&quot;&gt; 
+  
+  &lt;h2&gt;String Reverser&lt;/h2&gt; 
+  
+  &lt;label for=&quot;inputString&quot;&gt;Enter a string:&lt;/label&gt; 
+  
+  &lt;input type=&quot;text&quot; id=&quot;inputString&quot; /&gt; 
+
+ 
+              &lt;button onclick=&quot;reverseString()&quot;&gt;Reverse&lt;/button&gt; 
+  
+  &lt;p id=&quot;result&quot;&gt;&lt;/p&gt; 
+  
+  &lt;script&gt; 
+   
+      function reverseString() { 
+      
+         const str = document.getElementById(&quot;inputString&quot;).value; 
+                     const reversed = str.split(&#x27;&#x27;).reverse().join(&#x27;&#x27;); 
+      
+         document.getElementById(&quot;result&quot;).innerText = &quot;Reversed string: &quot; + reversed;    
+} 
+  
+  &lt;/script&gt; 
+      &lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

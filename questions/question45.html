@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 45 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 45</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question44.html">← Previous</a>
+    <a class="btn" href="question46.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 45</h2>
+    <div class="question">Develop a Java Servlet application with session tracking</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>SessionApp/ 
+├── WEB-INF/ 
+│   ├── web.xml 
+│   └── classes/ 
+│       └── VisitCounterServlet.class 
+ 
+VisitCounterServlet.java 
+ 
+import java.io.*; 
+import javax.servlet.*; 
+
+ 
+import javax.servlet.http.*; 
+ 
+public class VisitCounterServlet extends HttpServlet { 
+    public void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException { 
+ 
+        response.setContentType(&quot;text/html&quot;); 
+        PrintWriter out = response.getWriter(); 
+ 
+        HttpSession session = request.getSession(); 
+ 
+        Integer visitCount = (Integer) session.getAttribute(&quot;visitCount&quot;); 
+ 
+        if (visitCount == null) { 
+            visitCount = 1; 
+            out.println(&quot;&lt;h2&gt;Welcome, new visitor!&lt;/h2&gt;&quot;); 
+        } else { 
+            visitCount++; 
+            out.println(&quot;&lt;h2&gt;Welcome back! Visit count: &quot; + visitCount + &quot;&lt;/h2&gt;&quot;); 
+        } 
+ 
+        session.setAttribute(&quot;visitCount&quot;, visitCount); 
+    } 
+} 
+Web.xml 
+ 
+&lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot; version=&quot;3.1&quot;&gt; 
+    &lt;servlet&gt; 
+        &lt;servlet-name&gt;VisitCounterServlet&lt;/servlet-name&gt; 
+        &lt;servlet-class&gt;VisitCounterServlet&lt;/servlet-class&gt; 
+    &lt;/servlet&gt; 
+ 
+    &lt;servlet-mapping&gt; 
+        &lt;servlet-name&gt;VisitCounterServlet&lt;/servlet-name&gt; 
+        &lt;url-pattern&gt;/visit&lt;/url-pattern&gt; 
+    &lt;/servlet-mapping&gt; 
+&lt;/web-app&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

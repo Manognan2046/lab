@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 40 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 40</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question39.html">← Previous</a>
+    <a class="btn" href="question41.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 40</h2>
+    <div class="question">XML document processing using SAX and DOM</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>Users.xml  
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;  
+&lt;users&gt;  
+&lt;user&gt;  
+&lt;id&gt;1&lt;/id&gt;  
+&lt;name&gt;John Doe&lt;/name&gt;  
+&lt;email&gt;john.doe@example.com&lt;/email&gt;  
+&lt;phone&gt;1234567890&lt;/phone&gt;  
+&lt;address&gt;123 Main St, Cityville&lt;/address&gt;  
+&lt;/user&gt;  
+&lt;user&gt;  
+&lt;id&gt;2&lt;/id&gt;  
+&lt;name&gt;Jane Smith&lt;/name&gt;  
+&lt;email&gt;jane.smith@example.com&lt;/email&gt;  
+&lt;phone&gt;9876543210&lt;/phone&gt;  
+&lt;address&gt;456 Maple Ave, Townsville&lt;/address&gt;  
+&lt;/user&gt;  
+&lt;user&gt;  
+&lt;id&gt;3&lt;/id&gt;  
+&lt;name&gt;Robert Johnson&lt;/name&gt;  
+&lt;email&gt;robert.j@example.com&lt;/email&gt;  
+
+ 
+&lt;phone&gt;1122334455&lt;/phone&gt;  
+&lt;address&gt;789 Oak Dr, Hamlet&lt;/address&gt;  
+&lt;/user&gt;  
+&lt;user&gt;  
+&lt;id&gt;4&lt;/id&gt;  
+&lt;name&gt;Emily Davis&lt;/name&gt;  
+&lt;email&gt;emily.d@example.com&lt;/email&gt;  
+&lt;phone&gt;2233445566&lt;/phone&gt;  
+&lt;address&gt;321 Pine Rd, Metropolis&lt;/address&gt;  
+&lt;/user&gt;  
+&lt;user&gt;  
+&lt;id&gt;5&lt;/id&gt;  
+&lt;name&gt;Michael Brown&lt;/name&gt;  
+&lt;email&gt;michael.b@example.com&lt;/email&gt;  
+&lt;phone&gt;3344556677&lt;/phone&gt;  
+&lt;address&gt;654 Birch Ln, Springfield&lt;/address&gt;  
+&lt;/user&gt;  
+&lt;user&gt;  
+&lt;id&gt;6&lt;/id&gt;  
+&lt;name&gt;Linda Wilson&lt;/name&gt;  
+&lt;email&gt;linda.w@example.com&lt;/email&gt;  
+&lt;phone&gt;4455667788&lt;/phone&gt;  
+&lt;address&gt;987 Cedar St, Rivertown&lt;/address&gt;  
+&lt;/user&gt;  
+&lt;user&gt;  
+&lt;id&gt;7&lt;/id&gt;  
+&lt;name&gt;David Martinez&lt;/name&gt;  
+&lt;email&gt;david.m@example.com&lt;/email&gt;  
+&lt;phone&gt;5566778899&lt;/phone&gt;  
+&lt;address&gt;123 Walnut Blvd, Lakeside&lt;/address&gt;  
+&lt;/user&gt;  
+&lt;user&gt;  
+&lt;id&gt;8&lt;/id&gt;  
+&lt;name&gt;Sarah Taylor&lt;/name&gt;  
+&lt;email&gt;sarah.t@example.com&lt;/email&gt;  
+6   
+&lt;phone&gt;6677889900&lt;/phone&gt;  
+&lt;address&gt;456 Chestnut Ct, Hilltop&lt;/address&gt;  
+&lt;/user&gt;  
+&lt;user&gt;  
+&lt;id&gt;9&lt;/id&gt;  
+&lt;name&gt;Daniel White&lt;/name&gt;  
+&lt;email&gt;daniel.w@example.com&lt;/email&gt;  
+&lt;phone&gt;7788990011&lt;/phone&gt;  
+&lt;address&gt;789 Redwood Pl, Valleyview&lt;/address&gt;  
+&lt;/user&gt;  
+&lt;user&gt;  
+&lt;id&gt;10&lt;/id&gt;  
+
+ 
+&lt;name&gt;Olivia Harris&lt;/name&gt;  
+&lt;email&gt;olivia.h@example.com&lt;/email&gt;  
+&lt;phone&gt;8899001122&lt;/phone&gt;  
+&lt;address&gt;321 Willow Ln, Bayside&lt;/address&gt;  
+&lt;/user&gt;  
+&lt;/users&gt;  
+  
+Login.java  
+import org.w3c.dom.*;  
+import javax.xml.parsers.*;  
+import java.io.File;  
+import java.util.Scanner;  
+public class UserDetails {  
+public static void main(String[] args) {  
+try {  
+File xmlFile = new File(&quot;users.xml&quot;);  
+DocumentBuilderFactory factory =  
+DocumentBuilderFactory.newInstance();  
+DocumentBuilder builder = factory.newDocumentBuilder();  
+Document document = builder.parse(xmlFile);  
+document.getDocumentElement().normalize();  
+NodeList userList = document.getElementsByTagName(&quot;user&quot;);  
+Scanner scanner = new Scanner(System.in);  
+System.out.print(&quot;Enter User ID to fetch details: &quot;);  
+String userId = scanner.nextLine();  
+boolean userFound = false;  
+for (int i = 0; i &lt; userList.getLength(); i++) {  
+Node userNode = userList.item(i);  
+if (userNode.getNodeType() == Node.ELEMENT_NODE) {  
+Element userElement = (Element) userNode;  
+String id =  
+userElement.getElementsByTagName(&quot;id&quot;).item(0).getTextContent();  
+if (id.equals(userId)) {  
+System.out.println(&quot;User Details:&quot;);  
+System.out.println(&quot;ID: &quot; + id);  
+System.out.println(&quot;Name: &quot; +  
+userElement.getElementsByTagName(&quot;name&quot;).item(0).getTextContent());  
+System.out.println(&quot;Email: &quot; +  
+userElement.getElementsByTagName(&quot;email&quot;).item(0).getTextContent());  
+System.out.println(&quot;Phone: &quot; +  
+userElement.getElementsByTagName(&quot;phone&quot;).item(0).getTextContent());  
+System.out.println(&quot;Address: &quot; +  
+userElement.getElementsByTagName(&quot;address&quot;).item(0).getTextContent());  
+userFound = true;  
+break;  
+}  
+}  
+}  
+
+ 
+if (!userFound) {  
+7   
+System.out.println(&quot;User with ID &quot; + userId + &quot; not  
+found.&quot;);  
+}  
+} catch (Exception e) {  
+e.printStackTrace();  
+}  
+}  
+}</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

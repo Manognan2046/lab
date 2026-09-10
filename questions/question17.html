@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 17 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 17</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question16.html">← Previous</a>
+    <a class="btn" href="question18.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 17</h2>
+    <div class="question">Create a student Registration form for Job Application and validate the form fields using</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>using JavaScript.  
+&lt;html&gt; 
+  &lt;body&gt; 
+    &lt;h2&gt;Student Job Application Form&lt;/h2&gt; 
+    &lt;form onsubmit=&quot;return validateForm()&quot;&gt; 
+      Name: &lt;input type=&quot;text&quot; id=&quot;name&quot;&gt;&lt;br&gt;&lt;br&gt; 
+      Email: &lt;input type=&quot;text&quot; id=&quot;email&quot;&gt;&lt;br&gt;&lt;br&gt; 
+
+ 
+      Phone: &lt;input type=&quot;text&quot; id=&quot;phone&quot;&gt;&lt;br&gt;&lt;br&gt; 
+     Gender: 
+      &lt;select id=&quot;gender&quot;&gt; 
+        &lt;option value=&quot;&quot;&gt;Select&lt;/option&gt; 
+        &lt;option&gt;Male&lt;/option&gt; 
+        &lt;option&gt;Female&lt;/option&gt; 
+        &lt;option&gt;Other&lt;/option&gt; 
+      &lt;/select&gt;&lt;br&gt;&lt;br&gt; 
+     Date of Birth: &lt;input type=&quot;date&quot; id=&quot;dob&quot;&gt;&lt;br&gt;&lt;br&gt; 
+     Qualification: 
+      &lt;select id=&quot;qualification&quot;&gt; 
+        &lt;option value=&quot;&quot;&gt;Select&lt;/option&gt; 
+        &lt;option&gt;B.Tech&lt;/option&gt; 
+        &lt;option&gt;B.Sc&lt;/option&gt; 
+        &lt;option&gt;MCA&lt;/option&gt; 
+      &lt;/select&gt;&lt;br&gt;&lt;br&gt; 
+     Upload Resume: &lt;input type=&quot;file&quot; id=&quot;resume&quot;&gt;&lt;br&gt;&lt;br&gt; 
+     Password: &lt;input type=&quot;password&quot; id=&quot;password&quot;&gt;&lt;br&gt;&lt;br&gt; 
+      &lt;p id=&quot;error&quot; style=&quot;color:red;&quot;&gt;&lt;/p&gt; 
+           &lt;input type=&quot;submit&quot; value=&quot;Register&quot;&gt; 
+    &lt;/form&gt; 
+   &lt;script&gt; 
+      function validateForm() { 
+        var name = document.getElementById(&quot;name&quot;).value; 
+        var email = document.getElementById(&quot;email&quot;).value; 
+        var phone = document.getElementById(&quot;phone&quot;).value; 
+        var gender = document.getElementById(&quot;gender&quot;).value; 
+        var dob = document.getElementById(&quot;dob&quot;).value; 
+
+ 
+        var qualification = document.getElementById(&quot;qualification&quot;).value; 
+        var resume = document.getElementById(&quot;resume&quot;).value; 
+        var password = document.getElementById(&quot;password&quot;).value; 
+        var error = document.getElementById(&quot;error&quot;); 
+ 
+        if ( 
+          name === &quot;&quot; || 
+          email === &quot;&quot; || 
+          phone === &quot;&quot; || 
+          gender === &quot;&quot; || 
+          dob === &quot;&quot; || 
+          qualification === &quot;&quot; || 
+          resume === &quot;&quot; || 
+          password === &quot;&quot; 
+        ) { 
+          error.innerHTML = &quot;Please fill all fields.&quot;; 
+          return false; 
+        } 
+ 
+      if (!email.includes(&quot;@&quot;) || !email.includes(&quot;.&quot;)) { 
+          error.innerHTML = &quot;Invalid email.&quot;; 
+          return false; 
+        } 
+       if (phone.length !== 10) { 
+          error.innerHTML = &quot;Phone must be 10 digits.&quot;; 
+          return false; 
+        } 
+         if (password.length &lt; 6) { 
+
+ 
+          error.innerHTML = &quot;Password must be at least 6 characters.&quot;; 
+          return false; 
+        } 
+         alert(&quot;Form submitted successfully!&quot;); 
+        return true; 
+      } 
+    &lt;/script&gt; 
+  &lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

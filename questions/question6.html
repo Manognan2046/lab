@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 6 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 6</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question5.html">← Previous</a>
+    <a class="btn" href="question7.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 6</h2>
+    <div class="question">Design the following web pages of college web site and link these pages to home page</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>page using frames in HTML-Home, About Us, Courses Offered, 
+Admissions.i.index.html (Home Page with Frameset) 
+
+index.html  
+&lt;!DOCTYPE html&gt; 
+&lt;html&gt; 
+&lt;head&gt; 
+  &lt;title&gt;College Website&lt;/title&gt; 
+&lt;/head&gt; 
+&lt;frameset rows=&quot;20%,80%&quot;&gt; 
+  &lt;!-- Top Frame for Heading --&gt; 
+  &lt;frame src=&quot;home.html&quot; name=&quot;topFrame&quot; scrolling=&quot;no&quot; noresize&gt; 
+ 
+  &lt;!-- Bottom frame with 2 columns --&gt; 
+  &lt;frameset cols=&quot;20%,80%&quot;&gt; 
+    &lt;!-- Left Frame for Menu --&gt; 
+    &lt;frame src=&quot;menu.html&quot; name=&quot;menuFrame&quot;&gt; 
+     
+    &lt;!-- Right Frame to display content --&gt; 
+    &lt;frame src=&quot;about.html&quot; name=&quot;contentFrame&quot;&gt; 
+  &lt;/frameset&gt; 
+&lt;/frameset&gt; 
+
+ 
+&lt;/html&gt; 
+ 
+menu.html  
+&lt;!DOCTYPE html&gt; 
+&lt;html&gt; 
+&lt;head&gt; 
+  &lt;title&gt;Menu&lt;/title&gt; 
+&lt;/head&gt; 
+&lt;body bgcolor=&quot;#f0f0f0&quot;&gt; 
+  &lt;h3&gt;Navigation&lt;/h3&gt; 
+  &lt;ul&gt; 
+    &lt;li&gt;&lt;a href=&quot;home.html&quot; target=&quot;topFrame&quot;&gt;Home&lt;/a&gt;&lt;/li&gt; 
+    &lt;li&gt;&lt;a href=&quot;about.html&quot; target=&quot;contentFrame&quot;&gt;About Us&lt;/a&gt;&lt;/li&gt; 
+    &lt;li&gt;&lt;a href=&quot;courses.html&quot; target=&quot;contentFrame&quot;&gt;Courses Offered&lt;/a&gt;&lt;/li&gt; 
+    &lt;li&gt;&lt;a href=&quot;admissions.html&quot; target=&quot;contentFrame&quot;&gt;Admissions&lt;/a&gt;&lt;/li&gt; 
+  &lt;/ul&gt; 
+&lt;/body&gt; 
+&lt;/html&gt; 
+ 
+HOME.html 
+ 
+&lt;!DOCTYPE html&gt; 
+&lt;html&gt; 
+&lt;head&gt; 
+  &lt;title&gt;Home&lt;/title&gt; 
+&lt;/head&gt; 
+&lt;body bgcolor=&quot;#003366&quot; text=&quot;white&quot;&gt; 
+  &lt;h1 style=&quot;text-align: center;&quot;&gt;Welcome to ABC College&lt;/h1&gt; 
+&lt;/body&gt; 
+&lt;/html&gt; 
+ 
+about.html 
+ 
+&lt;!DOCTYPE html&gt; 
+&lt;html&gt; 
+&lt;head&gt; 
+  &lt;title&gt;About Us&lt;/title&gt; 
+&lt;/head&gt; 
+&lt;body&gt; 
+  &lt;h2&gt;About Us&lt;/h2&gt; 
+  &lt;p&gt;ABC College was established in 1990 and has been providing quality education in 
+various disciplines.&lt;/p&gt; 
+&lt;/body&gt; 
+&lt;/html&gt; 
+ 
+courses.html 
+ 
+&lt;!DOCTYPE html&gt; 
+
+ 
+&lt;html&gt; 
+&lt;head&gt; 
+  &lt;title&gt;Courses Offered&lt;/title&gt; 
+&lt;/head&gt; 
+&lt;body&gt; 
+  &lt;h2&gt;Courses Offered&lt;/h2&gt; 
+  &lt;ul&gt; 
+    &lt;li&gt;B.Sc Computer Science&lt;/li&gt; 
+    &lt;li&gt;B.Com&lt;/li&gt; 
+    &lt;li&gt;BA English&lt;/li&gt; 
+    &lt;li&gt;BBA&lt;/li&gt; 
+  &lt;/ul&gt; 
+&lt;/body&gt; 
+&lt;/html&gt; 
+
+admissions.html 
+ 
+&lt;!DOCTYPE html&gt; 
+&lt;html&gt; 
+&lt;head&gt; 
+  &lt;title&gt;Admissions&lt;/title&gt; 
+&lt;/head&gt; 
+&lt;body&gt; 
+  &lt;h2&gt;Admissions&lt;/h2&gt; 
+  &lt;p&gt;Admissions open from June 1st. Fill the application online or visit our campus for more 
+details.&lt;/p&gt; 
+&lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

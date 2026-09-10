@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 31 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 31</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question30.html">← Previous</a>
+    <a class="btn" href="question32.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 31</h2>
+    <div class="question">Write a program to encrypt the given number to display the encrypted data using Java</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>Java Script 
+ &lt;!DOCTYPE html&gt; 
+&lt;html&gt; 
+&lt;head&gt; 
+  &lt;title&gt;Encrypt Number&lt;/title&gt; 
+
+ 
+&lt;/head&gt; 
+&lt;body style=&quot;font-family: Arial; text-align: center; padding-top: 50px;&quot;&gt; 
+&lt;h2&gt;Encrypt a 4-digit Number&lt;/h2&gt; 
+  &lt;input type=&quot;text&quot; id=&quot;inputNumber&quot; maxlength=&quot;4&quot; placeholder=&quot;Enter 4-digit number&quot;&gt; 
+  &lt;button onclick=&quot;encrypt()&quot;&gt;Encrypt&lt;/button&gt; 
+  &lt;h3 id=&quot;result&quot;&gt;&lt;/h3&gt; 
+  &lt;script&gt; 
+    function encrypt() { 
+      let num = document.getElementById(&quot;inputNumber&quot;).value; 
+      if (num.length !== 4 || isNaN(num)) { 
+        alert(&quot;Please enter a valid 4-digit number&quot;); 
+        return; 
+      } 
+      let digits = num.split(&#x27;&#x27;).map(Number); 
+      for (let i = 0; i &lt; 4; i++) { 
+        digits[i] = (digits[i] + 7) % 10; 
+      } 
+      // Step 2: Swap 1st and 3rd, 2nd and 4th 
+      [digits[0], digits[2]] = [digits[2], digits[0]]; 
+      [digits[1], digits[3]] = [digits[3], digits[1]]; 
+      let encrypted = digits.join(&#x27;&#x27;); 
+      document.getElementById(&quot;result&quot;).innerText = &quot;Encrypted Number: &quot; + encrypted; 
+    } 
+  &lt;/script&gt; 
+&lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 26 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 26</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question25.html">← Previous</a>
+    <a class="btn" href="question27.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 26</h2>
+    <div class="question">Develop and demonstrate JavaScript with POP-UP boxes and functions for the</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>following problem. 
+Input: A number n obtained using prompt. 
+
+ 
+Output: A multiplication table of numbers from 1 to 10 of n using alert 
+ 
+&lt;!DOCTYPE html&gt; 
+&lt;html&gt; 
+&lt;head&gt; 
+  &lt;title&gt;Multiplication Table using JS Pop-Ups&lt;/title&gt; 
+  &lt;script&gt; 
+    function showMultiplicationTable() { 
+      var n = prompt(&quot;Enter a number:&quot;); 
+      n = Number(n); // convert to number 
+ 
+      if (isNaN(n)) { 
+        alert(&quot;Invalid input. Please enter a valid number.&quot;); 
+        return; 
+      } 
+ 
+      var table = &quot;Multiplication Table of &quot; + n + &quot;:\n&quot;; 
+      for (var i = 1; i &lt;= 10; i++) { 
+        table += n + &quot; x &quot; + i + &quot; = &quot; + (n * i) + &quot;\n&quot;; 
+      } 
+ 
+      alert(table); 
+    } 
+  &lt;/script&gt; 
+&lt;/head&gt; 
+ 
+&lt;body onload=&quot;showMultiplicationTable()&quot;&gt; 
+  &lt;h2&gt;Multiplication Table using JavaScript Pop-Up Boxes&lt;/h2&gt; 
+
+ 
+  &lt;p&gt;Check the alert box for output.&lt;/p&gt; 
+&lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

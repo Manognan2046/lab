@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 38 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 38</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question37.html">← Previous</a>
+    <a class="btn" href="question39.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 38</h2>
+    <div class="question">Create an XML files with book-cover catalog and store the titles of the books in a title</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>title attribute of each cover node. Modify the example so that every time the mouse 
+hovers over an image, the book&#x27;s title is displayed below the image.
+Create a file named book-catalog.xml: 
+ 
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; 
+&lt;catalog&gt; 
+  &lt;cover title=&quot;To Kill a Mockingbird&quot; /&gt; 
+  &lt;cover title=&quot;1984&quot; /&gt; 
+  &lt;cover title=&quot;Pride and Prejudice&quot; /&gt; 
+  &lt;cover title=&quot;The Great Gatsby&quot; /&gt; 
+  &lt;cover title=&quot;Harry Potter and the Sorcerer&#x27;s Stone&quot; /&gt; 
+  &lt;cover title=&quot;The Catcher in the Rye&quot; /&gt; 
+  &lt;cover title=&quot;Lord of the Flies&quot; /&gt; 
+  &lt;cover title=&quot;Jane Eyre&quot; /&gt; 
+&lt;/catalog&gt; 
+index.html 
+&lt;!DOCTYPE html&gt; 
+&lt;html lang=&quot;en&quot;&gt; 
+&lt;head&gt; 
+  &lt;meta charset=&quot;UTF-8&quot;&gt; 
+  &lt;title&gt;Book Cover Catalog (From XML)&lt;/title&gt; 
+  &lt;style&gt; 
+    body { 
+     font-family: Arial, sans-serif; 
+      margin: 20px; 
+      background-color: #f5f5f5; 
+    } 
+    h1 { 
+
+ 
+      text-align: center; 
+      margin-bottom: 30px; 
+    } 
+    .catalog { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+      gap: 20px; 
+      max-width: 1200px; 
+      margin: 0 auto; 
+    } 
+    .book-item { 
+      background: white; 
+      border-radius: 8px; 
+      padding: 15px; 
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
+      text-align: center; 
+    } 
+book-cover { 
+      width: 120px; 
+      height: 180px; 
+      background: linear-gradient(135deg, #667eea, #764ba2); 
+      border-radius: 4px; 
+      margin: 0 auto 15px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      color: white; 
+      font-weight: bold; 
+
+ 
+      cursor: pointer; 
+    } 
+    .book-title { 
+      font-size: 14px; 
+      color: #333; 
+      min-height: 20px; 
+      opacity: 0; 
+      transition: opacity 0.3s; 
+    } 
+ 
+    .book-title.visible { 
+      opacity: 1; 
+    } 
+  &lt;/style&gt; 
+&lt;/head&gt; 
+&lt;body&gt; 
+  &lt;h1&gt;Book Cover Catalog&lt;/h1&gt; 
+  &lt;div class=&quot;catalog&quot; id=&quot;catalog&quot;&gt;&lt;/div&gt; 
+  &lt;script&gt; 
+    // Load XML file using AJAX 
+    function loadBookCatalog() { 
+      var xhr = new XMLHttpRequest(); 
+      xhr.open(&quot;GET&quot;, &quot;book-catalog.xml&quot;, true); 
+      xhr.onload = function () { 
+        if (xhr.status === 200) { 
+          var xml = xhr.responseXML; 
+          var covers = xml.getElementsByTagName(&quot;cover&quot;); 
+          var catalog = document.getElementById(&quot;catalog&quot;); 
+
+ 
+ 
+      
+  for (var i = 0; i &lt; covers.length; i++) { 
+      
+      var title = covers[i].getAttribute(&quot;title&quot;); 
+var item = document.createElement(&quot;div&quot;); 
+            
+
+item.className = &quot;book-item&quot;; 
+ 
+            var cover = document.createElement(&quot;div&quot;); 
+            cover.className = &quot;book-cover&quot;; 
+            cover.textContent = &quot;COVER&quot;; 
+ 
+            var titleDiv = document.createElement(&quot;div&quot;); 
+            titleDiv.className = &quot;book-title&quot;; 
+cover.addEventListener(&quot;mouseenter&quot;, function(t = titleDiv, txt = title) { 
+              return () =&gt; { 
+                t.textContent = txt; 
+                t.classList.add(&quot;visible&quot;); 
+              }; 
+            }()); 
+           cover.addEventListener(&quot;mouseleave&quot;, function(t = titleDiv) { 
+              return () =&gt; { 
+                t.classList.remove(&quot;visible&quot;); 
+                setTimeout(() =&gt; { 
+                  if (!t.classList.contains(&quot;visible&quot;)) { 
+                    t.textContent = &quot;&quot;; 
+                  } 
+                }, 300); 
+              }; 
+            }());            
+
+item.appendChild(cover); 
+
+ 
+            item.appendChild(titleDiv); 
+            catalog.appendChild(item); 
+          } 
+        } else { 
+          console.error(&quot;Failed to load XML.&quot;); 
+        } 
+      }; 
+      xhr.send(); 
+    } 
+ 
+    // Run on page load 
+    document.addEventListener(&quot;DOMContentLoaded&quot;, loadBookCatalog); 
+  &lt;/script&gt; 
+&lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>

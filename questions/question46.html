@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question 46 - Web Programming Lab</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Question 46</h1>
+    <p class="subtitle">Web Programming Lab</p>
+  </div>
+</header>
+<main>
+  <div class="actions">
+    <a class="btn primary" href="../index.html">← All Questions</a>
+    <a class="btn" href="question45.html">← Previous</a>
+    <a class="btn" href="question47.html">Next →</a>
+  </div>
+
+  <section class="card">
+    <h2>Question 46</h2>
+    <div class="question">Develop a simple JSP application</div>
+  </section>
+
+  <section class="card">
+    <h2>Code / Solution from the Record</h2>
+    <pre><code>index.jsp – Input Form 
+ 
+
+ 
+&lt;!DOCTYPE html&gt; 
+&lt;html&gt; 
+&lt;head&gt; 
+    &lt;title&gt;Simple JSP App&lt;/title&gt; 
+&lt;/head&gt; 
+&lt;body style=&quot;font-family: Arial; text-align: center; padding-top: 100px;&quot;&gt; 
+    &lt;h2&gt;Welcome to My JSP App&lt;/h2&gt; 
+    &lt;form action=&quot;welcome.jsp&quot; method=&quot;post&quot;&gt; 
+        Enter your name: &lt;input type=&quot;text&quot; name=&quot;username&quot; required&gt; 
+        &lt;br&gt;&lt;br&gt; 
+        &lt;input type=&quot;submit&quot; value=&quot;Submit&quot;&gt; 
+    &lt;/form&gt; 
+&lt;/body&gt; 
+&lt;/html&gt; 
+welcome.jsp – Display Output 
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt; 
+&lt;% 
+    String name = request.getParameter(&quot;username&quot;); 
+%&gt; 
+&lt;!DOCTYPE html&gt; 
+&lt;html&gt; 
+&lt;head&gt; 
+    &lt;title&gt;Welcome&lt;/title&gt; 
+&lt;/head&gt; 
+&lt;body style=&quot;font-family: Arial; text-align: center; padding-top: 100px;&quot;&gt; 
+    &lt;h2&gt;Hello, &lt;%= name %&gt;!&lt;/h2&gt; 
+    &lt;p&gt;Welcome to this simple JSP application.&lt;/p&gt; 
+&lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p><small class="note">This page was generated from the supplied lab-record PDF. Server-side programs may require their respective runtime/server to execute.</small></p>
+  </section>
+</main>
+<footer>Web Programming Lab</footer>
+</body>
+</html>
