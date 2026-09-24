@@ -10,17 +10,17 @@ export default function JupyterTreePage() {
   const router = useRouter();
 
   const getItems = () => {
-    // We want to show all files from the 'dl' lab directly on the home page
-    const dlFiles = allLabs['dl'] || [];
+    // Show all CV record question files directly on the home page
+    const cvFiles = allLabs['cv'] || [];
     
     if (currentPath.length === 0) {
-      return dlFiles.map(file => ({
+      return cvFiles.map(file => ({
         name: file.fileName,
         type: "file",
-        path: ['dl', file.fileName],
+        path: ['cv', file.fileName],
         lastModified: "moments ago",
         size: "1.2 KB",
-        labKey: 'dl'
+        labKey: 'cv'
       }));
     }
     return [];
