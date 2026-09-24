@@ -1,723 +1,622 @@
 export interface LabExperiment {
-  folderName: string;
-  fileName: string;
-  code: string;
+    folderName: string;
+    fileName: string;
+    code: string;
 }
 
-const dlLabData: LabExperiment[] = [
-  {
-    folderName: "DL",
-    fileName: "Q1_Linear_Regression_Single.py",
-    code: `import numpy as np
-import tensorflow as tf
-from tensorflow import keras
-from keras.datasets import boston_housing
+const cvLabData: LabExperiment[] = [
+    {
+        folderName: "CV",
+        fileName: "Q1_Filters_and_Edges.py",
+        code: `import cv2, numpy as np, matplotlib.pyplot as plt
+img = cv2.imread('lena.png', 0)
+if img is None: img = np.tile(np.arange(256, dtype=np.uint8), (256, 1))
+
+gb, mb = cv2.GaussianBlur(img, (5, 5), 0), cv2.medianBlur(img, 5)
+sx = cv2.Sobel(img, cv2.CV_64F, 1, 0); sy = cv2.Sobel(img, cv2.CV_64F, 0, 1)
+sobel = np.uint8(np.clip(np.hypot(sx, sy), 0, 255))
+canny, he = cv2.Canny(img, 100, 200), cv2.equalizeHist(img)
+
+imgs = [img, gb, mb, sobel, canny, he]
+titles = ['Original', 'Gauss', 'Median', 'Sobel', 'Canny', 'HistEq']
+
+plt.figure(figsize=(12, 6))
+for i in range(6):
+ plt.subplot(2, 4, i + 1); plt.imshow(imgs[i], 'gray'); plt.title(titles[i]); plt.axis('off')
+plt.subplot(2, 4, 7); plt.hist(img.ravel(), 256, [0, 256]); plt.title('Hist Before')
+plt.subplot(2, 4, 8); plt.hist(he.ravel(), 256, [0, 256]); plt.title('Hist After')
+plt.tight_layout(); plt.savefig('q1.png'); plt.show()`
+    },
+    {
+        folderName: "CV",
+        fileName: "Q2_Custom_Convolution.py",
+        code: `import cv2, numpy as np, matplotlib.pyplot as plt
+
+img = cv2.imread('flowers.jpg')
+if img is None: img = np.random.randint(0, 255, (100, 100, 3), dtype=np.uint8)
+
+k = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]], dtype=np.float32)
+p = np.pad(img, ((1, 1), (1, 1), (0, 0)), 'edge')
+sharp = np.clip(sum(p[i:i+img.shape[0], j:j+img.shape[1]] * k[i, j] for i in range(3) for j in range(3)), 0, 255).astype(np.uint8)
+lap = np.uint8(np.clip(np.abs(cv2.Laplacian(img, cv2.CV_64F)), 0, 255))
+
+ps1, ps2 = cv2.PSNR(img, sharp), cv2.PSNR(img, lap)
+print(f"PSNR -> Sharp: {ps1:.2f}dB | Laplacian: {ps2:.2f}dB")
+
+res = [img, sharp, lap]
+t = ['Original', f'Sharp ({ps1:.1f}dB)', f'Lap ({ps2:.1f}dB)']
+
+for i in range(3):
+ plt.subplot(1, 3, i + 1); plt.imshow(cv2.cvtColor(res[i], cv2.COLOR_BGR2RGB)); plt.title(t[i]); plt.axis('off')
+plt.show()`
+    },
+    {
+        folderName: "CV",
+        fileName: "Q3_Color_Space_and_KMeans.py",
+        code: `import cv2, numpy as np, matplotlib.pyplot as plt
+
+img = cv2.resize(cv2.imread('flowers.jpg') if cv2.imread('flowers.jpg') is not None else np.zeros((100, 100, 3), dtype=np.uint8), (100, 100))
+rgb, hsv, lab = cv2.cvtColor(img, cv2.COLOR_BGR2RGB), cv2.cvtColor(img, cv2.COLOR_BGR2HSV), cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+
+mask = cv2.inRange(hsv, (20, 40, 40), (85, 255, 255))
+hsv_seg = cv2.bitwise_and(rgb, rgb, mask=mask)
+
+def km(k):
+ _, lbl, ctr = cv2.kmeans(rgb.reshape(-1, 3).astype(np.float32), k, None, (1, 5, 1.0), 3, cv2.KMEANS_RANDOM_CENTERS)
+ return np.uint8(ctr)[lbl.flatten()].reshape(rgb.shape)
+
+disp = [*cv2.split(rgb), *cv2.split(hsv), *cv2.split(lab), hsv_seg, km(3), km(5)]
+names = ['R','G','B','H','S','V','L','A','B','HSV Mask','K=3','K=5']
+
+plt.figure(figsize=(10, 7))
+for i in range(12):
+ plt.subplot(3, 4, i + 1); plt.imshow(disp[i], cmap='gray' if i < 9 else None); plt.title(names[i]); plt.axis('off')
+plt.tight_layout(); plt.show()`
+    },
+    {
+        folderName: "CV",
+        fileName: "Q4_Simple_CNN.py",
+        code: `import torch
+import torch.nn as nn
+import torch.optim as optim
+import torchvision
+import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
 
-# Load Boston Housing dataset
-(x_train, y_train), (x_test, y_test) = boston_housing.load_data()
+torch.set_num_threads(4)
+transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
 
-# Normalize features
-mean = x_train.mean(axis=0)
-std = x_train.std(axis=0)
-x_train = (x_train - mean) / std
-x_test = (x_test - mean) / std
+trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
+train_sub = torch.utils.data.Subset(trainset, range(1200))
+trainloader = torch.utils.data.DataLoader(train_sub, batch_size=64, shuffle=True)
 
-# Build Linear Regression Model
-model = keras.Sequential([
-    keras.layers.Dense(1, input_shape=(13,))
-])
+testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform)
+test_sub = torch.utils.data.Subset(testset, range(300))
+testloader = torch.utils.data.DataLoader(test_sub, batch_size=64, shuffle=False)
 
-# Compile Model
-model.compile(
-    optimizer='sgd',
-    loss='mean_squared_error',
-    metrics=['mae'])
+class SimpleCNN(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv = nn.Sequential(
+            nn.Conv2d(3, 16, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2, 2),
+            nn.Conv2d(16, 32, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2, 2)
+        )
+        self.fc = nn.Sequential(nn.Linear(32 * 8 * 8, 64), nn.ReLU(), nn.Linear(64, 10))
+    def forward(self, x):
+        return self.fc(self.conv(x).view(x.size(0), -1))
 
-# Train Model
-history = model.fit(
-    x_train,
-    y_train,
-    epochs=100,
-    validation_split=0.2,
-    verbose=1)
+model = SimpleCNN()
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(), lr=0.002)
+loss_hist, acc_hist = [], []
 
-# Evaluate Model
-loss, mae = model.evaluate(x_test, y_test, verbose=0)
-print("\\nTest Loss:", loss)
-print("Mean Absolute Error:", mae)
+for epoch in range(10):
+    running_loss, correct, total = 0.0, 0, 0
+    for imgs, labels in trainloader:
+        optimizer.zero_grad()
+        outs = model(imgs)
+        loss = criterion(outs, labels)
+        loss.backward()
+        optimizer.step()
+        running_loss += loss.item() * imgs.size(0)
+        correct += (outs.argmax(1) == labels).sum().item()
+        total += labels.size(0)
+    loss_hist.append(running_loss / total)
+    acc_hist.append(correct / total)
+    print(f"Epoch {epoch+1}/10 - Loss: {loss_hist[-1]:.4f} - Acc: {acc_hist[-1]:.4f}")
 
-# Make Predictions
-predictions = model.predict(x_test)
-print("\\nSample Predictions:")
-for i in range(5):
-    print(f"Actual: {y_test[i]:.2f}  Predicted: {predictions[i][0]:.2f}")
+correct, total = 0, 0
+with torch.no_grad():
+    for imgs, labels in testloader:
+        correct += (model(imgs).argmax(1) == labels).sum().item()
+        total += labels.size(0)
+print(f"Test Accuracy: {100 * correct / total:.2f}%")
+torch.save(model.state_dict(), 'cifar_cnn.pth')
 
-# Graph 2: Actual vs Predicted Prices
-plt.figure(figsize=(8, 6))
-plt.scatter(y_test, predictions)
-plt.plot(
-    [y_test.min(), y_test.max()],
-    [y_test.min(), y_test.max()],
-    'r--')
-plt.xlabel('Actual House Price')
-plt.ylabel('Predicted House Price')
-plt.title('Actual vs Predicted House Prices')
-plt.grid(True)
-plt.show()`
-  },
-  {
-    folderName: "DL",
-    fileName: "Q2_Linear_Regression_Multiple.py",
-    code: `import numpy as np
-import tensorflow as tf
-from tensorflow import keras
-from keras.datasets import boston_housing
-import matplotlib.pyplot as plt
-
-# Load Boston Housing dataset
-(x_train, y_train), (x_test, y_test) = boston_housing.load_data()
-
-# Normalize features
-mean = x_train.mean(axis=0)
-std = x_train.std(axis=0)
-x_train = (x_train - mean) / std
-x_test = (x_test - mean) / std
-
-# Build Linear Regression Model
-model = keras.Sequential([
-    keras.layers.Dense(1, input_shape=(13,))
-])
-
-# Compile Model
-model.compile(
-    optimizer='sgd',
-    loss='mean_squared_error',
-    metrics=['mae'])
-
-# Train Model
-history = model.fit(
-    x_train,
-    y_train,
-    epochs=100,
-    validation_split=0.2,
-    verbose=1)
-
-# Evaluate Model
-loss, mae = model.evaluate(x_test, y_test, verbose=0)
-print("\\nTest Loss:", loss)
-print("Mean Absolute Error:", mae)
-
-# Make Predictions
-predictions = model.predict(x_test)
-print("\\nSample Predictions:")
-for i in range(5):
-    print(f"Actual: {y_test[i]:.2f}  Predicted: {predictions[i][0]:.2f}")
-
-# Graph 2: Actual vs Predicted Prices
-plt.figure(figsize=(8, 6))
-plt.scatter(y_test, predictions)
-plt.plot(
-    [y_test.min(), y_test.max()],
-    [y_test.min(), y_test.max()],
-    'r--')
-plt.xlabel('Actual House Price')
-plt.ylabel('Predicted House Price')
-plt.title('Actual vs Predicted House Prices')
-plt.grid(True)
-plt.show()`
-  },
-  {
-    folderName: "DL",
-    fileName: "Q3_Speech_to_Text.py",
-    code: `# pip install SpeechRecognition
-import speech_recognition as sr
-
-recognizer = sr.Recognizer()
-with sr.AudioFile('sample.wav') as source:
-    audio = recognizer.record(source)
-
-try:
-    text = recognizer.recognize_google(audio)
-    print("Recognized Speech:", text)
-except sr.UnknownValueError:
-    print("Could not understand audio")
-except sr.RequestError:
-    print("Could not reach recognition service")`
-  },
-  {
-    folderName: "DL",
-    fileName: "Q4_Time_Series_LSTM.py",
-    code: `import numpy as np
-import tensorflow as tf
-from tensorflow import keras
-from keras.models import Sequential
-from keras.layers import LSTM, Dense
-import matplotlib.pyplot as plt
-
-# Generate dummy time series data: y = x + some noise
-x = np.array([i for i in range(100)])
-y = x + np.random.normal(0, 1, 100)
-
-# Prepare the data as sequences
-def create_dataset(data, step=5):
-    X, Y = [], []
-    for i in range(len(data) - step):
-        X.append(data[i:i + step])
-        Y.append(data[i + step])
-    return np.array(X), np.array(Y)
-
-X, Y = create_dataset(y)
-
-# Reshape input to be [samples, time steps, features]
-X = X.reshape((X.shape[0], X.shape[1], 1))
-
-# Build LSTM model
-model = Sequential([
-    LSTM(50, activation='relu', input_shape=(X.shape[1], 1)),
-    Dense(1)
-])
-model.compile(optimizer='adam', loss='mse')
-
-# Train model
-model.fit(X, Y, epochs=100, verbose=0)
-
-# Make predictions
-predicted = model.predict(X, verbose=0)
-
-# Plot actual vs predicted
-plt.plot(Y, label='Actual')
-plt.plot(predicted, label='Predicted')
-plt.title("LSTM Time-Series Forecasting")
-plt.xlabel("Time Step")
-plt.ylabel("Value")
-plt.legend()
-plt.grid()
-plt.show()`
-  },
-  {
-    folderName: "DL",
-    fileName: "Q5_Image_Captioning_LSTM.py",
-    code: `import numpy as np
-import matplotlib.pyplot as plt
-from tensorflow.keras.applications.inception_v3 import InceptionV3, preprocess_input
-from tensorflow.keras.preprocessing import image
-from tensorflow.keras.models import Model, load_model
-from tensorflow.keras.preprocessing.sequence import pad_sequences
-import pickle
-
-# Load the InceptionV3 model for feature extraction
-base_model = InceptionV3(weights='imagenet')
-cnn_model = Model(inputs=base_model.input, outputs=base_model.layers[-2].output)
-
-# Function to preprocess the image
-def preprocess_img(img_path):
-    img = image.load_img(img_path, target_size=(299, 299))
-    img_array = image.img_to_array(img)
-    img_array = np.expand_dims(img_array, axis=0)
-    img_array = preprocess_input(img_array)
-    return img_array
-
-# Function to encode image to feature vector
-def encode_image(img_path):
-    img = preprocess_img(img_path)
-    fea_vec = cnn_model.predict(img, verbose=0)
-    fea_vec = np.reshape(fea_vec, fea_vec.shape[1])
-    return fea_vec
-
-# Load tokenizer and trained caption generation model
-with open("tokenizer.pkl", "rb") as f:
-    tokenizer = pickle.load(f)
-
-model = load_model("image_caption_model.h5")
-max_length = 34
-
-# Function to generate caption using greedy search
-def predict_caption(photo):
-    in_text = 'startseq'
-    for i in range(max_length):
-        sequence = tokenizer.texts_to_sequences([in_text])[0]
-        sequence = pad_sequences([sequence], maxlen=max_length)
-        yhat = model.predict([np.expand_dims(photo, axis=0), sequence], verbose=0)
-        yhat = np.argmax(yhat)
-        word = None
-        for w, index in tokenizer.word_index.items():
-            if index == yhat:
-                word = w
-                break
-        if word is None:
-            break
-        in_text += ' ' + word
-        if word == 'endseq':
-            break
-    return in_text.replace('startseq', '').replace('endseq', '').strip()
-
-# Run the full pipeline
-img_path = "sample.jpg"  # replace with your actual image file
-photo = encode_image(img_path)
-caption = predict_caption(photo)
-print("Predicted Caption:", caption)
-
-# Display the image
-img_display = image.load_img(img_path)
-plt.imshow(img_display)
-plt.axis('off')
-plt.title(caption)
-plt.show()`
-  },
-  {
-    folderName: "DL",
-    fileName: "Q6_Character_Recognition_CNN.py",
-    code: `from tensorflow import keras
-from keras.datasets import mnist
-from keras.models import Sequential
-from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
-from keras.utils import to_categorical
-import matplotlib.pyplot as plt
-
-# Load MNIST dataset
-(X_train, y_train), (X_test, y_test) = mnist.load_data()
-
-# Reshape to fit CNN input and normalize
-X_train = X_train.reshape(-1, 28, 28, 1).astype('float32') / 255.0
-X_test = X_test.reshape(-1, 28, 28, 1).astype('float32') / 255.0
-
-# One-hot encode labels
-y_train = to_categorical(y_train, 10)
-y_test = to_categorical(y_test, 10)
-
-# Build the CNN model
-model = Sequential([
-    Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(28, 28, 1)),
-    MaxPooling2D(pool_size=(2, 2)),
-    Conv2D(64, kernel_size=(3, 3), activation='relu'),
-    MaxPooling2D(pool_size=(2, 2)),
-    Flatten(),
-    Dense(128, activation='relu'),
-    Dense(10, activation='softmax')
-])
-
-# Compile model
-model.compile(
-    optimizer='adam',
-    loss='categorical_crossentropy',
-    metrics=['accuracy'])
-
-# Train model
-history = model.fit(
-    X_train,
-    y_train,
-    epochs=5,
-    batch_size=128,
-    validation_split=0.2)
-
-# Evaluate model
-test_loss, test_acc = model.evaluate(X_test, y_test)
-print(f"Test Accuracy: {test_acc * 100:.2f}%")
-
-# Plot accuracy
-plt.plot(history.history['accuracy'], label='Train Accuracy')
-plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
-plt.title('Character Recognition Accuracy')
-plt.xlabel('Epoch')
-plt.ylabel('Accuracy')
-plt.legend()
-plt.grid(True)
-plt.show()`
-  },
-  {
-    folderName: "DL",
-    fileName: "Q7_Image_Captioning_CNN.py",
-    code: `import numpy as np
-import matplotlib.pyplot as plt
-from tensorflow import keras
-from keras.models import Sequential
-from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
-from keras.preprocessing import image
-
-# Suppose we have 4 "caption" labels (classes)
-class_names = ['a cat', 'a dog', 'a flower', 'a football']
-
-# Define the CNN model
-model = Sequential([
-    Conv2D(32, (3, 3), activation='relu', input_shape=(64, 64, 3)),
-    MaxPooling2D(pool_size=(2, 2)),
-    Conv2D(64, (3, 3), activation='relu'),
-    MaxPooling2D(pool_size=(2, 2)),
-    Flatten(),
-    Dense(128, activation='relu'),
-    Dense(len(class_names), activation='softmax')
-])
-
-# Compile model
-model.compile(
-    optimizer='adam',
-    loss='categorical_crossentropy',
-    metrics=['accuracy'])
-
-# NOTE: Training skipped (for demo purposes)
-
-# Load and preprocess test image
-img_path = 'sample.png'  # Replace with actual image
-img = image.load_img(img_path, target_size=(64, 64))
-img_array = image.img_to_array(img)
-img_array = np.expand_dims(img_array, axis=0) / 255.0
-
-# Simulated prediction (since model is not trained)
-# prediction = model.predict(img_array)
-prediction = np.array([[0.1, 0.05, 0.05, 0.8]])
-
-# Get predicted class
-predicted_class = np.argmax(prediction)
-caption = class_names[predicted_class]
-print("Predicted Caption:", caption)
-
-# Display image
-plt.imshow(img)
-plt.axis('off')
-plt.title(caption)
-plt.show()`
-  },
-  {
-    folderName: "DL",
-    fileName: "Q8_RNN_vs_CNN_MNIST.py",
-    code: `import tensorflow as tf
-from keras.datasets import mnist
-from keras.models import Sequential
-from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, SimpleRNN
-from keras.utils import to_categorical
-
-# Load and preprocess MNIST
-(X_train, y_train), (X_test, y_test) = mnist.load_data()
-X_train_cnn = X_train.reshape(-1, 28, 28, 1).astype('float32') / 255.0
-X_test_cnn = X_test.reshape(-1, 28, 28, 1).astype('float32') / 255.0
-
-# One-hot encoding
-y_train = to_categorical(y_train, 10)
-y_test = to_categorical(y_test, 10)
-
-# CNN Model
-cnn_model = Sequential([
-    Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)),
-    MaxPooling2D(pool_size=(2, 2)),
-    Conv2D(64, (3, 3), activation='relu'),
-    MaxPooling2D(pool_size=(2, 2)),
-    Flatten(),
-    Dense(128, activation='relu'),
-    Dense(10, activation='softmax')
-])
-
-# Compile model
-cnn_model.compile(
-    optimizer='adam',
-    loss='categorical_crossentropy',
-    metrics=['accuracy'])
-
-# Train model
-cnn_model.fit(
-    X_train_cnn,
-    y_train,
-    epochs=5,
-    batch_size=128,
-    validation_split=0.2)
-
-# Evaluate model
-cnn_test_loss, cnn_test_acc = cnn_model.evaluate(X_test_cnn, y_test)
-print(f"CNN Accuracy: {cnn_test_acc * 100:.2f}%")
-
-# Reshape MNIST data for RNN: treat each row as a time step
-X_train_rnn = X_train.reshape(-1, 28, 28) / 255.0
-X_test_rnn = X_test.reshape(-1, 28, 28) / 255.0
-
-# RNN Model
-rnn_model = Sequential([
-    SimpleRNN(128, input_shape=(28,28), activation='tanh'),
-    Dense(10, activation='softmax')
-])
-rnn_model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-rnn_model.fit(X_train_rnn, y_train, epochs=5, batch_size=128, validation_split=0.2)
-rnn_test_loss, rnn_test_acc = rnn_model.evaluate(X_test_rnn, y_test)
-print(f"RNN Accuracy: {rnn_test_acc*100:.2f}%")`
-  },
-  {
-    folderName: "DL",
-    fileName: "Q9_YOLO_Dog_Detection.py",
-    code: `# !pip install ultralytics
-from ultralytics import YOLO
-import cv2
+plt.figure(figsize=(9, 3))
+plt.subplot(1, 2, 1); plt.plot(loss_hist); plt.title('Training Loss')
+plt.subplot(1, 2, 2); plt.plot(acc_hist); plt.title('Training Accuracy')
+plt.tight_layout(); plt.show()`
+    },
+    {
+        folderName: "CV",
+        fileName: "Q5_Regularized_CNN.py",
+        code: `import torch
+import torch.nn as nn
+import torch.optim as optim
+import torchvision
+import torchvision.transforms as transforms
 import numpy as np
-
-# Method 1: Ultralytics YOLOv8
-try:
-    model = YOLO('yolov8n.pt')
-    results = model("dog.jpg")
-    results[0].show()
-    results[0].save(filename="dog_detected.jpg")
-    print("Detection completed. Output saved as dog_detected.jpg.")
-except Exception as e:
-    print("YOLOv8 Error:", e)
-
-# Method 2: OpenCV DNN (YOLOv3)
-try:
-    net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
-    with open("coco.names", "r") as f:
-        classes = [line.strip() for line in f.readlines()]
-    img = cv2.imread("dog.jpg")
-    height, width, _ = img.shape
-    blob = cv2.dnn.blobFromImage(img, 1/255.0, (416, 416), swapRB=True, crop=False)
-    net.setInput(blob)
-    layer_names = net.getUnconnectedOutLayersNames()
-    outputs = net.forward(layer_names)
-    
-    boxes, confidences, class_ids = [], [], []
-    for output in outputs:
-        for detection in output:
-            scores = detection[5:]
-            class_id = np.argmax(scores)
-            confidence = scores[class_id]
-            if confidence > 0.5 and classes[class_id] == "dog":
-                center_x, center_y = int(detection[0] * width), int(detection[1] * height)
-                w, h = int(detection[2] * width), int(detection[3] * height)
-                x, y = int(center_x - w / 2), int(center_y - h / 2)
-                boxes.append([x, y, w, h])
-                confidences.append(float(confidence))
-                class_ids.append(class_id)
-                
-    indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
-    for i in indexes.flatten():
-        x, y, w, h = boxes[i]
-        label = f"{classes[class_ids[i]]} {confidences[i]:.2f}"
-        cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        cv2.putText(img, label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
-    cv2.imwrite("dog_detected_v3.jpg", img)
-except Exception as e:
-    print("YOLOv3 Error:", e)`
-  },
-  {
-    folderName: "DL",
-    fileName: "Q10_GAN_MNIST.py",
-    code: `import numpy as np
 import matplotlib.pyplot as plt
-from tensorflow import keras
-from keras.layers import Dense, Reshape, Flatten, LeakyReLU, Input
-from keras.models import Sequential, Model
-from keras.datasets import mnist
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
-# Load and preprocess MNIST dataset
-(X_train, _), (_, _) = mnist.load_data()
-X_train = (X_train.astype(np.float32) - 127.5) / 127.5
-X_train = X_train.reshape(-1, 28 * 28)
+base_t = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
+aug_t = transforms.Compose([
+    transforms.RandomHorizontalFlip(),
+    transforms.RandomRotation(10),
+    transforms.ToTensor(),
+    transforms.Normalize((0.5,), (0.5,))
+])
 
-# Generator
-def build_generator():
-    model = Sequential([
-        Dense(128, input_dim=100),
-        LeakyReLU(0.2),
-        Dense(784, activation='tanh'),
-        Reshape((28, 28))
-    ])
-    return model
+class RegularizedCNN(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Conv2d(3, 16, 3, padding=1), nn.BatchNorm2d(16), nn.ReLU(), nn.MaxPool2d(2, 2),
+            nn.Conv2d(16, 32, 3, padding=1), nn.BatchNorm2d(32), nn.ReLU(), nn.MaxPool2d(2, 2),
+            nn.Flatten(),
+            nn.Linear(32 * 8 * 8, 64), nn.ReLU(), nn.Dropout(0.3),
+            nn.Linear(64, 10)
+        )
+    def forward(self, x): return self.net(x)
 
-# Discriminator
-def build_discriminator():
-    model = Sequential([
-        Flatten(input_shape=(28, 28)),
-        Dense(128),
-        LeakyReLU(0.2),
-        Dense(1, activation='sigmoid')
-    ])
-    return model
-
-generator = build_generator()
-discriminator = build_discriminator()
-discriminator.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-
-z = Input(shape=(100,))
-img = generator(z)
-discriminator.trainable = False
-validity = discriminator(img)
-combined = Model(z, validity)
-combined.compile(optimizer='adam', loss='binary_crossentropy')
-
-epochs, batch_size, sample_interval = 4, 128, 2
-
-for epoch in range(1, epochs + 1):
-    idx = np.random.randint(0, X_train.shape[0], batch_size)
-    real_imgs = X_train[idx].reshape(-1, 28, 28)
-    noise = np.random.normal(0, 1, (batch_size, 100))
-    fake_imgs = generator.predict(noise, verbose=0)
-    real, fake = np.ones((batch_size, 1)), np.zeros((batch_size, 1))
+def train_and_eval(t_form):
+    train_ds = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=t_form)
+    test_ds = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=base_t)
+    train_ldr = torch.utils.data.DataLoader(torch.utils.data.Subset(train_ds, range(1000)), batch_size=64, shuffle=True)
+    test_ldr = torch.utils.data.DataLoader(torch.utils.data.Subset(test_ds, range(200)), batch_size=64, shuffle=False)
     
-    d_loss_real = discriminator.train_on_batch(real_imgs, real)
-    d_loss_fake = discriminator.train_on_batch(fake_imgs, fake)
-    d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
+    m = RegularizedCNN()
+    crit, opt = nn.CrossEntropyLoss(), optim.Adam(m.parameters(), lr=0.002)
+    for _ in range(5):
+        m.train()
+        for x, y in train_ldr:
+            opt.zero_grad(); crit(m(x), y).backward(); opt.step()
     
-    noise = np.random.normal(0, 1, (batch_size, 100))
-    g_loss = combined.train_on_batch(noise, real)
-    
-    if epoch % sample_interval == 0:
-        print(f"{epoch} [D loss: {d_loss[0]:.4f}, acc: {100*d_loss[1]:.2f}%] [G loss: {g_loss:.4f}]")
-        gen_img = generator.predict(np.random.normal(0, 1, (1, 100)), verbose=0)
-        plt.imshow(gen_img[0], cmap='gray')
-        plt.title(f"Epoch {epoch}")
-        plt.axis('off')
-        plt.show()`
-  },
-  {
-    folderName: "DL",
-    fileName: "Q11_Vision_Transformer.py",
-    code: `from transformers import ViTImageProcessor, ViTForImageClassification
-from PIL import Image
-import torch
+    m.eval()
+    preds, targets = [], []
+    with torch.no_grad():
+        for x, y in test_ldr:
+            preds.extend(m(x).argmax(1).numpy())
+            targets.extend(y.numpy())
+    return (np.array(preds) == np.array(targets)).mean() * 100, preds, targets
+
+acc_noaug, _, _ = train_and_eval(base_t)
+acc_aug, preds, targets = train_and_eval(aug_t)
+print(f"Accuracy Without Augmentation: {acc_noaug:.2f}% | With Augmentation: {acc_aug:.2f}%")
+
+cm = confusion_matrix(targets, preds)
+ConfusionMatrixDisplay(cm).plot()
+plt.title("Confusion Matrix (With Augmentation)")
+plt.show()`
+    },
+    {
+        folderName: "CV",
+        fileName: "Q6_Filter_Visualization.py",
+        code: `import torch
+import torch.nn as nn
+import torchvision
+import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
 
-# Load image and convert to RGB
-image = Image.open("/content/1.jpg").convert("RGB")
-plt.imshow(image)
-plt.axis('off')
-plt.title("Input Image")
+class SimpleCNN(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.Conv2d(3, 16, 3, padding=1)
+        self.conv2 = nn.Conv2d(16, 32, 3, padding=1)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.relu = nn.ReLU()
+        self.fc = nn.Linear(32 * 8 * 8, 64)
+    def forward(self, x):
+        c1 = self.relu(self.conv1(x))
+        p1 = self.pool(c1)
+        c2 = self.relu(self.conv2(p1))
+        p2 = self.pool(c2)
+        return self.fc(p2.view(x.size(0), -1)), c1, c2
+
+model = SimpleCNN()
+try:
+    model.load_state_dict(torch.load('cifar_cnn.pth', map_location='cpu'), strict=False)
+except: pass
+model.eval()
+
+filters = model.conv1.weight.data
+f_min, f_max = filters.min(), filters.max()
+filters = (filters - f_min) / (f_max - f_min + 1e-8)
+
+fig, ax = plt.subplots(2, 8, figsize=(10, 3))
+for i in range(16):
+    r, c = divmod(i, 8)
+    ax[r, c].imshow(filters[i].permute(1, 2, 0).numpy())
+    ax[r, c].axis('off')
+plt.suptitle('Conv1 Layer: 16 Learned Filters')
 plt.show()
 
-# Load model
-processor = ViTImageProcessor.from_pretrained('google/vit-base-patch16-224')
-model = ViTForImageClassification.from_pretrained('google/vit-base-patch16-224')
+transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
+testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform)
+img, _ = testset[0]
 
-# Preprocess
-inputs = processor(images=image, return_tensors="pt")
-
-# Inference
 with torch.no_grad():
-    outputs = model(**inputs)
-logits = outputs.logits
-predicted_class_idx = logits.argmax(-1).item()
-label = model.config.id2label[predicted_class_idx]
-print("Predicted Tag:", label)`
-  },
-  {
-    folderName: "DL",
-    fileName: "Q12_Avg_Pooling_Convolution.py",
-    code: `import tensorflow as tf
+    _, act1, act2 = model(img.unsqueeze(0))
+
+fig, ax = plt.subplots(1, 8, figsize=(10, 2))
+for i in range(8):
+    ax[i].imshow(act1[0, i].numpy(), cmap='viridis'); ax[i].axis('off')
+plt.suptitle('Conv1 Activations (Low-level: edges, corners, colors)')
+plt.show()
+
+fig, ax = plt.subplots(1, 8, figsize=(10, 2))
+for i in range(8):
+    ax[i].imshow(act2[0, i].numpy(), cmap='viridis'); ax[i].axis('off')
+plt.suptitle('Conv2 Activations (High-level: parts, textures, context)')
+plt.show()`
+    },
+    {
+        folderName: "CV",
+        fileName: "Q7_Grad_CAM.py",
+        code: `import torch
+import torch.nn as nn
+import torchvision
+import torchvision.transforms as transforms
 import numpy as np
+import cv2
+import matplotlib.pyplot as plt
 
-# Example input: a 4x4 image with 1 channel
-input_data = np.array([
-    [[1], [2], [3], [4]],
-    [[5], [6], [7], [8]],
-    [[9], [10], [11], [12]],
-    [[13], [14], [15], [16]]], dtype=np.float32)
-input_tensor = tf.constant(input_data.reshape(1, 4, 4, 1))
+class SimpleCNN(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv = nn.Sequential(
+            nn.Conv2d(3, 16, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2, 2),
+            nn.Conv2d(16, 32, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2, 2)
+        )
+        self.fc = nn.Sequential(nn.Linear(32 * 8 * 8, 64), nn.ReLU(), nn.Linear(64, 10))
+    def forward(self, x): return self.fc(self.conv(x).view(x.size(0), -1))
 
-# Define a kernel of size 2x2 with all 1s
-kernel = tf.constant([[[[1.0]], [[1.0]]], [[[1.0]], [[1.0]]]])
-conv = tf.nn.conv2d(input=input_tensor, filters=kernel, strides=[1, 2, 2, 1], padding='VALID')
-avg_pooled = conv / 4.0
+model = SimpleCNN()
+try:
+    model.load_state_dict(torch.load('cifar_cnn.pth', map_location='cpu'), strict=False)
+except: pass
+model.eval()
 
-print("Input:\\n", input_tensor.numpy().squeeze())
-print("\\nAverage Pooled Output via Convolution:\\n", avg_pooled.numpy().squeeze())`
-  },
-  {
-    folderName: "DL",
-    fileName: "Q13_LeNet_BatchNormalization.py",
-    code: `from tensorflow import keras
-from keras.datasets import mnist
-from keras.models import Sequential
-from keras.layers import (Conv2D, AveragePooling2D, Flatten, Dense, BatchNormalization, Activation)
-from keras.utils import to_categorical
+transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
+testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform)
 
-(x_train, y_train), (x_test, y_test) = mnist.load_data()
-x_train = x_train.reshape(-1, 28, 28, 1).astype('float32') / 255.0
-x_test = x_test.reshape(-1, 28, 28, 1).astype('float32') / 255.0
-y_train, y_test = to_categorical(y_train, 10), to_categorical(y_test, 10)
+fig, axes = plt.subplots(3, 2, figsize=(6, 8))
+for idx in range(3):
+    img_t, _ = testset[idx]
+    x = img_t.unsqueeze(0).requires_grad_(True)
+    
+    features = {'activations': None, 'gradients': None}
+    def f_hook(m, inp, out): features['activations'] = out
+    def b_hook(m, gi, go): features['gradients'] = go[0]
+    
+    target_layer = model.conv[3]
+    h1 = target_layer.register_forward_hook(f_hook)
+    h2 = target_layer.register_full_backward_hook(b_hook)
+    
+    out = model(x)
+    pred_cls = out.argmax(1).item()
+    out[0, pred_cls].backward()
+    
+    weights = features['gradients'].mean(dim=(2, 3), keepdim=True)
+    cam = torch.relu((weights * features['activations']).sum(dim=1)).squeeze().detach().numpy()
+    cam = cv2.resize(cam, (32, 32))
+    cam = (cam - cam.min()) / (cam.max() - cam.min() + 1e-8)
+    
+    orig = np.clip(img_t.permute(1, 2, 0).numpy() * 0.5 + 0.5, 0, 1)
+    heatmap = cv2.applyColorMap(np.uint8(255 * cam), cv2.COLORMAP_JET)
+    heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB) / 255.0
+    overlay = np.clip(0.6 * orig + 0.4 * heatmap, 0, 1)
+    
+    axes[idx, 0].imshow(orig); axes[idx, 0].axis('off'); axes[idx, 0].set_title('Original')
+    axes[idx, 1].imshow(overlay); axes[idx, 1].axis('off'); axes[idx, 1].set_title(f'Grad-CAM (Cls: {pred_cls})')
+    h1.remove(); h2.remove()
 
-model = Sequential()
-model.add(Conv2D(6, kernel_size=(5, 5), padding='same', input_shape=(28, 28, 1)))
-model.add(BatchNormalization())
-model.add(Activation('relu'))
-model.add(AveragePooling2D(pool_size=(2, 2), strides=2))
-model.add(Conv2D(16, kernel_size=(5, 5)))
-model.add(BatchNormalization())
-model.add(Activation('relu'))
-model.add(AveragePooling2D(pool_size=(2, 2), strides=2))
-model.add(Flatten())
-model.add(Dense(120))
-model.add(BatchNormalization())
-model.add(Activation('relu'))
-model.add(Dense(84))
-model.add(BatchNormalization())
-model.add(Activation('relu'))
-model.add(Dense(10, activation='softmax'))
+plt.tight_layout()
+plt.show()`
+    },
+    {
+        folderName: "CV",
+        fileName: "Q8_Feature_Matching.py",
+        code: `import cv2
+import numpy as np
+import matplotlib.pyplot as plt
 
-model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-model.fit(x_train, y_train, epochs=5, batch_size=128, validation_split=0.2)
-loss, accuracy = model.evaluate(x_test, y_test)
-print(f"Test Accuracy: {accuracy * 100:.2f}%")`
-  },
-  {
-    folderName: "DL",
-    fileName: "Q14_ResNet.py",
-    code: `from tensorflow import keras
-from keras import layers, models
-from keras.datasets import cifar10
-from keras.utils import to_categorical
+img1 = cv2.imread('img1.jpg', cv2.IMREAD_GRAYSCALE)
+img2 = cv2.imread('img2.jpg', cv2.IMREAD_GRAYSCALE)
 
-(x_train, y_train), (x_test, y_test) = cifar10.load_data()
-x_train, y_train = x_train[:500] / 255.0, to_categorical(y_train[:500], 10)
-x_test, y_test = x_test[:100] / 255.0, to_categorical(y_test[:100], 10)
+if img1 is None or img2 is None:
+    img1 = np.zeros((200, 200), dtype=np.uint8)
+    cv2.rectangle(img1, (40, 40), (140, 140), 255, -1)
+    cv2.circle(img1, (90, 90), 30, 0, -1)
+    M = cv2.getRotationMatrix2D((100, 100), 25, 1.0)
+    img2 = cv2.warpAffine(img1, M, (200, 200))
 
-def mini_res_block(x, filters):
-    shortcut = x
-    x = layers.Conv2D(filters, 3, padding='same')(x)
-    x = layers.BatchNormalization()(x)
-    x = layers.ReLU()(x)
-    x = layers.Conv2D(filters, 3, padding='same')(x)
-    x = layers.BatchNormalization()(x)
-    x = layers.Add()([x, shortcut])
-    return layers.ReLU()(x)
+sift = cv2.SIFT_create(nfeatures=500)
+kp1_s, des1_s = sift.detectAndCompute(img1, None)
+kp2_s, des2_s = sift.detectAndCompute(img2, None)
+bf_sift = cv2.BFMatcher(cv2.NORM_L2)
+matches_s = bf_sift.knnMatch(des1_s, des2_s, k=2)
+good_sift = [m for m, n in matches_s if m.distance < 0.75 * n.distance]
 
-def build_mini_resnet():
-    inputs = layers.Input(shape=(32, 32, 3))
-    x = layers.Conv2D(16, 3, padding='same')(inputs)
-    x = layers.BatchNormalization()(x)
-    x = layers.ReLU()(x)
-    x = mini_res_block(x, 16)
-    x = layers.GlobalAveragePooling2D()(x)
-    outputs = layers.Dense(10, activation='softmax')(x)
-    return models.Model(inputs, outputs)
+orb = cv2.ORB_create(nfeatures=500)
+kp1_o, des1_o = orb.detectAndCompute(img1, None)
+kp2_o, des2_o = orb.detectAndCompute(img2, None)
+bf_orb = cv2.BFMatcher(cv2.NORM_HAMMING)
+matches_o = bf_orb.knnMatch(des1_o, des2_o, k=2)
+good_orb = [m for m, n in matches_o if len((m, n)) == 2 and m.distance < 0.75 * n.distance]
 
-model = build_mini_resnet()
-model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-model.fit(x_train, y_train, epochs=2, batch_size=32, verbose=0)
-loss, acc = model.evaluate(x_test, y_test, verbose=0)
-print(f"Test Accuracy: {acc * 100:.2f}%")`
-  },
-  {
-    folderName: "DL",
-    fileName: "Q15_Mini_Batch_Classification.py",
-    code: `import tensorflow as tf
-from tensorflow.keras.datasets import cifar10
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
-from tensorflow.keras.utils import to_categorical
+img_s = cv2.drawMatches(img1, kp1_s, img2, kp2_s, good_sift[:30], None, flags=2)
+img_o = cv2.drawMatches(img1, kp1_o, img2, kp2_o, good_orb[:30], None, flags=2)
 
-(x_train, y_train), (x_test, y_test) = cifar10.load_data()
-x_train, x_test = x_train[:1000] / 255.0, x_test[:100] / 255.0
-y_train, y_test = to_categorical(y_train[:1000], 10), to_categorical(y_test[:100], 10)
+print(f"SIFT good matches: {len(good_sift)}")
+print(f"ORB good matches: {len(good_orb)}")
+print("SIFT provides better rotation/scale invariance; ORB runs faster.")
 
-model = Sequential([
-    Conv2D(16, (3, 3), activation='relu', input_shape=(32, 32, 3)),
-    MaxPooling2D(pool_size=(2, 2)),
-    Flatten(),
-    Dense(32, activation='relu'),
-    Dense(10, activation='softmax')
+plt.figure(figsize=(12, 6))
+plt.subplot(2, 1, 1); plt.imshow(img_s); plt.title(f'SIFT Matches ({len(good_sift)})'); plt.axis('off')
+plt.subplot(2, 1, 2); plt.imshow(img_o); plt.title(f'ORB Matches ({len(good_orb)})'); plt.axis('off')
+plt.tight_layout(); plt.show()`
+    },
+    {
+        folderName: "CV",
+        fileName: "Q9_Image_Retrieval.py",
+        code: `import torch
+import torchvision
+import torchvision.transforms as transforms
+import numpy as np
+import cv2
+import matplotlib.pyplot as plt
+from sklearn.cluster import MiniBatchKMeans
+from scipy.spatial.distance import cdist
+
+transform = transforms.Compose([transforms.Resize((64, 64)), transforms.ToTensor()])
+stl10 = torchvision.datasets.STL10(root='./data', split='train', download=True, transform=transform)
+
+data, counts = [], {i: 0 for i in range(5)}
+for img, lbl in stl10:
+    if lbl < 5 and counts[lbl] < 20:
+        data.append((np.clip(img.permute(1, 2, 0).numpy() * 255, 0, 255)).astype(np.uint8))
+        counts[lbl] += 1
+    if sum(counts.values()) == 100: break
+
+sift = cv2.SIFT_create(nfeatures=100)
+descriptors_list = []
+for im in data:
+    gray = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY)
+    _, des = sift.detectAndCompute(gray, None)
+    descriptors_list.append(des if des is not None else np.zeros((1, 128), dtype=np.float32))
+
+all_des = np.vstack(descriptors_list)
+kmeans = MiniBatchKMeans(n_clusters=20, random_state=42, batch_size=100, n_init=1).fit(all_des)
+
+bow_hist = np.zeros((100, 20))
+for i, des in enumerate(descriptors_list):
+    preds = kmeans.predict(des)
+    for p in preds: bow_hist[i, p] += 1
+    norm = np.linalg.norm(bow_hist[i])
+    if norm > 0: bow_hist[i] /= norm
+
+resnet = torchvision.models.resnet18(weights='DEFAULT')
+resnet.fc = torch.nn.Identity()
+resnet.eval()
+
+t_norm = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+tensors = torch.stack([t_norm(transforms.ToTensor()(im)) for im in data])
+with torch.no_grad():
+    deep_feats = resnet(tensors).numpy()
+
+query_idx = 0
+sift_top5 = np.argsort(cdist(bow_hist[[query_idx]], bow_hist, metric='euclidean')[0])[1:6]
+resnet_top5 = np.argsort(cdist(deep_feats[[query_idx]], deep_feats, metric='euclidean')[0])[1:6]
+
+fig, axes = plt.subplots(3, 5, figsize=(10, 5))
+axes[0, 2].imshow(data[query_idx]); axes[0, 2].set_title("Query")
+for i in range(5):
+    axes[0, i].axis('off')
+    axes[1, i].imshow(data[sift_top5[i]]); axes[1, i].set_title(f"SIFT #{i+1}"); axes[1, i].axis('off')
+    axes[2, i].imshow(data[resnet_top5[i]]); axes[2, i].set_title(f"ResNet #{i+1}"); axes[2, i].axis('off')
+plt.tight_layout()
+plt.show()`
+    },
+    {
+        folderName: "CV",
+        fileName: "Q10_Fine_Tuning.py",
+        code: `import torch
+import torch.nn as nn
+import torch.optim as optim
+import torchvision
+import torchvision.transforms as transforms
+import time
+import matplotlib.pyplot as plt
+
+transform = transforms.Compose([
+    transforms.Resize((32, 32)),
+    transforms.Grayscale(num_output_channels=3),
+    transforms.ToTensor(),
+    transforms.Normalize((0.5,), (0.5,))
 ])
 
-model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-model.fit(x_train, y_train, batch_size=64, epochs=1, verbose=0)
-loss, acc = model.evaluate(x_test, y_test, verbose=0)
-print(f"Test Accuracy: {acc * 100:.2f}%")`
-  }
+trainset = torchvision.datasets.FashionMNIST(root='./data', train=True, download=True, transform=transform)
+trainloader = torch.utils.data.DataLoader(torch.utils.data.Subset(trainset, range(500)), batch_size=64, shuffle=True)
+testset = torchvision.datasets.FashionMNIST(root='./data', train=False, download=True, transform=transform)
+testloader = torch.utils.data.DataLoader(torch.utils.data.Subset(testset, range(150)), batch_size=64, shuffle=False)
+
+def run_experiment(freeze_backbone=True):
+    m = torchvision.models.resnet18(weights='DEFAULT')
+    for p in m.parameters(): p.requires_grad = False
+    if not freeze_backbone:
+        for p in m.layer4.parameters(): p.requires_grad = True
+    m.fc = nn.Linear(m.fc.in_features, 10)
+    
+    crit = nn.CrossEntropyLoss()
+    opt = optim.Adam(filter(lambda p: p.requires_grad, m.parameters()), lr=0.003)
+    
+    start = time.time()
+    for _ in range(5):
+        m.train()
+        for x, y in trainloader:
+            opt.zero_grad(); crit(m(x), y).backward(); opt.step()
+    elapsed = time.time() - start
+    
+    m.eval()
+    corr = 0
+    with torch.no_grad():
+        for x, y in testloader:
+            corr += (m(x).argmax(1) == y).sum().item()
+    return (corr / 150) * 100, elapsed
+
+acc_a, t_a = run_experiment(freeze_backbone=True)
+acc_b, t_b = run_experiment(freeze_backbone=False)
+
+plt.figure(figsize=(7, 3))
+plt.subplot(1, 2, 1); plt.bar(['A (Frozen)', 'B (Fine-tune)'], [acc_a, acc_b], color=['navy', 'teal'])
+plt.ylabel('Test Accuracy (%)'); plt.title('Accuracy')
+plt.subplot(1, 2, 2); plt.bar(['A (Frozen)', 'B (Fine-tune)'], [t_a, t_b], color=['navy', 'teal'])
+plt.ylabel('Time (sec)'); plt.title('Training Time')
+plt.tight_layout(); plt.show()`
+    },
+    {
+        folderName: "CV",
+        fileName: "Q11_YOLO_Detection.py",
+        code: `import torch
+import torchvision
+import urllib.request
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+from ultralytics import YOLO
+
+resnet = torchvision.models.resnet18(weights='DEFAULT')
+resnet.fc = torch.nn.Linear(resnet.fc.in_features, 10)
+resnet.eval()
+print("ResNet18 Fine-tuning pipeline initialized.")
+
+yolo = YOLO('yolov8n.pt')
+urls = [
+    "https://raw.githubusercontent.com/ultralytics/ultralytics/main/ultralytics/assets/bus.jpg",
+    "https://raw.githubusercontent.com/ultralytics/ultralytics/main/ultralytics/assets/zidane.jpg"
+]
+
+images = []
+for i, u in enumerate(urls):
+    fn = f"scene_{i}.jpg"
+    try: urllib.request.urlretrieve(u, fn)
+    except: pass
+    im = cv2.imread(fn)
+    if im is not None: images.append(cv2.resize(im, (320, 320)))
+
+while len(images) < 5:
+    canvas = np.zeros((320, 320, 3), dtype=np.uint8)
+    cv2.putText(canvas, f"Scene {len(images)+1}", (40, 160), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+    images.append(canvas)
+
+fig, axes = plt.subplots(1, 5, figsize=(15, 3))
+for i in range(5):
+    res = yolo(images[i], verbose=False)[0]
+    axes[i].imshow(cv2.cvtColor(res.plot(), cv2.COLOR_BGR2RGB))
+    axes[i].set_title(f"Boxes: {len(res.boxes)}")
+    axes[i].axis('off')
+plt.tight_layout()
+plt.show()`
+    },
+    {
+        folderName: "CV",
+        fileName: "Q12_SimCLR_Pipeline.py",
+        code: `import torch
+import torch.nn as nn
+import torchvision
+import torchvision.transforms as transforms
+from torch.utils.data import DataLoader, Subset
+from sklearn.manifold import TSNE
+import matplotlib.pyplot as plt
+import numpy as np
+
+class SimCLRAugment:
+    def __init__(self):
+        self.aug = transforms.Compose([
+            transforms.RandomResizedCrop(32, scale=(0.8, 1.0)),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            transforms.Normalize((0.5,), (0.5,))
+        ])
+    def __call__(self, x): return self.aug(x), self.aug(x)
+
+class SimpleSimCLR(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.enc = nn.Sequential(
+            nn.Conv2d(3, 16, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2, 2),
+            nn.Conv2d(16, 32, 3, padding=1), nn.ReLU(), nn.AdaptiveAvgPool2d((1, 1)),
+            nn.Flatten()
+        )
+        self.proj = nn.Sequential(nn.Linear(32, 32), nn.ReLU(), nn.Linear(32, 16))
+    def forward(self, x):
+        h = self.enc(x)
+        return h, nn.functional.normalize(self.proj(h), dim=1)
+
+def nt_xent_loss(z1, z2, temp=0.5):
+    z = torch.cat([z1, z2], dim=0)
+    sim = torch.mm(z, z.t()) / temp
+    sim.fill_diagonal_(-float('inf'))
+    labels = torch.cat([torch.arange(len(z1)) + len(z1), torch.arange(len(z1))])
+    return nn.functional.cross_entropy(sim, labels)
+
+train_raw = torchvision.datasets.STL10(root='./data', split='train', download=True)
+train_sub = Subset(train_raw, range(200))
+
+class PairDS(torch.utils.data.Dataset):
+    def __init__(self, subset, tf): self.sub, self.tf = subset, tf
+    def __len__(self): return len(self.sub)
+    def __getitem__(self, idx): return self.tf(self.sub[idx][0])
+
+loader = DataLoader(PairDS(train_sub, SimCLRAugment()), batch_size=32, shuffle=True)
+model = SimpleSimCLR()
+opt = torch.optim.Adam(model.parameters(), lr=0.003)
+
+for epoch in range(10):
+    model.train()
+    for x1, x2 in loader:
+        opt.zero_grad()
+        _, z1 = model(x1)
+        _, z2 = model(x2)
+        loss = nt_xent_loss(z1, z2)
+        loss.backward()
+        opt.step()
+
+test_tf = transforms.Compose([transforms.Resize((32, 32)), transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
+testset = torchvision.datasets.STL10(root='./data', split='test', download=True, transform=test_tf)
+test_loader = DataLoader(Subset(testset, range(200)), batch_size=32, shuffle=False)
+
+embs, labels = [], []
+model.eval()
+with torch.no_grad():
+    for x, y in test_loader:
+        h, _ = model(x)
+        embs.append(h.numpy())
+        labels.append(y.numpy())
+
+embs, labels = np.concatenate(embs), np.concatenate(labels)
+tsne = TSNE(n_components=2, random_state=42, perplexity=15).fit_transform(embs)
+
+plt.figure(figsize=(7, 5))
+scatter = plt.scatter(tsne[:, 0], tsne[:, 1], c=labels, cmap='tab10', alpha=0.8, s=25)
+plt.colorbar(scatter, label='Class Label')
+plt.title("t-SNE of SimCLR Embeddings (Fast CPU)")
+plt.show()`
+    }
 ];
 
 export const allLabs: Record<string, LabExperiment[]> = {
-  dl: dlLabData
+    cv: cvLabData
 };
