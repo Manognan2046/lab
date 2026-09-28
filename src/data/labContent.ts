@@ -10,7 +10,8 @@ const cvLabData: LabExperiment[] = [
         fileName: "Q1_Filters_and_Edges.py",
         code: `import cv2, numpy as np, matplotlib.pyplot as plt
 img = cv2.imread('lena.png', 0)
-if img is None: img = np.tile(np.arange(256, dtype=np.uint8), (256, 1))
+if img is None:
+    img = np.tile(np.arange(256, dtype=np.uint8), (256, 1))
 
 gb, mb = cv2.GaussianBlur(img, (5, 5), 0), cv2.medianBlur(img, 5)
 sx = cv2.Sobel(img, cv2.CV_64F, 1, 0); sy = cv2.Sobel(img, cv2.CV_64F, 0, 1)
@@ -22,7 +23,7 @@ titles = ['Original', 'Gauss', 'Median', 'Sobel', 'Canny', 'HistEq']
 
 plt.figure(figsize=(12, 6))
 for i in range(6):
- plt.subplot(2, 4, i + 1); plt.imshow(imgs[i], 'gray'); plt.title(titles[i]); plt.axis('off')
+    plt.subplot(2, 4, i + 1); plt.imshow(imgs[i], 'gray'); plt.title(titles[i]); plt.axis('off')
 plt.subplot(2, 4, 7); plt.hist(img.ravel(), 256, [0, 256]); plt.title('Hist Before')
 plt.subplot(2, 4, 8); plt.hist(he.ravel(), 256, [0, 256]); plt.title('Hist After')
 plt.tight_layout(); plt.savefig('q1.png'); plt.show()`
@@ -33,11 +34,16 @@ plt.tight_layout(); plt.savefig('q1.png'); plt.show()`
         code: `import cv2, numpy as np, matplotlib.pyplot as plt
 
 img = cv2.imread('flowers.jpg')
-if img is None: img = np.random.randint(0, 255, (100, 100, 3), dtype=np.uint8)
+if img is None:
+    img = np.random.randint(0, 255, (100, 100, 3), dtype=np.uint8)
 
 k = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]], dtype=np.float32)
 p = np.pad(img, ((1, 1), (1, 1), (0, 0)), 'edge')
-sharp = np.clip(sum(p[i:i+img.shape[0], j:j+img.shape[1]] * k[i, j] for i in range(3) for j in range(3)), 0, 255).astype(np.uint8)
+sharp = np.zeros_like(img, dtype=np.float32)
+for i in range(3):
+    for j in range(3):
+        sharp += p[i:i + img.shape[0], j:j + img.shape[1]] * k[i, j]
+sharp = np.clip(sharp, 0, 255).astype(np.uint8)
 lap = np.uint8(np.clip(np.abs(cv2.Laplacian(img, cv2.CV_64F)), 0, 255))
 
 ps1, ps2 = cv2.PSNR(img, sharp), cv2.PSNR(img, lap)
@@ -47,7 +53,7 @@ res = [img, sharp, lap]
 t = ['Original', f'Sharp ({ps1:.1f}dB)', f'Lap ({ps2:.1f}dB)']
 
 for i in range(3):
- plt.subplot(1, 3, i + 1); plt.imshow(cv2.cvtColor(res[i], cv2.COLOR_BGR2RGB)); plt.title(t[i]); plt.axis('off')
+    plt.subplot(1, 3, i + 1); plt.imshow(cv2.cvtColor(res[i], cv2.COLOR_BGR2RGB)); plt.title(t[i]); plt.axis('off')
 plt.show()`
     },
     {
@@ -55,22 +61,26 @@ plt.show()`
         fileName: "Q3_Color_Space_and_KMeans.py",
         code: `import cv2, numpy as np, matplotlib.pyplot as plt
 
-img = cv2.resize(cv2.imread('flowers.jpg') if cv2.imread('flowers.jpg') is not None else np.zeros((100, 100, 3), dtype=np.uint8), (100, 100))
+img = cv2.imread("flowers.jpg")
+if img is None:
+    img = np.zeros((100, 100, 3), dtype=np.uint8)
+else:
+    img = cv2.resize(img, (100, 100))
 rgb, hsv, lab = cv2.cvtColor(img, cv2.COLOR_BGR2RGB), cv2.cvtColor(img, cv2.COLOR_BGR2HSV), cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
 
 mask = cv2.inRange(hsv, (20, 40, 40), (85, 255, 255))
 hsv_seg = cv2.bitwise_and(rgb, rgb, mask=mask)
 
 def km(k):
- _, lbl, ctr = cv2.kmeans(rgb.reshape(-1, 3).astype(np.float32), k, None, (1, 5, 1.0), 3, cv2.KMEANS_RANDOM_CENTERS)
- return np.uint8(ctr)[lbl.flatten()].reshape(rgb.shape)
+    _, lbl, ctr = cv2.kmeans(rgb.reshape(-1, 3).astype(np.float32), k, None, (1, 5, 1.0), 3, cv2.KMEANS_RANDOM_CENTERS)
+    return np.uint8(ctr)[lbl.flatten()].reshape(rgb.shape)
 
 disp = [*cv2.split(rgb), *cv2.split(hsv), *cv2.split(lab), hsv_seg, km(3), km(5)]
 names = ['R','G','B','H','S','V','L','A','B','HSV Mask','K=3','K=5']
 
 plt.figure(figsize=(10, 7))
 for i in range(12):
- plt.subplot(3, 4, i + 1); plt.imshow(disp[i], cmap='gray' if i < 9 else None); plt.title(names[i]); plt.axis('off')
+    plt.subplot(3, 4, i + 1); plt.imshow(disp[i], cmap='gray' if i < 9 else None); plt.title(names[i]); plt.axis('off')
 plt.tight_layout(); plt.show()`
     },
     {
@@ -84,7 +94,7 @@ import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
 
 torch.set_num_threads(4)
-transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
+transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
 trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
 train_sub = torch.utils.data.Subset(trainset, range(1200))
@@ -150,12 +160,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
-base_t = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
+base_t = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 aug_t = transforms.Compose([
     transforms.RandomHorizontalFlip(),
     transforms.RandomRotation(10),
     transforms.ToTensor(),
-    transforms.Normalize((0.5,), (0.5,))
+    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
 
 class RegularizedCNN(nn.Module):
@@ -227,7 +237,7 @@ class SimpleCNN(nn.Module):
 model = SimpleCNN()
 try:
     model.load_state_dict(torch.load('cifar_cnn.pth', map_location='cpu'), strict=False)
-except: pass
+except Exception: pass
 model.eval()
 
 filters = model.conv1.weight.data
@@ -242,7 +252,7 @@ for i in range(16):
 plt.suptitle('Conv1 Layer: 16 Learned Filters')
 plt.show()
 
-transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
+transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform)
 img, _ = testset[0]
 
@@ -285,10 +295,10 @@ class SimpleCNN(nn.Module):
 model = SimpleCNN()
 try:
     model.load_state_dict(torch.load('cifar_cnn.pth', map_location='cpu'), strict=False)
-except: pass
+except Exception: pass
 model.eval()
 
-transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
+transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform)
 
 fig, axes = plt.subplots(3, 2, figsize=(6, 8))
@@ -346,15 +356,15 @@ sift = cv2.SIFT_create(nfeatures=500)
 kp1_s, des1_s = sift.detectAndCompute(img1, None)
 kp2_s, des2_s = sift.detectAndCompute(img2, None)
 bf_sift = cv2.BFMatcher(cv2.NORM_L2)
-matches_s = bf_sift.knnMatch(des1_s, des2_s, k=2)
-good_sift = [m for m, n in matches_s if m.distance < 0.75 * n.distance]
+matches_s = bf_sift.knnMatch(des1_s, des2_s, k=2) if des1_s is not None and des2_s is not None else []
+good_sift = [pair[0] for pair in matches_s if len(pair) == 2 and pair[0].distance < 0.75 * pair[1].distance]
 
 orb = cv2.ORB_create(nfeatures=500)
 kp1_o, des1_o = orb.detectAndCompute(img1, None)
 kp2_o, des2_o = orb.detectAndCompute(img2, None)
 bf_orb = cv2.BFMatcher(cv2.NORM_HAMMING)
-matches_o = bf_orb.knnMatch(des1_o, des2_o, k=2)
-good_orb = [m for m, n in matches_o if len((m, n)) == 2 and m.distance < 0.75 * n.distance]
+matches_o = bf_orb.knnMatch(des1_o, des2_o, k=2) if des1_o is not None and des2_o is not None else []
+good_orb = [pair[0] for pair in matches_o if len(pair) == 2 and pair[0].distance < 0.75 * pair[1].distance]
 
 img_s = cv2.drawMatches(img1, kp1_s, img2, kp2_s, good_sift[:30], None, flags=2)
 img_o = cv2.drawMatches(img1, kp1_o, img2, kp2_o, good_orb[:30], None, flags=2)
@@ -364,8 +374,8 @@ print(f"ORB good matches: {len(good_orb)}")
 print("SIFT provides better rotation/scale invariance; ORB runs faster.")
 
 plt.figure(figsize=(12, 6))
-plt.subplot(2, 1, 1); plt.imshow(img_s); plt.title(f'SIFT Matches ({len(good_sift)})'); plt.axis('off')
-plt.subplot(2, 1, 2); plt.imshow(img_o); plt.title(f'ORB Matches ({len(good_orb)})'); plt.axis('off')
+plt.subplot(2, 1, 1); plt.imshow(cv2.cvtColor(img_s, cv2.COLOR_BGR2RGB)); plt.title(f'SIFT Matches ({len(good_sift)})'); plt.axis('off')
+plt.subplot(2, 1, 2); plt.imshow(cv2.cvtColor(img_o, cv2.COLOR_BGR2RGB)); plt.title(f'ORB Matches ({len(good_orb)})'); plt.axis('off')
 plt.tight_layout(); plt.show()`
     },
     {
@@ -405,7 +415,8 @@ for i, des in enumerate(descriptors_list):
     preds = kmeans.predict(des)
     for p in preds: bow_hist[i, p] += 1
     norm = np.linalg.norm(bow_hist[i])
-    if norm > 0: bow_hist[i] /= norm
+    if norm > 0:
+        bow_hist[i] /= norm
 
 resnet = torchvision.models.resnet18(weights='DEFAULT')
 resnet.fc = torch.nn.Identity()
@@ -444,7 +455,7 @@ transform = transforms.Compose([
     transforms.Resize((32, 32)),
     transforms.Grayscale(num_output_channels=3),
     transforms.ToTensor(),
-    transforms.Normalize((0.5,), (0.5,))
+    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
 
 trainset = torchvision.datasets.FashionMNIST(root='./data', train=True, download=True, transform=transform)
@@ -489,18 +500,11 @@ plt.tight_layout(); plt.show()`
     {
         folderName: "CV",
         fileName: "Q11_YOLO_Detection.py",
-        code: `import torch
-import torchvision
-import urllib.request
+        code: `import urllib.request
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 from ultralytics import YOLO
-
-resnet = torchvision.models.resnet18(weights='DEFAULT')
-resnet.fc = torch.nn.Linear(resnet.fc.in_features, 10)
-resnet.eval()
-print("ResNet18 Fine-tuning pipeline initialized.")
 
 yolo = YOLO('yolov8n.pt')
 urls = [
@@ -511,8 +515,10 @@ urls = [
 images = []
 for i, u in enumerate(urls):
     fn = f"scene_{i}.jpg"
-    try: urllib.request.urlretrieve(u, fn)
-    except: pass
+    try:
+        urllib.request.urlretrieve(u, fn)
+    except Exception:
+        pass
     im = cv2.imread(fn)
     if im is not None: images.append(cv2.resize(im, (320, 320)))
 
@@ -548,7 +554,7 @@ class SimCLRAugment:
             transforms.RandomResizedCrop(32, scale=(0.8, 1.0)),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
-            transforms.Normalize((0.5,), (0.5,))
+            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
         ])
     def __call__(self, x): return self.aug(x), self.aug(x)
 
@@ -594,7 +600,7 @@ for epoch in range(10):
         loss.backward()
         opt.step()
 
-test_tf = transforms.Compose([transforms.Resize((32, 32)), transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
+test_tf = transforms.Compose([transforms.Resize((32, 32)), transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 testset = torchvision.datasets.STL10(root='./data', split='test', download=True, transform=test_tf)
 test_loader = DataLoader(Subset(testset, range(200)), batch_size=32, shuffle=False)
 
