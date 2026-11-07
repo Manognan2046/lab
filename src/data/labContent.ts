@@ -1,3 +1,5 @@
+import additionalCvLabs from "./additionalCvLabs.json";
+
 export interface LabExperiment {
     folderName: string;
     fileName: string;
@@ -624,5 +626,5 @@ plt.show()`
 ];
 
 export const allLabs: Record<string, LabExperiment[]> = {
-    cv: cvLabData
+    cv: [...cvLabData, ...additionalCvLabs]
 };
